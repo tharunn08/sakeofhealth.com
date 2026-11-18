@@ -1,0 +1,118 @@
+[
+ {
+  "version": "004",
+  "file": "004_core_governance.js",
+  "sql": "sql/004_core_governance.sql",
+  "sql_sha256": "7ff73696cf578a1c131bb9e432a5dbb308536aaf4f8d00255e2066ee0c602e84",
+  "new_tables": 12,
+  "guarded_ops": 15,
+  "ops_by_type": {
+   "addColumn": 12,
+   "addIndex": 2,
+   "extendEnum": 1
+  }
+ },
+ {
+  "version": "005",
+  "file": "005_products_pricing.js",
+  "sql": "sql/005_products_pricing.sql",
+  "sql_sha256": "6c20871af2cfb21cfddec6519af936a9f5601e06bb3874cef3ae67abf5860be0",
+  "new_tables": 4,
+  "guarded_ops": 16,
+  "ops_by_type": {
+   "addColumn": 12,
+   "addIndex": 2,
+   "extendEnum": 2
+  }
+ },
+ {
+  "version": "006",
+  "file": "006_vendors.js",
+  "sql": "sql/006_vendors.sql",
+  "sql_sha256": "4004df679afb61c7ea5061bc1d4146380095c815f069d86b14ff43e0964cab7c",
+  "new_tables": 11,
+  "guarded_ops": 2,
+  "ops_by_type": {
+   "addForeignKey": 2
+  }
+ },
+ {
+  "version": "007",
+  "file": "007_procurement_lots.js",
+  "sql": "sql/007_procurement_lots.sql",
+  "sql_sha256": "be8c873d0c26c32f637b4ebbd91a4be5244464336f1f45569813746554f8025b",
+  "new_tables": 23,
+  "guarded_ops": 12,
+  "ops_by_type": {
+   "addColumn": 4,
+   "addForeignKey": 4,
+   "addIndex": 3,
+   "extendEnum": 1
+  }
+ },
+ {
+  "version": "008",
+  "file": "008_inventory.js",
+  "sql": "sql/008_inventory.sql",
+  "sql_sha256": "981e9ba5817feb9f680cb0c5176b7b2d68b72df3d1ed8bca19957745aa7e5613",
+  "new_tables": 9,
+  "guarded_ops": 4,
+  "ops_by_type": {
+   "addColumn": 4
+  }
+ },
+ {
+  "version": "009",
+  "file": "009_network.js",
+  "sql": "sql/009_network.sql",
+  "sql_sha256": "cfe7d32858d0ad1a64493491943bdcbc488e3ba276a8b2e61f1dea0b23d1404c",
+  "new_tables": 3,
+  "guarded_ops": 17,
+  "ops_by_type": {
+   "addColumn": 5,
+   "addForeignKey": 3,
+   "addIndex": 3,
+   "extendEnum": 4,
+   "makeNullable": 2
+  }
+ },
+ {
+  "version": "010",
+  "file": "010_field_sales.js",
+  "sql": "sql/010_field_sales.sql",
+  "sql_sha256": "94d675f77ac6a2eb04fa155cb1cabf5cfe4abe610a993cbf8fa52e4eea46f36d",
+  "new_tables": 7,
+  "guarded_ops": 32,
+  "ops_by_type": {
+   "addColumn": 15,
+   "addForeignKey": 6,
+   "addIndex": 9,
+   "extendEnum": 2
+  }
+ },
+ {
+  "version": "011",
+  "file": "011_returns_recalls.js",
+  "sql": "sql/011_returns_recalls.sql",
+  "sql_sha256": "6c256cfa49e4307bd5682934b53cc7b0e0dbfe790cd2f45a9de900469b8af9df",
+  "new_tables": 4,
+  "guarded_ops": 15,
+  "ops_by_type": {
+   "addColumn": 7,
+   "addForeignKey": 3,
+   "addIndex": 3,
+   "extendEnum": 2
+  }
+ },
+ {
+  "version": "012",
+  "file": "012_finance.js",
+  "sql": "sql/012_finance.sql",
+  "sql_sha256": "25d3210e15c630850a5c4be2d29465bf65c8e5c74baa0db46aed6d880dcfff99",
+  "new_tables": 5,
+  "guarded_ops": 1,
+  "ops_by_type": {
+   "addColumn": 1
+  }
+ }
+]

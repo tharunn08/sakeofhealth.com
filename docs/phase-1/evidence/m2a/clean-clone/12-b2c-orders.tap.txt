@@ -1,0 +1,66 @@
+$ node --test tests/b2c-orders.test.js  (clean clone of ca2426e, no 013/014, 2026-11-13T10:57:36Z)
+TAP version 13
+# Subtest: BUG-012: marking an order delivered does not mark an unpaid order as paid
+ok 1 - BUG-012: marking an order delivered does not mark an unpaid order as paid
+  ---
+  duration_ms: 343.88351
+  type: 'test'
+  ...
+# Subtest: BUG-013: a new order number is never a duplicate, even after a gap in the day
+ok 2 - BUG-013: a new order number is never a duplicate, even after a gap in the day
+  ---
+  duration_ms: 12.693739
+  type: 'test'
+  ...
+# Subtest: BUG-013: order numbers keep increasing across many orders
+ok 3 - BUG-013: order numbers keep increasing across many orders
+  ---
+  duration_ms: 15.889879
+  type: 'test'
+  ...
+# Subtest: D10: "delete order" no longer removes the order
+ok 4 - D10: "delete order" no longer removes the order
+  ---
+  duration_ms: 6.673207
+  type: 'test'
+  ...
+# Subtest: D10: cancel requires a reason, keeps the order, records who/why/when
+ok 5 - D10: cancel requires a reason, keeps the order, records who/why/when
+  ---
+  duration_ms: 12.298546
+  type: 'test'
+  ...
+# Subtest: D10: a delivered order cannot be cancelled
+ok 6 - D10: a delivered order cannot be cancelled
+  ---
+  duration_ms: 3.170822
+  type: 'test'
+  ...
+# Subtest: D10: cancelling updates the customer totals; numbering stays unique after cancel
+ok 7 - D10: cancelling updates the customer totals; numbering stays unique after cancel
+  ---
+  duration_ms: 11.901451
+  type: 'test'
+  ...
+# Subtest: roles: support staff cannot cancel, either way
+ok 8 - roles: support staff cannot cancel, either way
+  ---
+  duration_ms: 13.055662
+  type: 'test'
+  ...
+# Subtest: D10: cancelling through the status menu also needs a reason and records it
+ok 9 - D10: cancelling through the status menu also needs a reason and records it
+  ---
+  duration_ms: 9.764106
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3496.777451
+exit=0

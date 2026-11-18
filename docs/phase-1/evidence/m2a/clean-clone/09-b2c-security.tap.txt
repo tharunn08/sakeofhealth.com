@@ -1,0 +1,141 @@
+$ node --test tests/b2c-security.test.js  (clean clone of ca2426e, no 013/014, 2026-11-13T10:57:23Z)
+TAP version 13
+# Subtest: auth: correctly configured secrets
+    # Subtest: customer tokens are typed "customer"
+    ok 1 - customer tokens are typed "customer"
+      ---
+      duration_ms: 0.671354
+      type: 'test'
+      ...
+    # Subtest: BUG-001: a customer token is refused (401) on every one of the 39 admin routes
+    ok 2 - BUG-001: a customer token is refused (401) on every one of the 39 admin routes
+      ---
+      duration_ms: 109.878316
+      type: 'test'
+      ...
+    # Subtest: BUG-001: a "customer"-typed token signed with the ADMIN secret is refused by the admin API
+    ok 3 - BUG-001: a "customer"-typed token signed with the ADMIN secret is refused by the admin API
+      ---
+      duration_ms: 3.102703
+      type: 'test'
+      ...
+    # Subtest: BUG-001: an untyped 30-day customer-style token signed with the ADMIN secret is refused
+    ok 4 - BUG-001: an untyped 30-day customer-style token signed with the ADMIN secret is refused
+      ---
+      duration_ms: 2.420953
+      type: 'test'
+      ...
+    # Subtest: compatibility: an untyped staff token (≤12 h, staff role) issued before the hotfix still works until it expires
+    ok 5 - compatibility: an untyped staff token (≤12 h, staff role) issued before the hotfix still works until it expires
+      ---
+      duration_ms: 2.448846
+      type: 'test'
+      ...
+    # Subtest: an untyped token whose lifetime exceeds the 12 h staff session is refused
+    ok 6 - an untyped token whose lifetime exceeds the 12 h staff session is refused
+      ---
+      duration_ms: 1.936576
+      type: 'test'
+      ...
+    # Subtest: admin login issues "staff"-typed tokens, and they work
+    ok 7 - admin login issues "staff"-typed tokens, and they work
+      ---
+      duration_ms: 6.31621
+      type: 'test'
+      ...
+    # Subtest: no fallback: a token signed with ADMIN_PASSWORD is refused
+    ok 8 - no fallback: a token signed with ADMIN_PASSWORD is refused
+      ---
+      duration_ms: 2.199091
+      type: 'test'
+      ...
+    # Subtest: compatibility: an untyped customer token signed with the CUSTOMER secret still works
+    ok 9 - compatibility: an untyped customer token signed with the CUSTOMER secret still works
+      ---
+      duration_ms: 2.63954
+      type: 'test'
+      ...
+    # Subtest: a token forged with the published constant is refused by the customer API
+    ok 10 - a token forged with the published constant is refused by the customer API
+      ---
+      duration_ms: 5.051005
+      type: 'test'
+      ...
+    # Subtest: the server log contains no login debug output
+    ok 11 - the server log contains no login debug output
+      ---
+      duration_ms: 0.325476
+      type: 'test'
+      ...
+    1..11
+ok 1 - auth: correctly configured secrets
+  ---
+  duration_ms: 355.825372
+  type: 'test'
+  ...
+# Subtest: auth: neither secret configured (the state of the shipped .env)
+    # Subtest: BUG-001: admin login refuses (503) instead of signing with the password
+    ok 1 - BUG-001: admin login refuses (503) instead of signing with the password
+      ---
+      duration_ms: 10.842911
+      type: 'test'
+      ...
+    # Subtest: BUG-001: customer sign-up and log-in refuse (503) instead of signing with a public constant
+    ok 2 - BUG-001: customer sign-up and log-in refuse (503) instead of signing with a public constant
+      ---
+      duration_ms: 4.392748
+      type: 'test'
+      ...
+    # Subtest: BUG-001: a token forged with the published constant is not accepted (accounts answer 503 until configured)
+    ok 3 - BUG-001: a token forged with the published constant is not accepted (accounts answer 503 until configured)
+      ---
+      duration_ms: 4.962607
+      type: 'test'
+      ...
+    # Subtest: the shop itself keeps working: products and guest checkout
+    ok 4 - the shop itself keeps working: products and guest checkout
+      ---
+      duration_ms: 9.236137
+      type: 'test'
+      ...
+    1..4
+ok 2 - auth: neither secret configured (the state of the shipped .env)
+  ---
+  duration_ms: 182.378184
+  type: 'test'
+  ...
+# Subtest: auth: admin secret set, customer secret missing
+    # Subtest: BUG-001: no customer token can be obtained, so none can reach the admin API
+    ok 1 - BUG-001: no customer token can be obtained, so none can reach the admin API
+      ---
+      duration_ms: 9.412342
+      type: 'test'
+      ...
+    # Subtest: admin login still works
+    ok 2 - admin login still works
+      ---
+      duration_ms: 2.96738
+      type: 'test'
+      ...
+    1..2
+ok 3 - auth: admin secret set, customer secret missing
+  ---
+  duration_ms: 151.73509
+  type: 'test'
+  ...
+# Subtest: auth: secrets shorter than 48 characters, or reused, are refused
+ok 4 - auth: secrets shorter than 48 characters, or reused, are refused
+  ---
+  duration_ms: 400.243168
+  type: 'test'
+  ...
+1..4
+# tests 21
+# suites 0
+# pass 21
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4129.117929
+exit=0

@@ -1,0 +1,91 @@
+$ node --test tests/platform-erp.test.js  (clean clone of ca2426e, no 013/014, 2026-11-13T10:57:12Z)
+TAP version 13
+# [DB] Using data directory: /tmp/tmp.CPXdPIOc3b
+# Subtest: all 18 ERP screens are in the one registry with exactly the permission the ERP code requires
+ok 1 - all 18 ERP screens are in the one registry with exactly the permission the ERP code requires
+  ---
+  duration_ms: 3.039395
+  type: 'test'
+  ...
+# Subtest: sidebar from ERP permissions: exactly the screens those permissions open
+ok 2 - sidebar from ERP permissions: exactly the screens those permissions open
+  ---
+  duration_ms: 6.86836
+  type: 'test'
+  ...
+# Subtest: sign-in: staff + ERP with the same password → one admin workspace carrying both sessions
+ok 3 - sign-in: staff + ERP with the same password → one admin workspace carrying both sessions
+  ---
+  duration_ms: 0.503036
+  type: 'test'
+  ...
+# Subtest: sign-in: ERP-only staff land in the same admin panel
+ok 4 - sign-in: ERP-only staff land in the same admin panel
+  ---
+  duration_ms: 0.259843
+  type: 'test'
+  ...
+# Subtest: sign-in: an ERP account with two-factor on asks for the code; the code is passed through
+ok 5 - sign-in: an ERP account with two-factor on asks for the code; the code is passed through
+  ---
+  duration_ms: 0.373443
+  type: 'test'
+  ...
+# Subtest: sign-in: staff password right but ERP code needed → admin opens now, ERP can be added with the code
+ok 6 - sign-in: staff password right but ERP code needed → admin opens now, ERP can be added with the code
+  ---
+  duration_ms: 0.267087
+  type: 'test'
+  ...
+# Subtest: sign-in: a password accepted elsewhere is not counted as a failed ERP attempt; a wrong-everywhere one is
+ok 7 - sign-in: a password accepted elsewhere is not counted as a failed ERP attempt; a wrong-everywhere one is
+  ---
+  duration_ms: 0.211943
+  type: 'test'
+  ...
+# Subtest: sign-in: business database down → ERP skipped, shop sign-in still works; all down → 503
+ok 8 - sign-in: business database down → ERP skipped, shop sign-in still works; all down → 503
+  ---
+  duration_ms: 0.579533
+  type: 'test'
+  ...
+# Subtest: sign-in: a locked ERP account says so only when nothing else accepted the password
+ok 9 - sign-in: a locked ERP account says so only when nothing else accepted the password
+  ---
+  duration_ms: 0.511251
+  type: 'test'
+  ...
+# Subtest: server: ERP screens are served inside the shell (ERP on) and not at all (ERP off)
+ok 10 - server: ERP screens are served inside the shell (ERP on) and not at all (ERP off)
+  ---
+  duration_ms: 661.779591
+  type: 'test'
+  ...
+# Subtest: server: sidebar with an ERP session while the database is down → shop pages plus a clear "unavailable" flag
+ok 11 - server: sidebar with an ERP session while the database is down → shop pages plus a clear "unavailable" flag
+  ---
+  duration_ms: 9.91542
+  type: 'test'
+  ...
+# Subtest: server: /login with ERP on and the database down still signs staff in (ERP skipped)
+ok 12 - server: /login with ERP on and the database down still signs staff in (ERP skipped)
+  ---
+  duration_ms: 5.470228
+  type: 'test'
+  ...
+# Subtest: ERP sign-in accepts "do not count this failure" only from the platform sign-in (signature check)
+ok 13 - ERP sign-in accepts "do not count this failure" only from the platform sign-in (signature check)
+  ---
+  duration_ms: 0.242761
+  type: 'test'
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3748.449801
+exit=0

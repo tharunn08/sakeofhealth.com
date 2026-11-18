@@ -1,0 +1,118 @@
+$ node --test tests/erp-migrations-guarded.test.js  (owner working copy @ ca2426e, WITH untracked 013/014 present, 2026-11-13T10:57:58Z)
+TAP version 13
+# Subtest: enum change that is not an append is refused
+ok 1 - enum change that is not an append is refused
+  ---
+  duration_ms: 1.613866
+  type: 'test'
+  ...
+# Subtest: enum append is applied; identical enum is skipped
+ok 2 - enum append is applied; identical enum is skipped
+  ---
+  duration_ms: 1.108263
+  type: 'test'
+  ...
+# Subtest: live schema drift: column already present with another type is refused
+ok 3 - live schema drift: column already present with another type is refused
+  ---
+  duration_ms: 0.138362
+  type: 'test'
+  ...
+# Subtest: MariaDB-style int display widths are treated as the same type
+ok 4 - MariaDB-style int display widths are treated as the same type
+  ---
+  duration_ms: 0.167896
+  type: 'test'
+  ...
+# Subtest: NOT NULL column without DEFAULT is refused (would fail on existing rows)
+ok 5 - NOT NULL column without DEFAULT is refused (would fail on existing rows)
+  ---
+  duration_ms: 0.260364
+  type: 'test'
+  ...
+# Subtest: index name already used for other columns is refused
+ok 6 - index name already used for other columns is refused
+  ---
+  duration_ms: 0.19044
+  type: 'test'
+  ...
+# Subtest: foreign key that existing rows would violate is refused
+ok 7 - foreign key that existing rows would violate is refused
+  ---
+  duration_ms: 0.1694
+  type: 'test'
+  ...
+# Subtest: makeNullable refuses a type change
+ok 8 - makeNullable refuses a type change
+  ---
+  duration_ms: 0.32995
+  type: 'test'
+  ...
+# Subtest: missing table is refused
+ok 9 - missing table is refused
+  ---
+  duration_ms: 0.94914
+  type: 'test'
+  ...
+# Subtest: SQL file changed after review is refused; destructive SQL is refused
+ok 10 - SQL file changed after review is refused; destructive SQL is refused
+  ---
+  duration_ms: 1.322809
+  type: 'test'
+  ...
+# Subtest: the forbidden-statement guard
+ok 11 - the forbidden-statement guard
+  ---
+  duration_ms: 0.179237
+  type: 'test'
+  ...
+# Subtest: every generated migration pins its SQL file and only uses allowed operations
+not ok 12 - every generated migration pins its SQL file and only uses allowed operations
+  ---
+  duration_ms: 0.967803
+  type: 'test'
+  location: '/home/claude/dev/soh/tests/erp-migrations-guarded.test.js:98:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    migration files differ from 004–012 — unexpected: 013_erp_governance.js, 014_erp_governance.js (D5: do not run, edit or delete without the owner's decision)
+    + actual - expected
+    
+      {
+        missing: [],
+    +   unexpected: [
+    +     '013_erp_governance.js',
+    +     '014_erp_governance.js'
+    +   ]
+    -   unexpected: []
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    unexpected:
+    missing:
+  actual:
+    unexpected:
+      0: '013_erp_governance.js'
+      1: '014_erp_governance.js'
+    missing:
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/home/claude/dev/soh/tests/erp-migrations-guarded.test.js:107:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 11
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 53.651301
+exit=1

@@ -1,0 +1,115 @@
+$ node --test tests/b2c-payments.test.js  (clean clone of ca2426e, no 013/014, 2026-11-13T10:57:31Z)
+TAP version 13
+# Subtest: BUG-028: /api/shop/quote prices the cart from the catalogue, ignoring client prices
+ok 1 - BUG-028: /api/shop/quote prices the cart from the catalogue, ignoring client prices
+  ---
+  duration_ms: 179.146365
+  type: 'test'
+  ...
+# Subtest: BUG-004/006: quote refuses unknown, coming-soon and over-stock items
+ok 2 - BUG-004/006: quote refuses unknown, coming-soon and over-stock items
+  ---
+  duration_ms: 12.546037
+  type: 'test'
+  ...
+# Subtest: BUG-002: the gateway order is created for the SERVER total; a client "amount" is ignored
+ok 3 - BUG-002: the gateway order is created for the SERVER total; a client "amount" is ignored
+  ---
+  duration_ms: 32.486953
+  type: 'test'
+  ...
+# Subtest: BUG-002: starting a payment without cart items is refused (no amount-only gateway orders)
+ok 4 - BUG-002: starting a payment without cart items is refused (no amount-only gateway orders)
+  ---
+  duration_ms: 3.076523
+  type: 'test'
+  ...
+# Subtest: BUG-002: a verified payment creates the order from the server-priced checkout (client items ignored)
+ok 5 - BUG-002: a verified payment creates the order from the server-priced checkout (client items ignored)
+  ---
+  duration_ms: 18.24666
+  type: 'test'
+  ...
+# Subtest: BUG-002: the same payment id cannot be attached to a second order
+ok 6 - BUG-002: the same payment id cannot be attached to a second order
+  ---
+  duration_ms: 17.133346
+  type: 'test'
+  ...
+# Subtest: repeating the browser confirmation for the same payment returns the same order (no duplicate)
+ok 7 - repeating the browser confirmation for the same payment returns the same order (no duplicate)
+  ---
+  duration_ms: 4.510724
+  type: 'test'
+  ...
+# Subtest: BUG-002: under-paid, wrong-currency, failed, mismatched or unsigned payments are refused
+ok 8 - BUG-002: under-paid, wrong-currency, failed, mismatched or unsigned payments are refused
+  ---
+  duration_ms: 40.30607
+  type: 'test'
+  ...
+# \# SKU/coupon combinations checked: 16 (4 SKUs), coupon applied in 12
+# Subtest: quote = gateway amount = order total, for every orderable SKU, with and without each coupon
+ok 9 - quote = gateway amount = order total, for every orderable SKU, with and without each coupon
+  ---
+  duration_ms: 135.453565
+  type: 'test'
+  ...
+# Subtest: webhook: a bad signature is refused
+ok 10 - webhook: a bad signature is refused
+  ---
+  duration_ms: 1.947647
+  type: 'test'
+  ...
+# Subtest: webhook: a captured payment whose browser callback was lost creates the order exactly once
+ok 11 - webhook: a captured payment whose browser callback was lost creates the order exactly once
+  ---
+  duration_ms: 11.344184
+  type: 'test'
+  ...
+# Subtest: webhook: an amount that does not match the checkout creates no order
+ok 12 - webhook: an amount that does not match the checkout creates no order
+  ---
+  duration_ms: 4.637933
+  type: 'test'
+  ...
+# Subtest: BUG-003: production never uses mock payments, even with PAYMENT_MOCK=true and no keys
+ok 13 - BUG-003: production never uses mock payments, even with PAYMENT_MOCK=true and no keys
+  ---
+  duration_ms: 158.810742
+  type: 'test'
+  ...
+# Subtest: BUG-003: PAYMENT_MOCK left unset with keys present means live verification, not mock
+ok 14 - BUG-003: PAYMENT_MOCK left unset with keys present means live verification, not mock
+  ---
+  duration_ms: 264.234476
+  type: 'test'
+  ...
+# Subtest: BUG-004/006: in test (mock) mode, order lines are still validated
+ok 15 - BUG-004/006: in test (mock) mode, order lines are still validated
+  ---
+  duration_ms: 157.636591
+  type: 'test'
+  ...
+# Subtest: BUG-021: the Cashfree fallback (hard-coded sandbox URL) is removed
+ok 16 - BUG-021: the Cashfree fallback (hard-coded sandbox URL) is removed
+  ---
+  duration_ms: 0.286465
+  type: 'test'
+  ...
+# Subtest: B2B contract: payments.createOrder() and verifySignature() still work for the business module (fail-closed)
+ok 17 - B2B contract: payments.createOrder() and verifySignature() still work for the business module (fail-closed)
+  ---
+  duration_ms: 138.23711
+  type: 'test'
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4241.451778
+exit=0

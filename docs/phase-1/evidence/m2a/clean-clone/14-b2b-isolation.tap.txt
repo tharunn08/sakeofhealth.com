@@ -1,0 +1,36 @@
+$ node --test tests/b2b-isolation.test.js  (clean clone of ca2426e, no 013/014, 2026-11-13T10:57:43Z)
+TAP version 13
+# Subtest: B2B disabled: no portal, no API, customer site unaffected
+ok 1 - B2B disabled: no portal, no API, customer site unaffected
+  ---
+  duration_ms: 239.598692
+  type: 'test'
+  ...
+# Subtest: B2B enabled but database down: customer site works, B2B answers 503 cleanly
+ok 2 - B2B enabled but database down: customer site works, B2B answers 503 cleanly
+  ---
+  duration_ms: 188.392344
+  type: 'test'
+  ...
+# Subtest: production without a signing secret: business logins are refused, customer site works
+ok 3 - production without a signing secret: business logins are refused, customer site works
+  ---
+  duration_ms: 155.617836
+  type: 'test'
+  ...
+# Subtest: first deploy: empty database → status shows pending → admin runs migrations → portal works
+ok 4 - first deploy: empty database → status shows pending → admin runs migrations → portal works # SKIP
+  ---
+  duration_ms: 0.0942
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 3
+# fail 0
+# cancelled 0
+# skipped 1
+# todo 0
+# duration_ms 3619.455721
+exit=0

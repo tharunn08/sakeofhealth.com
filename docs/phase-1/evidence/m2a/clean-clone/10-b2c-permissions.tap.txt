@@ -1,0 +1,49 @@
+$ node --test tests/b2c-permissions.test.js  (clean clone of ca2426e, no 013/014, 2026-11-13T10:57:28Z)
+TAP version 13
+# [DB] Using data directory: /tmp/tmp.18k2QoIL4p
+# Subtest: BUG-005: every admin route is covered by the approved matrix
+ok 1 - BUG-005: every admin route is covered by the approved matrix
+  ---
+  duration_ms: 338.50266
+  type: 'test'
+  ...
+# Subtest: every route in routes/admin.js has a rule in the permission middleware
+ok 2 - every route in routes/admin.js has a rule in the permission middleware
+  ---
+  duration_ms: 1.505895
+  type: 'test'
+  ...
+# Subtest: BUG-005: role × route matrix is enforced on the server (4 roles × 39 routes)
+ok 3 - BUG-005: role × route matrix is enforced on the server (4 roles × 39 routes)
+  ---
+  duration_ms: 224.110134
+  type: 'test'
+  ...
+# Subtest: BUG-005: delivery agents see and update only their own assigned orders
+ok 4 - BUG-005: delivery agents see and update only their own assigned orders
+  ---
+  duration_ms: 57.733024
+  type: 'test'
+  ...
+# Subtest: BUG-005: support staff may add notes but not change payment or address
+ok 5 - BUG-005: support staff may add notes but not change payment or address
+  ---
+  duration_ms: 9.955038
+  type: 'test'
+  ...
+# Subtest: BUG-005: unknown or business-only roles get no shop-admin access
+ok 6 - BUG-005: unknown or business-only roles get no shop-admin access
+  ---
+  duration_ms: 60.432674
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3763.544566
+exit=0

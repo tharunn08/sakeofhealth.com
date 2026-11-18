@@ -1,0 +1,101 @@
+TAP version 13
+# Subtest: every existing B2C and B2B admin page is in the one registry, at /admin/<group>/<page>
+ok 1 - every existing B2C and B2B admin page is in the one registry, at /admin/<group>/<page>
+  ---
+  duration_ms: 629.632971
+  type: 'test'
+  ...
+# Subtest: each registered page is served by the one shell with its page script
+ok 2 - each registered page is served by the one shell with its page script
+  ---
+  duration_ms: 36.500123
+  type: 'test'
+  ...
+# Subtest: /admin opens the shell home; old page addresses keep working
+ok 3 - /admin opens the shell home; old page addresses keep working
+  ---
+  duration_ms: 13.382216
+  type: 'test'
+  ...
+# Subtest: the sidebar needs a login
+ok 4 - the sidebar needs a login
+  ---
+  duration_ms: 1.593658
+  type: 'test'
+  ...
+# [DB] Using data directory: /root/sakeofhealth-data  (default: your account home directory — safe from redeploys)
+# Subtest: admin sees every module in one sidebar, grouped
+ok 5 - admin sees every module in one sidebar, grouped
+  ---
+  duration_ms: 6.764987
+  type: 'test'
+  ...
+# Subtest: for every role, the sidebar shows exactly the pages whose data the server lets them open
+ok 6 - for every role, the sidebar shows exactly the pages whose data the server lets them open
+  ---
+  duration_ms: 140.033712
+  type: 'test'
+  ...
+# Subtest: delivery agents get only their board; business-only roles get no shop pages
+ok 7 - delivery agents get only their board; business-only roles get no shop pages
+  ---
+  duration_ms: 8.559745
+  type: 'test'
+  ...
+# Subtest: with the business platform off, its pages are neither listed nor served
+ok 8 - with the business platform off, its pages are neither listed nor served
+  ---
+  duration_ms: 158.512465
+  type: 'test'
+  ...
+# Subtest: /login is one sign-in page for staff and shop customers
+ok 9 - /login is one sign-in page for staff and shop customers
+  ---
+  duration_ms: 3.054156
+  type: 'test'
+  ...
+# Subtest: staff sign in at /login and land in the admin panel
+ok 10 - staff sign in at /login and land in the admin panel
+  ---
+  duration_ms: 52.271132
+  type: 'test'
+  ...
+# Subtest: shop customers sign in at /login and land in their account
+ok 11 - shop customers sign in at /login and land in their account
+  ---
+  duration_ms: 100.194444
+  type: 'test'
+  ...
+# Subtest: someone who is both staff and a customer (same e-mail and password) chooses where to go
+ok 12 - someone who is both staff and a customer (same e-mail and password) chooses where to go
+  ---
+  duration_ms: 167.851984
+  type: 'test'
+  ...
+# Subtest: a wrong password gets one generic answer, whatever the account type
+ok 13 - a wrong password gets one generic answer, whatever the account type
+  ---
+  duration_ms: 33.73584
+  type: 'test'
+  ...
+# Subtest: /login is rate-limited like the admin login
+ok 14 - /login is rate-limited like the admin login
+  ---
+  duration_ms: 30.882066
+  type: 'test'
+  ...
+# Subtest: the old admin sign-in address now goes to /login
+ok 15 - the old admin sign-in address now goes to /login
+  ---
+  duration_ms: 3.932796
+  type: 'test'
+  ...
+1..15
+# tests 15
+# suites 0
+# pass 15
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4466.912067

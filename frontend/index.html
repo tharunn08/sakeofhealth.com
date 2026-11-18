@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sake of Health — India's Premium Gummy Supplements</title>
+<meta name="description" content="India's most delicious daily supplement gummies. Multivitamins, Iron, Athletic performance — crafted for everyday Indian wellness."/>
+<meta name="theme-color" content="#fdf8f2"/>
+<link rel="canonical" href="https://sakeofhealth.in/"/>
+<link rel="icon" type="image/png" href="assets/images/carousel/favicon.png?v=2"/>
+<link rel="shortcut icon" type="image/png" href="assets/images/carousel/favicon.png?v=2"/>
+<link rel="apple-touch-icon" href="assets/images/carousel/favicon.png?v=2"/>
+
+<script>if('scrollRestoration'in history)history.scrollRestoration='manual';</script>
+<!-- Fonts -->
+<link href="https://api.fontshare.com/v2/css?f[]=recoleta@400,700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/css/main.css?v=10"/>
+
+<!-- CDN -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.17/dist/lenis.min.js" defer></script>
+
+<style>
+body { padding-top: 72px; }
+body.banner-visible { padding-top: 108px; }
+
+/* Hero */
+#hero { padding: 4rem 5vw 0; background: var(--cream); }
+.hero-statement { text-align: center; max-width: 760px; margin: 0 auto 3.5rem; }
+.hero-eyebrow { color: var(--green-mid); margin-bottom: 1rem; }
+.hero-title { font-family: var(--ff-display); font-size: clamp(2.6rem, 5.5vw, 4.2rem); line-height: 1.1; margin-bottom: 1.2rem; }
+.hero-title em { color: var(--green-deep); font-style: normal; }
+.hero-sub { font-size: 1.1rem; color: var(--text-muted); font-weight: 300; margin-bottom: 2.2rem; }
+.hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+/* Category grid */
+.cat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 1200px; margin: 0 auto; padding: 0 0 1px; }
+.cat-hero-card { border-radius: 20px; overflow: hidden; position: relative; height: 380px; display: flex; flex-direction: column; justify-content: flex-end; cursor: pointer; transition: transform 0.35s cubic-bezier(0.22,0.61,0.36,1), box-shadow 0.35s; text-decoration: none; }
+.cat-hero-card:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,0.18); }
+.cat-hero-card:hover .cat-bottle { transform: translateX(-50%) translateY(-10px) scale(1.04); }
+.cat-bg { position: absolute; inset: 0; }
+.cat-bg-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.15) 45%, transparent 70%); }
+.cat-bottle { position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%); width: auto; height: 220px; object-fit: contain; filter: drop-shadow(0 16px 32px rgba(0,0,0,0.3)); transition: transform 0.4s cubic-bezier(0.22,0.61,0.36,1); }
+.cat-content { position: relative; z-index: 1; padding: 1.5rem 1.8rem; }
+.cat-label { font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; color: rgba(255,255,255,0.55); margin-bottom: 0.25rem; }
+.cat-name { font-family: var(--ff-display); font-size: 1.7rem; color: #fff; margin-bottom: 0.2rem; }
+.cat-sub { font-size: 0.82rem; color: rgba(255,255,255,0.65); }
+.cat-arrow { position: absolute; top: 1.4rem; right: 1.4rem; width: 36px; height: 36px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1rem; backdrop-filter: blur(4px); transition: transform 0.4s cubic-bezier(.34,1.56,.64,1), background 0.35s ease; }
+.cat-hero-card:hover .cat-arrow { transform: translateX(4px) scale(1.15); background: rgba(255,255,255,0.3); }
+.cat-multi .cat-bg { background: linear-gradient(145deg, #1a4a12 0%, #3d8c2e 100%); }
+.cat-iron .cat-bg { background: linear-gradient(145deg, #8a1500 0%, #c13b10 100%); }
+.cat-athletic .cat-bg { background: linear-gradient(145deg, #1a2810 0%, #2d5a22 100%); }
+
+/* Products section */
+#products { background: var(--cream-dark); }
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.8rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+.products-grid .product-card {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+.products-grid .product-card-img {
+  width: 100%;
+  box-sizing: border-box;
+}
+@media (max-width: 980px) {
+  .products-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .products-grid { grid-template-columns: 1fr; }
+}
+
+/* Benefits */
+#benefits { background: var(--cream); }
+.benefits-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1rem; max-width: 1280px; margin: 0 auto; }
+.benefit-card { background: #fff; border-radius: 14px; padding: 1.1rem 0.9rem; border: 1px solid rgba(120,163,59,0.1); }
+.benefit-icon { width: 40px; height: 40px; border-radius: 11px; background: var(--cream-dark); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 0.8rem; }
+.benefit-title { font-weight: 600; margin-bottom: 0.35rem; font-size: 0.92rem; }
+.benefit-desc { font-size: 0.78rem; color: var(--text-muted); font-weight: 300; line-height: 1.5; }
+@media (max-width: 1100px) { .benefits-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 680px) { .benefits-grid { grid-template-columns: repeat(2, 1fr); } }
+
+/* How it works */
+#how { background: var(--green-deep); color: #fff; }
+#how .section-title { color: #fff; }
+#how .section-sub { color: rgba(255,255,255,0.65); }
+#how .section-tag { color: rgba(255,255,255,0.5); }
+.steps { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 2rem; max-width: 1100px; margin: 0 auto; }
+.step-circle { width: 58px; height: 58px; border-radius: 50%; background: rgba(255,255,255,0.12); border: 2px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-family: var(--ff-display); font-size: 1.4rem; color: #fff; margin: 0 auto 1.2rem; }
+.step-title { font-family: var(--ff-display); font-size: 1.05rem; text-align: center; margin-bottom: 0.4rem; }
+.step-desc { font-size: 0.86rem; color: rgba(255,255,255,0.6); text-align: center; font-weight: 300; }
+
+/* Testimonials */
+#testimonials { background: var(--cream-dark); }
+.testi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; max-width: 1100px; margin: 0 auto; }
+.testi-card { background: #fff; border-radius: 20px; padding: 1.8rem; box-shadow: 0 2px 14px rgba(0,0,0,0.05); }
+.stars { color: #f5a623; font-size: 0.95rem; margin-bottom: 0.9rem; }
+.testi-text { font-size: 0.93rem; color: var(--text-muted); margin-bottom: 1.2rem; font-weight: 300; line-height: 1.75; }
+.testi-author { display: flex; align-items: center; gap: 0.75rem; }
+.testi-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--cream-dark); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+.testi-name { font-weight: 600; font-size: 0.88rem; }
+.testi-loc { font-size: 0.75rem; color: var(--text-muted); }
+
+/* FAQ */
+#faq { background: var(--cream); }
+.faq-wrap { max-width: 700px; margin: 0 auto; }
+
+/* CTA */
+#cta { background: linear-gradient(135deg, var(--green-deep) 0%, var(--green-mid) 100%); text-align: center; padding: 6rem 5vw; }
+#cta .section-title { color: #fff; }
+#cta .section-sub { color: rgba(255,255,255,0.7); }
+#cta .section-tag { color: rgba(255,255,255,0.5); }
+
+/* Toast */
+.soh-toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(20px); background: #1a1a1a; color: #fff; padding: 0.9rem 1.8rem; border-radius: 50px; font-size: 0.9rem; white-space: nowrap; z-index: 9999; opacity: 0; transition: opacity 0.25s, transform 0.25s; pointer-events: none; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+.soh-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.soh-toast span { color: #78a33b; margin-right: 0.4rem; }
+
+/* ============================================================
+   HOVER ANIMATIONS — Benefits, Trust badges, Trust pillars,
+   Testimonials, Steps, Blog cards, Stats, Contact
+   ============================================================ */
+
+/* ---------- 1. "Why Gummies" benefit cards ---------- */
+.benefit-card {
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+  will-change: transform;
+  transition: transform .4s cubic-bezier(.2,.8,.2,1),
+              box-shadow .4s ease,
+              border-color .4s ease,
+              background .4s ease;
+}
+.benefit-card::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(120,163,59,0.10) 0%, rgba(120,163,59,0) 65%);
+  opacity: 0; transition: opacity .4s ease; pointer-events: none;
+}
+.benefit-card:hover {
+  transform: translateY(-10px) scale(1.025);
+  box-shadow: 0 22px 45px rgba(41,103,33,0.16);
+  border-color: rgba(120,163,59,0.4);
+  background: #fdfdfa;
+}
+.benefit-card:hover::before { opacity: 1; }
+
+.benefit-icon {
+  transition: transform .45s cubic-bezier(.34,1.56,.64,1),
+              background .4s ease,
+              box-shadow .4s ease;
+}
+.benefit-card:hover .benefit-icon {
+  transform: scale(1.15) rotate(-8deg);
+  background: rgba(120,163,59,0.18);
+  box-shadow: 0 8px 18px rgba(41,103,33,0.15);
+}
+.benefit-title { transition: color .35s ease, transform .4s cubic-bezier(.2,.8,.2,1); }
+.benefit-card:hover .benefit-title {
+  color: var(--green-deep);
+  transform: translateX(4px);
+}
+.benefit-desc { transition: color .35s ease; }
+.benefit-card:hover .benefit-desc { color: #444; }
+
+/* ---------- 2. Trust badges row ---------- */
+.trust-badge {
+  cursor: default;
+  transition: transform .35s cubic-bezier(.2,.8,.2,1),
+              box-shadow .35s ease,
+              background .35s ease;
+  will-change: transform;
+}
+.trust-badge:hover {
+  transform: translateY(-6px) scale(1.04);
+  box-shadow: 0 16px 34px rgba(41,103,33,0.16);
+  background: #fff;
+}
+.trust-badge-icon {
+  display: inline-flex;
+  transition: transform .45s cubic-bezier(.34,1.56,.64,1);
+}
+.trust-badge:hover .trust-badge-icon {
+  transform: scale(1.25) rotate(-10deg);
+}
+
+/* ---------- 3. Trust pillars ---------- */
+.trust-pillar {
+  cursor: default;
+  border-radius: 18px;
+  padding: 1.5rem 1.2rem;
+  transition: transform .4s cubic-bezier(.2,.8,.2,1),
+              box-shadow .4s ease,
+              background .4s ease;
+  will-change: transform;
+}
+.trust-pillar:hover {
+  transform: translateY(-8px);
+  background: #fff;
+  box-shadow: 0 18px 40px rgba(41,103,33,0.13);
+}
+.trust-pillar-icon {
+  display: inline-block;
+  transition: transform .5s cubic-bezier(.34,1.56,.64,1);
+}
+.trust-pillar:hover .trust-pillar-icon {
+  transform: scale(1.2) translateY(-4px);
+  animation: sohIconFloat 1.4s ease-in-out .3s infinite;
+}
+@keyframes sohIconFloat {
+  0%,100% { transform: scale(1.2) translateY(-4px); }
+  50%     { transform: scale(1.22) translateY(-9px); }
+}
+.trust-pillar h3 { transition: color .35s ease; }
+.trust-pillar:hover h3 { color: var(--green-deep); }
+
+/* ---------- 4. Testimonial cards ---------- */
+.testi-card {
+  position: relative;
+  cursor: default;
+  border-top: 3px solid transparent;
+  transition: transform .4s cubic-bezier(.2,.8,.2,1),
+              box-shadow .4s ease,
+              border-top-color .4s ease;
+  will-change: transform;
+}
+.testi-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 24px 48px rgba(0,0,0,0.12);
+  border-top-color: #f5a623;
+}
+.stars {
+  display: inline-block;
+  transition: transform .4s cubic-bezier(.34,1.56,.64,1), letter-spacing .4s ease;
+}
+.testi-card:hover .stars {
+  transform: scale(1.08);
+  letter-spacing: 2px;
+}
+.testi-avatar {
+  transition: transform .45s cubic-bezier(.34,1.56,.64,1), background .35s ease;
+}
+.testi-card:hover .testi-avatar {
+  transform: scale(1.15) rotate(-8deg);
+  background: rgba(245,166,35,0.18);
+}
+.testi-text { transition: color .35s ease; }
+.testi-card:hover .testi-text { color: #3a3a3a; }
+
+/* ---------- 5. "How it works" steps ---------- */
+.step { cursor: default; transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+.step:hover { transform: translateY(-8px); }
+.step-circle {
+  transition: transform .45s cubic-bezier(.34,1.56,.64,1),
+              background .35s ease,
+              border-color .35s ease,
+              box-shadow .35s ease;
+}
+.step:hover .step-circle {
+  transform: scale(1.15);
+  background: rgba(255,255,255,0.25);
+  border-color: rgba(255,255,255,0.55);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.25);
+}
+.step-title { transition: color .3s ease; }
+.step:hover .step-title { color: #d8ecc4; }
+
+/* ---------- 6. Blog cards ---------- */
+.blog-card {
+  overflow: hidden;
+  transition: transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s ease;
+  will-change: transform;
+}
+.blog-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 44px rgba(0,0,0,0.14);
+}
+.blog-card-thumb {
+  transition: transform .5s cubic-bezier(.2,.8,.2,1), filter .4s ease;
+}
+.blog-card:hover .blog-card-thumb {
+  transform: scale(1.12);
+  filter: saturate(1.2);
+}
+.blog-title { transition: color .3s ease; }
+.blog-card:hover .blog-title { color: var(--green-deep); }
+.blog-read-more { transition: transform .3s ease; display: inline-block; }
+.blog-card:hover .blog-read-more { transform: translateX(5px); }
+
+/* ---------- 7. Stats bar ---------- */
+.stat-item { cursor: default; transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+.stat-item:hover { transform: translateY(-5px); }
+.stat-num {
+  display: inline-block;
+  transition: transform .4s cubic-bezier(.34,1.56,.64,1), color .35s ease;
+}
+.stat-item:hover .stat-num { transform: scale(1.12); color: var(--green-mid); }
+
+/* ---------- 8. Contact info rows ---------- */
+.contact-info-item {
+  border-radius: 12px;
+  padding: .6rem .7rem;
+  transition: transform .3s cubic-bezier(.2,.8,.2,1), background .3s ease;
+}
+.contact-info-item:hover {
+  transform: translateX(6px);
+  background: rgba(120,163,59,0.07);
+}
+.contact-info-icon {
+  display: inline-flex;
+  transition: transform .4s cubic-bezier(.34,1.56,.64,1);
+}
+.contact-info-item:hover .contact-info-icon { transform: scale(1.2) rotate(-8deg); }
+
+/* ---------- Accessibility ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .benefit-card, .benefit-icon, .trust-badge, .trust-badge-icon,
+  .trust-pillar, .trust-pillar-icon, .testi-card, .stars, .testi-avatar,
+  .step, .step-circle, .blog-card, .blog-card-thumb, .stat-item, .stat-num,
+  .contact-info-item, .contact-info-icon {
+    transition: none !important;
+    animation: none !important;
+  }
+  .benefit-card:hover, .trust-badge:hover, .trust-pillar:hover,
+  .testi-card:hover, .step:hover, .blog-card:hover,
+  .stat-item:hover, .contact-info-item:hover { transform: none; }
+}
+
+@media (max-width: 860px) {
+  .cat-grid { grid-template-columns: 1fr; }
+  .cat-hero-card { height: 260px; }
+  .cat-bottle { height: 160px; bottom: 70px; }
+}
+@media (max-width: 600px) {
+  .hero-title { font-size: 2.2rem; }
+}
+
+/* ---------- Scroll-to-top button ---------- */
+.scroll-top-btn {
+  position: fixed;
+  left: 50%;
+  bottom: 110px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: none;
+  background: var(--green-deep, #1a4a12);
+  color: #fff;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.22);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(14px);
+  transition: opacity .3s ease, transform .3s cubic-bezier(.34,1.56,.64,1), visibility .3s, background .3s ease, box-shadow .3s ease;
+  z-index: 2147483000;
+}
+.scroll-top-btn.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+.scroll-top-btn:hover {
+  background: var(--green-mid, #3d8c2e);
+  box-shadow: 0 14px 32px rgba(0,0,0,0.3);
+  transform: translateX(-50%) translateY(-4px);
+}
+@media (max-width: 600px) {
+  .scroll-top-btn {
+    width: 42px;
+    height: 42px;
+    bottom: 100px;
+    font-size: 1.05rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-top-btn { transition: opacity .2s ease, visibility .2s; }
+  .scroll-top-btn:hover { transform: translateX(-50%); }
+}
+</style>
+</head>
+<body class="banner-visible">
+
+<!-- ── Navigation ── -->
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <img src="assets/images/logo-mark.png" class="logo-mark" alt="" aria-hidden="true"/>
+      <div>
+        <span class="logo-name">Sake of Health</span>
+        <span class="logo-tagline">Premium Gummies</span>
+      </div>
+    </a>
+
+    <nav class="nav-cats" aria-label="Categories">
+      <a href="categories/multivitamins.html" class="nav-cat">Multivitamins</a>
+      <a href="categories/iron.html" class="nav-cat">Iron</a>
+      <a href="categories/athletic.html" class="nav-cat">Athletic</a>
+    </nav>
+
+    <div class="nav-actions">
+      <a href="track.html" class="nav-track-link" aria-label="Track your order" title="Track your order">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span>Track</span>
+      </a>
+      <a href="checkout/" style="position:relative;display:inline-flex;" aria-label="Cart">
+        <button class="nav-cart" aria-label="View cart">🛒
+          <span class="cart-count" style="display:none">0</span>
+        </button>
+      </a>
+      <a href="#products" class="btn btn-primary btn-sm">Shop Now</a>
+      <a href="/account.html" class="nav-login-link" aria-label="My Account" title="My Account">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+        <span>Login</span>
+      </a>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu" onclick="toggleMobileMenu()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div class="nav-mobile-menu" id="nav-mobile-menu">
+  <a href="categories/multivitamins.html" class="nav-mobile-link">Multivitamins</a>
+  <a href="categories/iron.html" class="nav-mobile-link">Iron</a>
+  <a href="categories/athletic.html" class="nav-mobile-link">Athletic</a>
+  <div class="nav-mobile-divider"></div>
+  <a href="track.html" class="nav-mobile-link">📍 Track Your Order</a>
+  <a href="products/multivitamin.html" class="nav-mobile-link">Multivitamin Gummies</a>
+  <a href="products/iron.html" class="nav-mobile-link">Iron Gummies</a>
+  <a href="products/probiotic.html" class="nav-mobile-link">Probiotic &amp; Prebiotic</a>
+  <a href="products/curcumin.html" class="nav-mobile-link">Curcumin Gummies</a>
+  <div class="nav-mobile-divider"></div>
+  <a href="blog/" class="nav-mobile-link">📖 Wellness Blog</a>
+  <a href="brand-story.html" class="nav-mobile-link">🌱 Our Story</a>
+  <a href="#contact" class="nav-mobile-link">📩 Contact Us</a>
+  <a href="/account.html" class="nav-mobile-link">👤 My Account</a>
+  <div class="nav-mobile-divider"></div>
+  <a href="checkout/" class="nav-mobile-cta">🛒 View Cart &amp; Checkout</a>
+</div>
+
+  
+    <div class="hero-btns reveal d3">
+      <a href="#products" class="btn btn-primary">Shop All Products →</a>
+      <a href="#how" class="btn btn-outline">How It Works</a>
+    </div>
+
+  
+  <!-- Campaign banner/slider -->
+  <div class="campaign-slider">
+    <div class="campaign-slide has-image active">
+      <img class="campaign-bg" src="assets/banner/banner-1.jpg?v=2" alt="" />
+    </div>
+    <div class="campaign-slide has-image">
+      <img class="campaign-bg" src="assets/banner/banner-2.jpg?v=2" alt="" />
+    </div>
+    <div class="campaign-slide has-image">
+      <img class="campaign-bg" src="assets/banner/banner-3.jpg?v=2" alt="" />
+    </div>
+    <div class="campaign-slide has-image">
+      <img class="campaign-bg" src="assets/banner/banner-4.jpg?v=2" alt="" />
+    </div>
+    <div class="campaign-dots">
+      <button class="campaign-dot active" onclick="goSlide(0)"></button>
+      <button class="campaign-dot" onclick="goSlide(1)"></button>
+      <button class="campaign-dot" onclick="goSlide(2)"></button>
+      <button class="campaign-dot" onclick="goSlide(3)"></button>
+    </div>
+    <div class="campaign-arrows">
+      <button class="campaign-arrow" onclick="prevSlide()">‹</button>
+      <button class="campaign-arrow" onclick="nextSlide()">›</button>
+    </div>
+  </div>
+</section>
+
+<!-- ── Active offers (shown only if enabled in admin settings) ── -->
+<div class="home-offers" id="homeOffers" hidden></div>
+
+<!-- ── Stats Bar ── -->
+<div class="stats-bar">
+  <div class="stat-item"><div class="stat-num">12,000+</div><div class="stat-label">Happy Customers</div></div>
+  <div class="stats-divider"></div>
+  <div class="stat-item"><div class="stat-num">4.8 ★</div><div class="stat-label">Average Rating</div></div>
+  <div class="stats-divider"></div>
+  <div class="stat-item"><div class="stat-num">100%</div><div class="stat-label">Vegetarian</div></div>
+  <div class="stats-divider"></div>
+  <div class="stat-item"><div class="stat-num">4</div><div class="stat-label">Expert Formulas</div></div>
+</div>
+
+<!-- ── All Products ── -->
+<section id="products" class="section">
+  <div class="section-head">
+    <p class="section-tag reveal">Our Range</p>
+    <h2 class="section-title reveal d1">Four formulas. One goal: <em style="color:var(--green-deep)">you, thriving.</em></h2>
+    <p class="section-sub reveal d2">Each gummy is clinically dosed — no fairy-dusting, no compromises on what actually works.</p>
+  </div>
+  <div class="products-grid">
+
+    <a href="products/iron.html" class="product-card reveal" style="text-decoration:none;color:inherit;">
+      <div class="product-card-img" style="background:linear-gradient(135deg,rgba(193,59,16,0.06) 0%,var(--cream) 100%)">
+        <img src="assets/images/iron.png" alt="Iron Gummies" loading="lazy"/>
+      </div>
+      <div class="product-card-body">
+        <span class="cat-pill" style="background:rgba(193,59,16,0.1);color:var(--red);margin-bottom:0.6rem;">Iron Formula</span>
+        <h3 class="product-card-name">Iron Gummies</h3>
+        <p class="product-card-desc">Iron · Folic Acid · Vitamin C — the absorption trio that fights fatigue and boosts haemoglobin.</p>
+        <div class="product-card-footer">
+          <div class="price-section">
+            <span class="original-price" style="text-decoration:line-through;color:#999;font-size:0.9rem;">₹645</span>
+            <span class="discount-badge" style="background:var(--red);color:white;padding:0.1rem 0.5rem;border-radius:4px;font-size:0.7rem;margin-left:0.5rem;">10% OFF</span>
+            <span class="final-price" style="font-weight:bold;font-size:1.1rem;margin-left:0.5rem;">₹581</span>
+          </div>
+          <span class="btn btn-sm btn-primary">View →</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="products/multivitamin.html" class="product-card reveal d1" style="text-decoration:none;color:inherit;">
+      <div class="product-card-img" style="background:linear-gradient(135deg,rgba(120,163,59,0.08) 0%,var(--cream) 100%)">
+        <img src="assets/images/multivitamin.png" alt="Multivitamin Gummies" loading="lazy"/>
+      </div>
+      <div class="product-card-body">
+        <span class="cat-pill" style="background:rgba(120,163,59,0.1);color:var(--green-mid);margin-bottom:0.6rem;">Best Seller</span>
+        <h3 class="product-card-name">Multivitamin Gummies</h3>
+        <p class="product-card-desc">Vitamins · Omega-3 · Panax Ginseng — your complete daily cover in a single delicious gummy.</p>
+        <div class="product-card-footer">
+          <div class="price-section">
+            <span class="original-price" style="text-decoration:line-through;color:#999;font-size:0.9rem;">₹690</span>
+            <span class="discount-badge" style="background:var(--red);color:white;padding:0.1rem 0.5rem;border-radius:4px;font-size:0.7rem;margin-left:0.5rem;">10% OFF</span>
+            <span class="final-price" style="font-weight:bold;font-size:1.1rem;margin-left:0.5rem;">₹621</span>
+          </div>
+          <span class="btn btn-sm btn-primary">View →</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="products/probiotic.html" class="product-card reveal d2" style="text-decoration:none;color:inherit;">
+      <div class="product-card-img" style="background:linear-gradient(135deg,rgba(236,129,100,0.07) 0%,var(--cream) 100%)">
+        <img src="assets/images/probiotic.png" alt="Probiotic Gummies" loading="lazy"/>
+      </div>
+      <div class="product-card-body">
+        <span class="cat-pill" style="background:rgba(236,129,100,0.1);color:var(--peach);margin-bottom:0.6rem;">Gut Health</span>
+        <h3 class="product-card-name">Probiotic &amp; Prebiotic</h3>
+        <p class="product-card-desc">ENZ Tribe · Sodium · Fibres — rebuild your microbiome and feel the gut-brain difference.</p>
+        <div class="product-card-footer">
+          <div class="price-section">
+            <span class="original-price" style="text-decoration:line-through;color:#999;font-size:0.9rem;">₹695</span>
+            <span class="discount-badge" style="background:var(--red);color:white;padding:0.1rem 0.5rem;border-radius:4px;font-size:0.7rem;margin-left:0.5rem;">10% OFF</span>
+            <span class="final-price" style="font-weight:bold;font-size:1.1rem;margin-left:0.5rem;">₹626</span>
+          </div>
+          <span class="btn btn-sm btn-primary">View →</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="products/curcumin.html" class="product-card reveal d3" style="text-decoration:none;color:inherit;">
+      <div class="product-card-img" style="background:linear-gradient(135deg,rgba(200,138,0,0.07) 0%,var(--cream) 100%)">
+        <img src="assets/images/curcumin.png" alt="Curcumin Gummies" loading="lazy"/>
+      </div>
+      <div class="product-card-body">
+        <span class="cat-pill" style="background:rgba(200,138,0,0.1);color:var(--gold);margin-bottom:0.6rem;">Anti-Inflammatory</span>
+        <h3 class="product-card-name">Curcumin Gummies</h3>
+        <p class="product-card-desc">Curcumin · Turmeric · Piperine — India's golden healer, with 2000% better bioavailability.</p>
+        <div class="product-card-footer">
+          <div class="price-section">
+            <span class="original-price" style="text-decoration:line-through;color:#999;font-size:0.9rem;">₹640</span>
+            <span class="discount-badge" style="background:var(--red);color:white;padding:0.1rem 0.5rem;border-radius:4px;font-size:0.7rem;margin-left:0.5rem;">10% OFF</span>
+            <span class="final-price" style="font-weight:bold;font-size:1.1rem;margin-left:0.5rem;">₹576</span>
+          </div>
+          <span class="btn btn-sm btn-primary">View →</span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+  <div class="home-offers" id="homeOffersProducts" hidden style="margin-top:1rem;"></div>
+</section>
+
+<!-- ── Benefits ── -->
+<section id="benefits" class="section">
+  <div class="section-head">
+    <p class="section-tag reveal">Why Gummies</p>
+    <h2 class="section-title reveal d1">Supplements you'll actually take</h2>
+  </div>
+  <div class="benefits-grid">
+    <div class="benefit-card reveal"><div class="benefit-icon">🍬</div><h3 class="benefit-title">Delicious by design</h3><p class="benefit-desc">Real fruit flavours, zero bitterness. We obsessed over taste so you never skip a day.</p></div>
+    <div class="benefit-card reveal d1"><div class="benefit-icon">🔬</div><h3 class="benefit-title">Clinically dosed</h3><p class="benefit-desc">Every nutrient at amounts your body actually needs — not token quantities for label appeal.</p></div>
+    <div class="benefit-card reveal d2"><div class="benefit-icon">🌱</div><h3 class="benefit-title">100% vegetarian</h3><p class="benefit-desc">Pectin-based, not gelatin. Proudly plant-forward and suitable for all diets.</p></div>
+    <div class="benefit-card reveal d3"><div class="benefit-icon">🇮🇳</div><h3 class="benefit-title">Made for India</h3><p class="benefit-desc">Formulated for Indian dietary gaps — iron, vitamin D3, omega-3 — because our needs are specific.</p></div>
+    <div class="benefit-card reveal"><div class="benefit-icon">📦</div><h3 class="benefit-title">Eco-friendly packaging</h3><p class="benefit-desc">Recyclable, minimal plastic — because a healthy you should mean a healthy planet.</p></div>
+    <div class="benefit-card reveal d1"><div class="benefit-icon">🏭</div><h3 class="benefit-title">GMP certified facility</h3><p class="benefit-desc">Manufactured in a GMP-compliant facility with FSSAI registration — quality you can trust.</p></div>
+  </div>
+</section>
+
+<!-- ── Brand Story ── -->
+<section class="brand-story section" id="our-story">
+  <div class="brand-story-inner">
+    <div>
+      <p class="section-tag reveal">Our Story</p>
+      <h2 class="section-title reveal d1">Born from a gap in Indian wellness</h2>
+      <p class="section-sub reveal d2" style="margin-top:1rem;">We looked at India's supplement market and saw the same thing everywhere — big capsules, bitter powders, and zero joy in taking them. We built Sake of Health to change that. Science-backed nutrition, in a form you actually look forward to.</p>
+      <div class="brand-story-milestones reveal d3">
+        <div class="milestone">
+          <div class="milestone-year">2024</div>
+          <div class="milestone-dot"></div>
+          <div class="milestone-content"><h4>The Idea</h4><p>Identified the gap: India needed supplements that were effective, vegetarian, and actually enjoyable to take.</p></div>
+        </div>
+        <div class="milestone">
+          <div class="milestone-year">2025</div>
+          <div class="milestone-dot"></div>
+          <div class="milestone-content"><h4>First Batch</h4><p>Partnered with GMP-certified manufacturers. Formulated, tested, refined — until every gummy was perfect.</p></div>
+        </div>
+        <div class="milestone">
+          <div class="milestone-year">2025</div>
+          <div class="milestone-dot"></div>
+          <div class="milestone-content"><h4>Launch</h4><p>Sake of Health officially launches — four products, one mission: good health, one chew at a time.</p></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="founder-quote reveal">
+        <p>"We didn't want to build just another supplement brand. We wanted to build the supplement brand Indians actually stick with — because it's delicious, honest, and made for us."</p>
+        <div class="founder-name">— Founder · Ixitek Healthcare and Wellness Pvt. Ltd.</div>
+      </div>
+      <div style="margin-top:2rem;background:var(--cream-dark);border-radius:20px;padding:1.8rem;" class="reveal d1">
+        <p class="section-tag" style="margin-bottom:0.8rem;">About the Parent Company</p>
+        <p style="font-size:0.9rem;color:var(--text-muted);font-weight:300;line-height:1.7;"><strong style="color:var(--green-deep)">Ixitek Healthcare and Wellness Pvt. Ltd.</strong> is the registered company behind Sake of Health. Based in India, Ixitek is committed to making science-backed wellness accessible, enjoyable, and honest for every Indian household.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Trust & Certifications ── -->
+<section class="trust-section section">
+  <div class="section-head">
+    <p class="section-tag reveal">Why Trust Us</p>
+    <h2 class="section-title reveal d1">Built on transparency, backed by science</h2>
+    <p class="section-sub reveal d2">We're a startup — so we earn your trust with facts, not just claims.</p>
+  </div>
+  <div class="trust-badges-row reveal">
+    <div class="trust-badge"><div class="trust-badge-icon">🏛️</div><div class="trust-badge-text"><strong>FSSAI Registered</strong><span>Lic. No.: 11225998000107</span></div></div>
+    <div class="trust-badge"><div class="trust-badge-icon">🌱</div><div class="trust-badge-text"><strong>100% Vegetarian</strong><span>Pectin-based · No Gelatin</span></div></div>
+    <div class="trust-badge"><div class="trust-badge-icon">🏭</div><div class="trust-badge-text"><strong>GMP Certified</strong><span>Quality-controlled manufacturing</span></div></div>
+    <div class="trust-badge"><div class="trust-badge-icon">🇮🇳</div><div class="trust-badge-text"><strong>Made in India</strong><span>Proudly Indian brand</span></div></div>
+  </div>
+  <div class="trust-pillars reveal d1">
+    <div class="trust-pillar">
+      <div class="trust-pillar-icon">🔬</div>
+      <h3>Science-Backed Formulations</h3>
+      <p>Every ingredient dosed at clinically effective levels, not symbolic quantities. We cite the studies — ask us.</p>
+    </div>
+    <div class="trust-pillar">
+      <div class="trust-pillar-icon">🏢</div>
+      <h3>Registered Indian Company</h3>
+      <p>Sake of Health is owned by Ixitek Healthcare and Wellness Pvt. Ltd. — a properly registered, accountable business.</p>
+    </div>
+    <div class="trust-pillar">
+      <div class="trust-pillar-icon">❤️</div>
+      <h3>Customer-First Always</h3>
+      <p>Questions about ingredients, sourcing, or anything else? Email us. We answer every single one.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── How It Works ── -->
+<section id="how" class="section">
+  <div class="section-head">
+    <p class="section-tag reveal">The Ritual</p>
+    <h2 class="section-title reveal d1">Four steps to a healthier you</h2>
+    <p class="section-sub reveal d2">No complicated stacks. Just two gummies, every morning.</p>
+  </div>
+  <div class="steps">
+    <div class="step reveal"><div class="step-circle">1</div><h3 class="step-title">Choose your formula</h3><p class="step-desc">Pick what your body needs — or stack for full coverage.</p></div>
+    <div class="step reveal d1"><div class="step-circle">2</div><h3 class="step-title">Chew two gummies</h3><p class="step-desc">Every morning. Tastes like a treat, works like medicine.</p></div>
+    <div class="step reveal d2"><div class="step-circle">3</div><h3 class="step-title">Nutrients absorb fast</h3><p class="step-desc">Gummy format increases absorption vs. capsules — more reaches your cells.</p></div>
+    <div class="step reveal d3"><div class="step-circle">4</div><h3 class="step-title">Feel the difference</h3><p class="step-desc">Most customers notice improvements within 3 weeks of consistent use.</p></div>
+  </div>
+</section>
+
+<!-- ── Testimonials ── -->
+<section id="testimonials" class="section">
+  <div class="section-head">
+    <p class="section-tag reveal">Real People, Real Results</p>
+    <h2 class="section-title reveal d1">India is buzzing about Sake of Health</h2>
+  </div>
+  <div class="testi-grid" id="testiGrid">
+    <div class="testi-card reveal"><div class="stars">★★★★★</div><p class="testi-text">"I've tried six supplement brands — Sake of Health is the first I actually look forward to taking. The multivitamin gummies taste incredible and my energy has genuinely improved."</p><div class="testi-author"><div class="testi-avatar">👩</div><div><div class="testi-name">Priya R.</div><div class="testi-loc">Bengaluru · Verified buyer</div></div></div></div>
+    <div class="testi-card reveal d1"><div class="stars">★★★★★</div><p class="testi-text">"As a vegetarian who was always anaemic, the Iron gummies changed everything. My haemoglobin went from 10.2 to 12.8 in three months. My doctor was surprised."</p><div class="testi-author"><div class="testi-avatar">👨</div><div><div class="testi-name">Arjun M.</div><div class="testi-loc">Mumbai · Verified buyer</div></div></div></div>
+    <div class="testi-card reveal d2"><div class="stars">★★★★★</div><p class="testi-text">"The probiotic gummies fixed my post-antibiotic gut issues in two weeks. Didn't expect something this tasty to actually work this well."</p><div class="testi-author"><div class="testi-avatar">👩</div><div><div class="testi-name">Sneha T.</div><div class="testi-loc">Pune · Verified buyer</div></div></div></div>
+  </div>
+  <div style="text-align:center;margin-top:2.5rem;">
+    <button class="btn btn-primary" id="openReviewBtn" type="button">✍️ Write a Review</button>
+  </div>
+</section>
+
+<!-- ── Review submission modal ── -->
+<div class="review-modal" id="reviewModal" hidden>
+  <style>
+    #reviewModal .rv-field{margin-bottom:1rem;}
+    #reviewModal .rv-row{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+    #reviewModal .rv-label{display:block;font-size:.8rem;font-weight:600;color:#3d4f42;margin-bottom:.4rem;}
+    #reviewModal .rv-input{width:100%;padding:.7rem .85rem;border:1.5px solid #e4e8e0;border-radius:10px;font-family:inherit;font-size:.88rem;background:#fff;box-sizing:border-box;}
+    #reviewModal .rv-input:focus{outline:none;border-color:#78a33b;box-shadow:0 0 0 3px rgba(120,163,59,.12);}
+    #reviewModal textarea.rv-input{resize:vertical;}
+    #reviewModal .rv-stars{display:flex;gap:.25rem;}
+    #reviewModal .rv-stars button{background:none;border:none;font-size:2rem;line-height:1;color:#d9dfd3;cursor:pointer;padding:0;transition:color .12s,transform .1s;}
+    #reviewModal .rv-stars button:hover{transform:scale(1.1);}
+    #reviewModal .rv-stars button.on{color:#f5a623;}
+    #reviewModal .review-modal-close{position:absolute;top:1rem;right:1.2rem;background:none;border:none;font-size:1.8rem;line-height:1;color:#9aa89f;cursor:pointer;z-index:2;}
+    #reviewModal .review-modal-close:hover{color:#3d4f42;}
+    @media(max-width:520px){#reviewModal .rv-row{grid-template-columns:1fr;}}
+  </style>
+  <div class="review-modal-backdrop" id="reviewBackdrop" style="position:absolute;inset:0;"></div>
+  <div class="review-modal-card" role="dialog" aria-modal="true" aria-labelledby="reviewModalTitle">
+    <button class="review-modal-close" id="reviewClose" aria-label="Close">&times;</button>
+    <h3 id="reviewModalTitle" style="font-family:var(--ff-display);font-size:1.5rem;margin:0 0 .3rem;">Share your experience</h3>
+    <p style="color:var(--text-muted);font-size:.88rem;margin:0 0 1.4rem;">Your review will appear on our site once our team approves it.</p>
+    <form id="reviewForm" novalidate>
+      <div class="rv-field">
+        <label class="rv-label">Your rating *</label>
+        <div class="rv-stars" id="rvStars">
+          <button type="button" data-star="1">★</button><button type="button" data-star="2">★</button>
+          <button type="button" data-star="3">★</button><button type="button" data-star="4">★</button>
+          <button type="button" data-star="5">★</button>
+        </div>
+      </div>
+      <div class="rv-row">
+        <div class="rv-field"><label class="rv-label" for="rvName">Your name *</label>
+          <input class="rv-input" id="rvName" type="text" placeholder="e.g. Priya R." maxlength="60"/></div>
+        <div class="rv-field"><label class="rv-label" for="rvCity">City</label>
+          <input class="rv-input" id="rvCity" type="text" placeholder="e.g. Bengaluru" maxlength="60"/></div>
+      </div>
+      <div class="rv-field"><label class="rv-label" for="rvEmail">Email (for verified badge)</label>
+        <input class="rv-input" id="rvEmail" type="email" placeholder="you@example.com"/></div>
+      <div class="rv-field"><label class="rv-label" for="rvProduct">Which product?</label>
+        <select class="rv-input" id="rvProduct">
+          <option value="">General / all products</option>
+          <option value="multivitamin">Multivitamin Gummies</option>
+          <option value="iron">Iron Gummies</option>
+          <option value="probiotic">Probiotic &amp; Prebiotic</option>
+          <option value="curcumin">Curcumin Gummies</option>
+        </select></div>
+      <div class="rv-field"><label class="rv-label" for="rvTitle">Title</label>
+        <input class="rv-input" id="rvTitle" type="text" placeholder="Sum it up in a few words" maxlength="120"/></div>
+      <div class="rv-field"><label class="rv-label" for="rvBody">Your review *</label>
+        <textarea class="rv-input" id="rvBody" rows="4" placeholder="Tell others about your experience…" maxlength="2000"></textarea></div>
+      <div class="rv-field">
+        <label class="rv-label">Add a photo (optional)</label>
+        <input type="file" id="rvPhoto" accept="image/*" style="font-size:.85rem;"/>
+        <div id="rvPhotoPreview" style="margin-top:.6rem;"></div>
+      </div>
+      <div id="rvMsg" style="font-size:.85rem;margin:.4rem 0;"></div>
+      <button type="submit" class="btn btn-primary" id="rvSubmit" style="width:100%;margin-top:.4rem;">Submit Review</button>
+    </form>
+  </div>
+</div>
+
+<!-- ── Blog ── -->
+<section id="blog" class="section" style="background:var(--cream-dark);">
+  <div class="section-head">
+    <p class="section-tag reveal">Wellness Reads</p>
+    <h2 class="section-title reveal d1">From our wellness blog</h2>
+    <p class="section-sub reveal d2">Science-backed insights, honest advice, no fluff.</p>
+  </div>
+  <div class="blog-grid">
+    <a href="blog/" class="blog-card reveal">
+      <div class="blog-card-thumb" style="background:linear-gradient(135deg,rgba(120,163,59,0.15),var(--cream));">💊</div>
+      <div class="blog-card-body">
+        <div class="blog-tag">Nutrition Science</div>
+        <h3 class="blog-title">Why Gummies Beat Capsules for Nutrient Absorption</h3>
+        <p class="blog-excerpt">The science behind why chewable supplements may actually deliver more nutrients to your cells than hard capsules...</p>
+        <div class="blog-meta"><span>5 min read</span><span class="blog-read-more">Read More →</span></div>
+      </div>
+    </a>
+    <a href="blog/" class="blog-card reveal d1">
+      <div class="blog-card-thumb" style="background:linear-gradient(135deg,rgba(193,59,16,0.1),var(--cream));">🩸</div>
+      <div class="blog-card-body">
+        <div class="blog-tag">Women's Health</div>
+        <h3 class="blog-title">Iron Deficiency in Indian Women: The Silent Epidemic</h3>
+        <p class="blog-excerpt">Over 50% of Indian women are iron deficient. Here's what that means, why it happens, and what to do about it...</p>
+        <div class="blog-meta"><span>7 min read</span><span class="blog-read-more">Read More →</span></div>
+      </div>
+    </a>
+    <a href="blog/" class="blog-card reveal d2">
+      <div class="blog-card-thumb" style="background:linear-gradient(135deg,rgba(236,129,100,0.1),var(--cream));">🦠</div>
+      <div class="blog-card-body">
+        <div class="blog-tag">Gut Health</div>
+        <h3 class="blog-title">The Complete Guide to Probiotics for Indian Diets</h3>
+        <p class="blog-excerpt">Our spice-rich, high-fibre diets create a unique gut environment. Here's what probiotics actually do — and don't do...</p>
+        <div class="blog-meta"><span>6 min read</span><span class="blog-read-more">Read More →</span></div>
+      </div>
+    </a>
+  </div>
+  <div style="text-align:center;margin-top:2.5rem;">
+    <a href="blog/" class="btn btn-outline reveal">View All Articles →</a>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section id="faq" class="section">
+  <div class="section-head">
+    <p class="section-tag reveal">Questions</p>
+    <h2 class="section-title reveal d1">Frequently asked</h2>
+  </div>
+  <div class="faq-wrap">
+    <div class="faq-item reveal"><button class="faq-q">Are Sake of Health gummies suitable for vegetarians? <span class="faq-arrow">+</span></button><div class="faq-a"><div class="faq-a-inner">Yes — 100%. We use pectin (from fruit peels) instead of gelatin. Every Sake of Health product is vegetarian and we're working toward full vegan certification.</div></div></div>
+    <div class="faq-item reveal"><button class="faq-q">How many gummies should I take per day? <span class="faq-arrow">+</span></button><div class="faq-a"><div class="faq-a-inner">Two gummies per day, preferably in the morning with or after breakfast. The dose is calibrated for two — taking more won't speed results.</div></div></div>
+    <div class="faq-item reveal"><button class="faq-q">When will I start seeing results? <span class="faq-arrow">+</span></button><div class="faq-a"><div class="faq-a-inner">Most customers report noticeable energy and mood improvements within 2–3 weeks of consistent use. Nutrient deficiencies typically reflect in blood work after 8–12 weeks.</div></div></div>
+    <div class="faq-item reveal"><button class="faq-q">Can I take multiple Sake of Health products together? <span class="faq-arrow">+</span></button><div class="faq-a"><div class="faq-a-inner">Yes. Our formulas are designed to complement each other — the multivitamin + probiotic stack is our most popular combination. Consult your doctor if you're on medication.</div></div></div>
+    <div class="faq-item reveal"><button class="faq-q">What is your refund policy? <span class="faq-arrow">+</span></button><div class="faq-a"><div class="faq-a-inner">We accept refunds for production defects, expired products, or wrong products delivered. Refund requests must be raised within 7 days of receipt. Processing takes 10–12 working days. <a href="refund-policy.html" style="color:var(--green-deep);font-weight:600;">Read full refund policy →</a></div></div></div>
+    <div class="faq-item reveal"><button class="faq-q">Is shipping free? <span class="faq-arrow">+</span></button><div class="faq-a"><div class="faq-a-inner">We charge a minimal shipping fee to cover handling and delivery. Exact charges are displayed at checkout based on your location.</div></div></div>
+  </div>
+</section>
+
+<!-- ── Contact ── -->
+<section id="contact" class="contact-section">
+  <div class="section-head">
+    <p class="section-tag reveal">Get in Touch</p>
+    <h2 class="section-title reveal d1">We'd love to hear from you</h2>
+    <p class="section-sub reveal d2">Questions, feedback, bulk orders — we respond within 24 hours.</p>
+  </div>
+  <div class="contact-grid">
+    <div>
+      <div class="contact-info-item reveal">
+        <div class="contact-info-icon">📧</div>
+        <div><div class="contact-info-label">General Enquiries</div><div class="contact-info-value"><a href="mailto:info@sakeofhealth.in">info@sakeofhealth.in</a></div></div>
+      </div>
+      <div class="contact-info-item reveal">
+        <div class="contact-info-icon">💼</div>
+        <div><div class="contact-info-label">Sales &amp; Partnerships</div><div class="contact-info-value"><a href="mailto:sales@sakeofhealth.in">sales@sakeofhealth.in</a></div></div>
+      </div>
+      <div class="contact-info-item reveal">
+        <div class="contact-info-icon">📞</div>
+        <div><div class="contact-info-label">Phone</div><div class="contact-info-value"><a href="tel:+917483927125" style="color:var(--green-deep)">+91 74839 27125</a></div></div>
+      </div>
+      <div class="contact-info-item reveal">
+        <div class="contact-info-icon">🏢</div>
+        <div><div class="contact-info-label">Registered Office</div><div class="contact-info-value">Ixitek Healthcare and Wellness Pvt. Ltd.<br/>GF - 001, No. 59 &amp; 60, 4th Main, 7th Cross, Devagiri Petals, PP Layout, Bengaluru, Karnataka - 560061<br/>India</div></div>
+      </div>
+      <div style="display:flex;gap:0.8rem;margin-top:0.5rem;" class="reveal">
+        <a href="https://www.instagram.com/sake.of.health/" target="_blank" rel="noopener" class="btn btn-outline btn-sm">📷 Instagram</a>
+        <a href="https://www.facebook.com/people/Sake-Of-Health/61589312395370/?ref=pl_edit_xav_ig_profile_page#" target="_blank" rel="noopener" class="btn btn-outline btn-sm">📘 Facebook</a>
+      </div>
+    </div>
+    <form class="contact-form reveal" onsubmit="submitContactForm(event)">
+      <div class="form-group">
+        <label for="c-name">Full Name *</label>
+        <input type="text" id="c-name" placeholder="Your name" required/>
+      </div>
+      <div class="form-group">
+        <label for="c-email">Email Address *</label>
+        <input type="email" id="c-email" placeholder="you@example.com" required/>
+      </div>
+      <div class="form-group">
+        <label for="c-phone">Phone Number *</label>
+        <input type="tel" id="c-phone" placeholder="9876543210" maxlength="10" required/>
+      </div>
+      <div class="form-group">
+        <label for="c-subject">Subject</label>
+        <input type="text" id="c-subject" placeholder="How can we help?"/>
+      </div>
+      <div class="form-group">
+        <label for="c-msg">Message *</label>
+        <textarea id="c-msg" placeholder="Tell us more..." required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Send Message →</button>
+    </form>
+  </div>
+</section>
+
+<!-- ── CTA ── -->
+<section id="cta">
+  <p class="section-tag reveal">Start Today</p>
+  <h2 class="section-title reveal d1">Your body deserves better than forgettable capsules.</h2>
+  <p class="section-sub reveal d2" style="margin:0.75rem auto 2.5rem;max-width:500px;">Be among the first to experience India's most delicious supplement gummies.</p>
+  <a href="#products" class="btn btn-white btn-lg reveal d3">Shop All Gummies →</a>
+</section>
+
+<!-- ── Footer ── -->
+<footer class="site-footer">
+  <div class="footer-grid container">
+    <div class="footer-brand">
+      <a href="/" class="logo" style="margin-bottom:1rem;">
+        <img src="assets/images/logo-mark.png" class="logo-mark" alt="" aria-hidden="true"/>
+        <span class="logo-name">Sake of Health</span>
+      </a>
+      <p class="footer-desc">Premium gummy supplements crafted for everyday Indian wellness. Science-backed, deliciously made.</p>
+      <div style="display:flex;gap:0.6rem;margin-top:1.2rem;">
+        <a href="https://www.instagram.com/sake.of.health/" target="_blank" rel="noopener" style="width:36px;height:36px;background:#e1306c;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;text-decoration:none;">📷</a>
+        <a href="https://www.facebook.com/people/Sake-Of-Health/61589312395370/?ref=pl_edit_xav_ig_profile_page#" target="_blank" rel="noopener" style="width:36px;height:36px;background:#1877f2;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;text-decoration:none;">📘</a>
+        <a href="https://wa.me/917483927125" target="_blank" rel="noopener" style="width:36px;height:36px;background:#25d366;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;text-decoration:none;">💬</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Categories</div>
+      <div class="footer-links">
+        <a href="categories/multivitamins.html">Multivitamins</a>
+        <a href="categories/iron.html">Iron</a>
+        <a href="categories/athletic.html">Athletic</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Products</div>
+      <div class="footer-links">
+        <a href="products/multivitamin.html">Multivitamin Gummies</a>
+        <a href="products/iron.html">Iron Gummies</a>
+        <a href="products/probiotic.html">Probiotic &amp; Prebiotic</a>
+        <a href="products/curcumin.html">Curcumin Gummies</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Company</div>
+      <div class="footer-links">
+        <a href="track.html">Track Your Order</a>
+        <a href="#testimonials" onclick="if(window.openReviewModal){event.preventDefault();window.openReviewModal();}">Write a Review</a>
+        <a href="brand-story.html">Our Story</a>
+        <a href="blog/">Wellness Blog</a>
+        <a href="#contact">Contact</a>
+        <a href="#faq">FAQ</a>
+        <a href="refund-policy.html">Refund Policy</a>
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="/account.html">My Account</a>
+        <a href="/b2b/login" id="footerBusinessLogin" style="display:none">Business Login (Retailers &amp; Distributors)</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom container">
+    <span>© 2025 Sake of Health. Made with love in India 🇮🇳</span>
+    <span>Minimal shipping charges apply.</span>
+  </div>
+  <div class="ixitek-note">Sake of Health is a brand of <strong>Ixitek Healthcare and Wellness Pvt. Ltd.</strong> — Registered in India · FSSAI Lic. No.: 11225998000107 · GF-001, No. 59 &amp; 60, 4th Main, 7th Cross, PP Layout, Bengaluru, Karnataka 560061</div>
+</footer>
+
+<!-- ── Floating Social Dock ──
+     Each icon is wrapped in .social-float-item, which carries the idle
+     bob animation. The inner <a> carries the hover pop + magnetic follow,
+     so the two transforms never overwrite each other. -->
+<div class="social-float" id="social-float">
+  <div class="social-float-item">
+    <a href="https://www.instagram.com/sake.of.health/" target="_blank" rel="noopener" aria-label="Instagram" class="social-float-btn instagram">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    </a>
+  </div>
+
+  <div class="social-float-item">
+    <a href="https://www.facebook.com/people/Sake-Of-Health/61589312395370/?ref=pl_edit_xav_ig_profile_page#" target="_blank" rel="noopener" aria-label="Facebook" class="social-float-btn facebook">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+    </a>
+  </div>
+
+  <div class="social-float-item">
+    <a href="https://wa.me/917483927125" target="_blank" rel="noopener" aria-label="WhatsApp" class="social-float-btn whatsapp">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    </a>
+  </div>
+</div>
+
+<!-- ── Scroll to Top Button ── -->
+<button id="scrollTopBtn" class="scroll-top-btn" aria-label="Scroll to top" onclick="scrollToHome()">↑</button>
+
+<!-- Scripts -->
+<script src="/config.js"></script>
+<script>if (window.SOH_CONFIG && window.SOH_CONFIG.b2bEnabled) { var bl = document.getElementById('footerBusinessLogin'); if (bl) bl.style.display = ''; }</script>
+<script src="assets/js/track.js?v=3"></script>
+<script src="assets/js/app.js?v=3"></script>
+<script>
+/* ── Promo banner ── */
+  if (sessionStorage.getItem('bannerDismissed')) dismissBanner();
+
+/* ── Mobile nav ── */
+function toggleMobileMenu() {
+  const menu = document.getElementById('nav-mobile-menu');
+  const btn = document.getElementById('nav-hamburger');
+  menu.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+document.addEventListener('click', function(e) {
+  const menu = document.getElementById('nav-mobile-menu');
+  const btn = document.getElementById('nav-hamburger');
+  if (menu && btn && !menu.contains(e.target) && !btn.contains(e.target)) {
+    menu.classList.remove('open');
+    btn.classList.remove('open');
+  }
+});
+
+/* ── Campaign slider ── */
+let slideIdx = 0;
+const slides = document.querySelectorAll('.campaign-slide');
+const dots = document.querySelectorAll('.campaign-dot');
+function goSlide(n) {
+  slides[slideIdx].classList.remove('active');
+  dots[slideIdx].classList.remove('active');
+  slideIdx = (n + slides.length) % slides.length;
+  slides[slideIdx].classList.add('active');
+  dots[slideIdx].classList.add('active');
+}
+function nextSlide() { goSlide(slideIdx + 1); }
+function prevSlide() { goSlide(slideIdx - 1); }
+
+/* Auto-advance, but pause while the cursor is over the banner so it
+   doesn't scroll away from under the user. */
+let slideTimer = null;
+function startSlider() {
+  if (slideTimer) return;
+  slideTimer = setInterval(nextSlide, 2500);
+}
+function stopSlider() {
+  clearInterval(slideTimer);
+  slideTimer = null;
+}
+(function initSlider() {
+  const slider = document.querySelector('.campaign-slider');
+  if (!slider || slides.length <= 1) return;
+  startSlider();
+  slider.addEventListener('mouseenter', stopSlider);
+  slider.addEventListener('mouseleave', startSlider);
+  /* Also pause when the tab is hidden, then resume on return. */
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) stopSlider(); else startSlider();
+  });
+})();
+
+/* ── Contact form ── */
+function submitContactForm(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('button[type=submit]');
+  btn.textContent = '✓ Message Sent!';
+  btn.disabled = true;
+  btn.style.background = 'var(--green-mid)';
+  setTimeout(() => { btn.textContent = 'Send Message →'; btn.disabled = false; btn.style.background = ''; e.target.reset(); }, 3500);
+}
+
+/* ── Scroll to top / home ──
+   Shows once the user has scrolled near the bottom of the page.
+   Clicking smoothly scrolls back up to the very top (home/hero). */
+function scrollToHome() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+(function () {
+  const btn = document.getElementById('scrollTopBtn');
+  if (!btn) return;
+  function checkScroll() {
+    const scrollY = window.scrollY || document.documentElement.scrollTop;
+    const viewportH = window.innerHeight;
+    const docH = document.documentElement.scrollHeight;
+    const nearBottom = scrollY + viewportH >= docH - 80; // within 80px of the very bottom
+    if (nearBottom) {
+      btn.classList.add('show');
+    } else {
+      btn.classList.remove('show');
+    }
+  }
+  window.addEventListener('scroll', checkScroll, { passive: true });
+  window.addEventListener('resize', checkScroll);
+  document.addEventListener('DOMContentLoaded', checkScroll);
+  checkScroll();
+})();
+
+/* ── Floating social dock ──
+   1. Re-parents the dock to <body> so no transformed ancestor
+      (Lenis smooth-scroll wrapper, page-transition class, etc.) can
+      turn its position:fixed into position:absolute. That was the bug
+      that made it scroll away instead of staying on screen.
+   2. Adds a gentle hover lift + very light magnetic drift. */
+(function () {
+  function liftDock() {
+    var dock = document.querySelector('.social-float');
+    if (!dock) return;
+    if (dock.parentElement !== document.documentElement) document.documentElement.appendChild(dock);
+    dock.style.setProperty('position', 'fixed', 'important');
+    dock.style.setProperty('right', '18px', 'important');
+    dock.style.setProperty('bottom', '26px', 'important');
+    dock.style.setProperty('top', 'auto', 'important');
+    dock.style.setProperty('left', 'auto', 'important');
+    dock.style.setProperty('margin', '0', 'important');
+    dock.style.setProperty('transform', 'none', 'important');
+    dock.style.setProperty('z-index', '2147483000', 'important');
+  }
+  liftDock();
+  document.addEventListener('DOMContentLoaded', liftDock);
+  window.addEventListener('load', liftDock);
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var touch  = window.matchMedia('(hover: none)').matches;
+
+  var items = document.querySelectorAll('.social-float-item');
+  if (!items.length) return;
+
+  // Hover state lives on the inner <a>, so it never fights the
+  // wrapper's bob animation.
+  items.forEach(function (item) {
+    var btn = item.querySelector('.social-float-btn');
+    if (!btn) return;
+    btn.addEventListener('mouseenter', function () {
+      item.classList.add('is-hovered');
+      btn.dataset.hover = '1';
+    });
+    btn.addEventListener('mouseleave', function () {
+      item.classList.remove('is-hovered');
+      btn.dataset.hover = '';
+    });
+  });
+
+  if (touch || reduce) return;
+
+  var mx = -9999, my = -9999;
+  document.addEventListener('mousemove', function (e) {
+    mx = e.clientX; my = e.clientY;
+  }, { passive: true });
+
+  var state = [];
+  items.forEach(function () { state.push({ x: 0, y: 0 }); });
+
+  function loop() {
+    items.forEach(function (item, i) {
+      var btn = item.querySelector('.social-float-btn');
+      if (!btn) return;
+
+      var r  = btn.getBoundingClientRect();
+      var cx = r.left + r.width / 2;
+      var cy = r.top + r.height / 2;
+      var dx = mx - cx, dy = my - cy;
+      var dist = Math.sqrt(dx * dx + dy * dy) || 1;
+
+      // Gentle magnetic drift: small radius, small pull.
+      var tx = 0, ty = 0, mag = 1;
+      if (dist < 120) {
+        var pull = (1 - dist / 120) * 5;
+        tx = (dx / dist) * pull;
+        ty = (dy / dist) * pull;
+        mag = 1 + (1 - dist / 120) * 0.05;
+      }
+
+      state[i].x += (tx - state[i].x) * 0.12;
+      state[i].y += (ty - state[i].y) * 0.12;
+
+      var hovered = btn.dataset.hover === '1';
+      var scale = hovered ? 1.10 : mag;
+
+      btn.style.transform =
+        'translate(' + state[i].x.toFixed(2) + 'px,' + state[i].y.toFixed(2) + 'px) ' +
+        'scale(' + scale.toFixed(3) + ')';
+    });
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+
+document.addEventListener('DOMContentLoaded', function () {
+  if (typeof gsap === 'undefined') return;
+  gsap.registerPlugin(ScrollTrigger);
+  try {
+    const lenis = new Lenis({ duration: 1.2, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(time => lenis.raf(time * 1000));
+    gsap.ticker.lagSmoothing(0);
+  } catch (e) {}
+  sohTrack && sohTrack('page_view', { page: 'home' });
+});
+
+/* ── Reviews: load approved reviews + submission modal ── */
+(function () {
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+    return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]; }); };
+
+  // Load approved reviews and render them (replacing the seed testimonials if any exist).
+  function loadReviews() {
+    fetch('/api/shop/reviews?limit=9').then(function (r) { return r.json(); }).then(function (d) {
+      if (!d.reviews || !d.reviews.length) return; // keep default testimonials
+      var grid = document.getElementById('testiGrid');
+      grid.innerHTML = d.reviews.map(function (rv) {
+        var rat = Math.max(0, Math.min(5, Number(rv.rating) || 5));
+        var stars = '★★★★★'.slice(0, rat) + '☆☆☆☆☆'.slice(0, 5 - rat);
+        var loc = [rv.city, rv.verified ? 'Verified buyer' : ''].filter(Boolean).join(' · ');
+        // NOTE: no "reveal" class here — injected cards must be visible immediately
+        // (the reveal animation only runs on elements present at page load).
+        return '<div class="testi-card">' +
+          '<div class="stars">' + stars + '</div>' +
+          (rv.photo ? '<img class="testi-photo" src="' + esc(rv.photo) + '" alt="" loading="lazy"/>' : '') +
+          (rv.title ? '<p class="testi-text" style="font-weight:600;margin-bottom:.4rem;color:#1a1a1a;">' + esc(rv.title) + '</p>' : '') +
+          '<p class="testi-text">' + esc(rv.body) + '</p>' +
+          '<div class="testi-author"><div class="testi-avatar">🧑</div><div>' +
+          '<div class="testi-name">' + esc(rv.name) + '</div>' +
+          '<div class="testi-loc">' + esc(loc) + '</div></div></div></div>';
+      }).join('');
+    }).catch(function () {});
+  }
+  loadReviews();
+
+  /* ── Homepage coupons (only if enabled in admin settings) ── */
+  function loadHomeCoupons() {
+    var mode = (window.SOH_CONFIG && window.SOH_CONFIG.couponDisplay) || 'off';
+    if (mode === 'off') return;
+    var host = mode === 'products'
+      ? document.getElementById('homeOffersProducts')
+      : document.getElementById('homeOffers');
+    if (!host) return;
+
+    fetch('/api/shop/coupons').then(function (r) { return r.json(); }).then(function (d) {
+      if (!d.coupons || !d.coupons.length) return;
+      host.hidden = false;
+      host.innerHTML =
+        '<div class="home-offers-title">🎁 Available Offers</div>' +
+        '<div class="home-offers-row">' +
+        d.coupons.map(function (c) {
+          var label = c.type === 'percent' ? c.value + '% OFF'
+            : c.type === 'flat' ? '₹' + c.value + ' OFF' : 'FREE DELIVERY';
+          return '<div class="home-offer-chip">' +
+            '<div class="hoc-badge">' + label + '</div>' +
+            '<div class="hoc-info"><div class="hoc-code">' + esc(c.code) + '</div>' +
+            '<div class="hoc-desc">' + esc(c.description || 'Use at checkout') + '</div></div></div>';
+        }).join('') +
+        '</div>';
+    }).catch(function () {});
+  }
+  loadHomeCoupons();
+
+  // Modal open/close — styles are forced inline so the modal always renders
+  // as a centred overlay even if an old cached stylesheet is in use.
+  var modal = document.getElementById('reviewModal');
+  var openBtn = document.getElementById('openReviewBtn');
+  var state = {};
+  function open() {
+    // Re-parent to <html> so no transformed/positioned ancestor (Lenis
+    // smooth-scroll wrapper, a .page-enter class, etc.) can turn this
+    // modal's position:fixed into position:absolute against that ancestor
+    // instead of the real viewport. This is the same bug and the same fix
+    // already used for the floating social dock below — without this the
+    // modal can render far off-screen, which looks like a blank page.
+    if (modal.parentElement !== document.documentElement) {
+      document.documentElement.appendChild(modal);
+    }
+    modal.hidden = false;
+    // Mobile fix: align to the top (not center) and let this container
+    // scroll. Centering a tall card against `vh` on mobile can push it
+    // above the visible viewport with nothing scrollable to reveal it —
+    // that's the "blank page" bug. Top-aligning + overflow-y:auto here
+    // guarantees the card is always reachable, on any screen size.
+    modal.style.setProperty('position', 'fixed', 'important');
+    modal.style.setProperty('inset', '0', 'important');
+    modal.style.setProperty('z-index', '2147483647', 'important');
+    modal.style.setProperty('display', 'flex', 'important');
+    modal.style.setProperty('align-items', 'flex-start', 'important');
+    modal.style.setProperty('justify-content', 'center', 'important');
+    modal.style.setProperty('padding', '1rem', 'important');
+    modal.style.setProperty('background', 'rgba(20,30,18,.55)', 'important');
+    modal.style.setProperty('overflow-y', 'auto', 'important');
+    modal.style.setProperty('-webkit-overflow-scrolling', 'touch', 'important');
+    modal.style.setProperty('transform', 'none', 'important');
+    var card = modal.querySelector('.review-modal-card');
+    if (card) {
+      card.style.setProperty('position', 'relative', 'important');
+      card.style.setProperty('background', '#fff', 'important');
+      card.style.setProperty('border-radius', '18px', 'important');
+      card.style.setProperty('padding', '2rem', 'important');
+      card.style.setProperty('max-width', '520px', 'important');
+      card.style.setProperty('width', '100%', 'important');
+      card.style.setProperty('margin', 'auto 0', 'important');
+      card.style.setProperty('max-height', '90vh', 'important');
+      card.style.setProperty('max-height', '90dvh', 'important');
+      card.style.setProperty('overflow-y', 'auto', 'important');
+      card.style.setProperty('-webkit-overflow-scrolling', 'touch', 'important');
+      card.style.setProperty('box-shadow', '0 20px 60px rgba(0,0,0,.3)', 'important');
+    }
+    // Lock background scroll without losing the current scroll position on
+    // iOS Safari (plain overflow:hidden on body does not stop touch-scroll
+    // on iOS, which is part of why the page looked broken behind the modal).
+    state.scrollY = window.scrollY || window.pageYOffset || 0;
+    document.body.style.setProperty('position', 'fixed');
+    document.body.style.setProperty('top', '-' + state.scrollY + 'px');
+    document.body.style.setProperty('left', '0');
+    document.body.style.setProperty('right', '0');
+    document.body.style.setProperty('overflow', 'hidden');
+  }
+  function close() {
+    modal.hidden = true;
+    modal.style.display = 'none';
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
+    document.body.style.overflow = '';
+    window.scrollTo(0, state.scrollY || 0);
+  }
+  if (openBtn) openBtn.addEventListener('click', open);
+  document.getElementById('reviewClose').addEventListener('click', close);
+  document.getElementById('reviewBackdrop').addEventListener('click', close);
+  // expose so the footer link can open it too
+  window.openReviewModal = open;
+
+  // Star rating
+  var rating = 0;
+  var starWrap = document.getElementById('rvStars');
+  starWrap.querySelectorAll('button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      rating = Number(b.dataset.star);
+      starWrap.querySelectorAll('button').forEach(function (x) {
+        x.classList.toggle('on', Number(x.dataset.star) <= rating);
+      });
+    });
+  });
+
+  // Photo preview + downscale to keep upload small
+  var photoData = '';
+  document.getElementById('rvPhoto').addEventListener('change', function (e) {
+    var file = e.target.files[0];
+    if (!file) { photoData = ''; document.getElementById('rvPhotoPreview').innerHTML = ''; return; }
+    var reader = new FileReader();
+    reader.onload = function (ev) {
+      var img = new Image();
+      img.onload = function () {
+        var max = 1000, w = img.width, h = img.height;
+        if (w > max || h > max) { if (w > h) { h = h * max / w; w = max; } else { w = w * max / h; h = max; } }
+        var canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        photoData = canvas.toDataURL('image/jpeg', 0.82);
+        document.getElementById('rvPhotoPreview').innerHTML =
+          '<img src="' + photoData + '" style="max-width:100%;max-height:160px;border-radius:10px;"/>';
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Submit
+  document.getElementById('reviewForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var msg = document.getElementById('rvMsg');
+    var name = document.getElementById('rvName').value.trim();
+    var body = document.getElementById('rvBody').value.trim();
+    if (!rating) { msg.textContent = 'Please select a star rating.'; msg.style.color = '#c0392b'; return; }
+    if (name.length < 2) { msg.textContent = 'Please enter your name.'; msg.style.color = '#c0392b'; return; }
+    if (body.length < 10) { msg.textContent = 'Please write at least 10 characters.'; msg.style.color = '#c0392b'; return; }
+
+    var btn = document.getElementById('rvSubmit');
+    btn.disabled = true; btn.textContent = 'Submitting…';
+    msg.textContent = '';
+
+    fetch('/api/shop/reviews', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: name, city: document.getElementById('rvCity').value.trim(),
+        email: document.getElementById('rvEmail').value.trim(),
+        productId: document.getElementById('rvProduct').value,
+        title: document.getElementById('rvTitle').value.trim(),
+        body: body, rating: rating, photo: photoData,
+      }),
+    }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (res) {
+        btn.disabled = false; btn.textContent = 'Submit Review';
+        if (!res.ok) { msg.textContent = res.d.error || 'Something went wrong.'; msg.style.color = '#c0392b'; return; }
+        document.getElementById('reviewForm').style.display = 'none';
+        msg.style.color = '#2f5d1f';
+        msg.innerHTML = '<div style="text-align:center;padding:1rem 0;"><div style="font-size:2.5rem;">✅</div>' +
+          '<p style="font-weight:600;margin:.5rem 0;">Thank you!</p>' +
+          '<p style="color:#6b7d70;font-size:.88rem;">' + esc(res.d.message || 'Your review will appear once approved.') + '</p></div>';
+      }).catch(function () {
+        btn.disabled = false; btn.textContent = 'Submit Review';
+        msg.textContent = 'Network error. Please try again.'; msg.style.color = '#c0392b';
+      });
+  });
+})();
+</script>
+</body>
+</html>

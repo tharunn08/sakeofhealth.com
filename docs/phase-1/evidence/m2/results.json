@@ -1,0 +1,362 @@
+[
+ {
+  "view": "desktop",
+  "path": "/admin/overview/system",
+  "h1": "Overview",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "desktop",
+  "path": "/admin/sales/desk",
+  "h1": "Sales desk",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "desktop",
+  "path": "/admin/accounts/distribution",
+  "h1": "Distribution network",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "desktop",
+  "path": "/admin/catalogue/master",
+  "h1": "Products",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "desktop",
+  "path": "/admin/catalogue/price-lists",
+  "h1": "Price lists",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "desktop",
+  "path": "/admin/inventory/batches",
+  "h1": "Stock",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "desktop",
+  "path": "/admin/inventory/recalls",
+  "h1": "Recalls",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "desktop",
+  "path": "/admin/procurement/vendors",
+  "h1": "Vendors",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "desktop",
+  "path": "/admin/procurement/purchasing",
+  "h1": "Purchasing",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "desktop",
+  "path": "/admin/procurement/receiving",
+  "h1": "Goods receipt",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "desktop",
+  "path": "/admin/finance/business",
+  "h1": "Finance",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "desktop",
+  "path": "/admin/finance/bills",
+  "h1": "Supplier bills",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "desktop",
+  "path": "/admin/finance/collections",
+  "h1": "Salesman collections",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "desktop",
+  "path": "/admin/administration/approvals",
+  "h1": "Approvals waiting for you",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "desktop",
+  "path": "/admin/administration/decisions",
+  "h1": "Business decisions",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "desktop",
+  "path": "/admin/administration/business-staff",
+  "h1": "Staff & roles",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "desktop",
+  "path": "/admin/administration/audit",
+  "h1": "Audit log",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "desktop",
+  "path": "/admin/administration/my-security",
+  "h1": "My account",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "mobile",
+  "path": "/admin/overview/system",
+  "h1": "Overview",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "mobile",
+  "path": "/admin/sales/desk",
+  "h1": "Sales desk",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "mobile",
+  "path": "/admin/accounts/distribution",
+  "h1": "Distribution network",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "mobile",
+  "path": "/admin/catalogue/master",
+  "h1": "Products",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "mobile",
+  "path": "/admin/catalogue/price-lists",
+  "h1": "Price lists",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "mobile",
+  "path": "/admin/inventory/batches",
+  "h1": "Stock",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "mobile",
+  "path": "/admin/inventory/recalls",
+  "h1": "Recalls",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "mobile",
+  "path": "/admin/procurement/vendors",
+  "h1": "Vendors",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "mobile",
+  "path": "/admin/procurement/purchasing",
+  "h1": "Purchasing",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "mobile",
+  "path": "/admin/procurement/receiving",
+  "h1": "Goods receipt",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "mobile",
+  "path": "/admin/finance/business",
+  "h1": "Finance",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "mobile",
+  "path": "/admin/finance/bills",
+  "h1": "Supplier bills",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "mobile",
+  "path": "/admin/finance/collections",
+  "h1": "Salesman collections",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "mobile",
+  "path": "/admin/administration/approvals",
+  "h1": "Approvals waiting for you",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "mobile",
+  "path": "/admin/administration/decisions",
+  "h1": "Business decisions",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "mobile",
+  "path": "/admin/administration/business-staff",
+  "h1": "Staff & roles",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "mobile",
+  "path": "/admin/administration/audit",
+  "h1": "Audit log",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ },
+ {
+  "view": "mobile",
+  "path": "/admin/administration/my-security",
+  "h1": "My account",
+  "in_shell": true,
+  "active_ok": true,
+  "no_own_menu_or_login": true,
+  "errors": [],
+  "url_ok": true
+ }
+]

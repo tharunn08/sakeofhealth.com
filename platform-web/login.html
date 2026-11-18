@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Sign In — Sake of Health</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="icon" type="image/png" href="/assets/images/carousel/favicon.png"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/admin/admin.css"/>
+</head>
+<body>
+<div class="login-wrap">
+  <form class="login-card" id="loginForm" autocomplete="on" data-endpoint="/api/platform/auth/login">
+    <div class="login-logo">S</div>
+    <h1>Sign In</h1>
+    <p class="sub">One sign-in for the Sake of Health team, business staff and shop customers</p>
+    <div id="alertBox" role="alert"></div>
+    <div id="credentials">
+      <div class="field">
+        <label for="email">Email address</label>
+        <input class="input" type="email" id="email" name="email" required autocomplete="username" autofocus/>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input class="input" type="password" id="password" name="password" required autocomplete="current-password"/>
+      </div>
+      <div class="field" id="codeField" hidden>
+        <label for="totp">Authenticator code</label>
+        <input class="input" id="totp" name="totp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="6-digit code"/>
+      </div>
+      <button class="btn btn-primary btn-block btn-lg mt-20" type="submit" id="submitBtn">Sign in</button>
+      <button class="btn btn-ghost btn-block mt-20" type="button" id="skipCode" hidden>Continue without business modules</button>
+      <p style="text-align:center;margin:14px 0 0;font-size:13px;"><a href="#" id="changeLink" style="color:var(--ink-3);">Team or business account: change my password</a></p>
+    </div>
+    <div id="changeBox" hidden>
+      <p class="sub" style="margin-top:0" id="changeWhy">Your account has a temporary password. Choose your own to continue (at least 12 characters, letters and a number).</p>
+      <div class="field"><label for="newPassword">New password</label><input class="input" type="password" id="newPassword" autocomplete="new-password" minlength="12"/></div>
+      <div class="field"><label for="newPassword2">Repeat new password</label><input class="input" type="password" id="newPassword2" autocomplete="new-password" minlength="12"/></div>
+      <button class="btn btn-primary btn-block btn-lg mt-20" type="button" id="changeBtn">Set new password and continue</button>
+    </div>
+    <div id="chooser" hidden>
+      <p class="sub" style="margin-top:0">Where would you like to go?</p>
+      <div id="chooserList" class="flex" style="flex-direction:column;gap:10px"></div>
+    </div>
+    <p style="text-align:center;margin-top:22px;font-size:12px;color:var(--ink-4);">
+      New to the shop? <a href="/account.html" style="color:var(--ink-3);">Create an account</a> · <a href="/" style="color:var(--ink-3);">Back to store</a>
+    </p>
+  </form>
+</div>
+<script src="/config.js"></script>
+<script src="/admin/admin.js"></script>
+<script src="/platform/login.js"></script>
+</body>
+</html>

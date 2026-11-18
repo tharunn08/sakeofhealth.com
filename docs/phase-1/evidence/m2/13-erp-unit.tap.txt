@@ -1,0 +1,90 @@
+$ node --test tests/erp-unit.test.js   (phase-1 working tree on b9bed95 + this increment, 2026-11-13T10:44:23Z)
+TAP version 13
+# Subtest: ERP is inert unless B2B_ENABLED and ERP_ENABLED are both true
+ok 1 - ERP is inert unless B2B_ENABLED and ERP_ENABLED are both true
+  ---
+  duration_ms: 0.681891
+  type: 'test'
+  ...
+# Subtest: passwords: scrypt, 12+ characters, wrong password fails
+ok 2 - passwords: scrypt, 12+ characters, wrong password fails
+  ---
+  duration_ms: 89.033595
+  type: 'test'
+  ...
+# Subtest: tokens: signed, audience-bound, expire, tamper-proof
+ok 3 - tokens: signed, audience-bound, expire, tamper-proof
+  ---
+  duration_ms: 0.983323
+  type: 'test'
+  ...
+# Subtest: TOTP matches the RFC 6238 reference vectors and tolerates one step of drift only
+ok 4 - TOTP matches the RFC 6238 reference vectors and tolerates one step of drift only
+  ---
+  duration_ms: 0.753865
+  type: 'test'
+  ...
+# Subtest: MFA secrets are encrypted at rest and tamper-evident
+ok 5 - MFA secrets are encrypted at rest and tamper-evident
+  ---
+  duration_ms: 0.730401
+  type: 'test'
+  ...
+# Subtest: audit hash: deterministic, and any field change or reordering changes it
+ok 6 - audit hash: deterministic, and any field change or reordering changes it
+  ---
+  duration_ms: 0.327208
+  type: 'test'
+  ...
+# Subtest: maker-checker rules
+ok 7 - maker-checker rules
+  ---
+  duration_ms: 0.30782
+  type: 'test'
+  ...
+# Subtest: business settings: no defaults, strict validation
+ok 8 - business settings: no defaults, strict validation
+  ---
+  duration_ms: 1.303386
+  type: 'test'
+  ...
+# Subtest: WhatsApp webhook: signature over raw bytes, handshake, status parsing
+ok 9 - WhatsApp webhook: signature over raw bytes, handshake, status parsing
+  ---
+  duration_ms: 0.545468
+  type: 'test'
+  ...
+# Subtest: every permission a route checks exists in the reference data; sensitive ones need MFA
+ok 10 - every permission a route checks exists in the reference data; sensitive ones need MFA
+  ---
+  duration_ms: 0.763059
+  type: 'test'
+  ...
+# Subtest: reference roles: Super Admin holds everything; fail-safe approver is Super Admin only; nobody else can change settings
+ok 11 - reference roles: Super Admin holds everything; fail-safe approver is Super Admin only; nobody else can change settings
+  ---
+  duration_ms: 0.293329
+  type: 'test'
+  ...
+# Subtest: B2C protection: protected files unchanged and no business code reaches into B2C
+ok 12 - B2C protection: protected files unchanged and no business code reaches into B2C
+  ---
+  duration_ms: 85.997241
+  type: 'test'
+  ...
+# Subtest: migration 004 is the reviewed file and contains no destructive or data statements
+ok 13 - migration 004 is the reviewed file and contains no destructive or data statements
+  ---
+  duration_ms: 1.313975
+  type: 'test'
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 300.000594
+exit=0

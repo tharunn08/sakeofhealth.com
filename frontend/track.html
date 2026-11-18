@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Track Your Order — Sake of Health</title>
+<link rel="icon" type="image/png" href="/assets/images/carousel/favicon.png"/>
+<link href="https://api.fontshare.com/v2/css?f[]=recoleta@400,700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/assets/css/main.css?v=5"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:#f8f4ee;font-family:var(--ff-body,'Sora',sans-serif);color:#16261a;min-height:100vh;}
+
+.tk-nav{background:#fff;border-bottom:1px solid rgba(120,163,59,.12);padding:1rem 5vw;
+  display:flex;align-items:center;justify-content:space-between;}
+.tk-nav a.logo{font-family:var(--ff-display,'Recoleta',serif);font-size:1.15rem;color:#2f5d1f;text-decoration:none;font-weight:700;}
+.tk-nav .back{font-size:.85rem;color:#6b7d70;text-decoration:none;}
+.tk-nav .back:hover{color:#2f5d1f;}
+
+.tk-wrap{max-width:680px;margin:0 auto;padding:3rem 5vw 5rem;}
+.tk-head{text-align:center;margin-bottom:2.5rem;}
+.tk-head h1{font-family:var(--ff-display,'Recoleta',serif);font-size:2rem;margin-bottom:.6rem;color:#1f3d14;}
+.tk-head p{color:#6b7d70;font-size:.95rem;line-height:1.6;}
+
+.tk-card{background:#fff;border-radius:18px;padding:2rem;box-shadow:0 2px 20px rgba(0,0,0,.05);margin-bottom:1.5rem;}
+.tk-form .row{margin-bottom:1.1rem;}
+.tk-form label{display:block;font-size:.82rem;font-weight:600;color:#3d4f42;margin-bottom:.4rem;}
+.tk-form input{width:100%;padding:.85rem 1rem;border:1px solid #e4e8e0;border-radius:10px;
+  font-size:.95rem;font-family:inherit;transition:border-color .15s,box-shadow .15s;}
+.tk-form input:focus{outline:none;border-color:#3f7a2a;box-shadow:0 0 0 3px rgba(63,122,42,.12);}
+.tk-form .hint{font-size:.75rem;color:#9aa89f;margin-top:.35rem;}
+.tk-btn{width:100%;padding:.95rem;border:none;border-radius:999px;background:#2f5d1f;color:#fff;
+  font-size:.95rem;font-weight:600;font-family:inherit;cursor:pointer;transition:background .15s;
+  display:flex;align-items:center;justify-content:center;gap:.5rem;margin-top:1.4rem;}
+.tk-btn:hover:not(:disabled){background:#3f7a2a;}
+.tk-btn:disabled{opacity:.6;cursor:not-allowed;}
+
+.tk-error{background:#fef2f2;color:#b91c1c;border:1px solid #f5d0d0;padding:.85rem 1rem;
+  border-radius:10px;font-size:.87rem;margin-bottom:1.2rem;line-height:1.5;}
+
+/* Result */
+.tk-status-hero{text-align:center;padding:1.5rem 0 2rem;border-bottom:1px solid #eef1ea;margin-bottom:2rem;}
+.tk-status-icon{width:64px;height:64px;border-radius:50%;background:#eef4e8;color:#2f5d1f;
+  display:grid;place-items:center;margin:0 auto 1rem;font-size:1.8rem;}
+.tk-status-hero h2{font-family:var(--ff-display,'Recoleta',serif);font-size:1.45rem;margin-bottom:.35rem;color:#1f3d14;}
+.tk-status-hero p{color:#6b7d70;font-size:.88rem;}
+.tk-order-id{font-family:ui-monospace,'SF Mono',monospace;font-size:.85rem;color:#2f5d1f;
+  background:#f4f8ef;padding:.35rem .8rem;border-radius:999px;display:inline-block;margin-top:.8rem;letter-spacing:.3px;}
+
+.tk-steps{display:flex;flex-direction:column;gap:0;margin-bottom:2rem;}
+.tk-step{display:flex;gap:1rem;position:relative;padding-bottom:1.6rem;}
+.tk-step:last-child{padding-bottom:0;}
+.tk-step::before{content:'';position:absolute;left:13px;top:30px;bottom:0;width:2px;background:#e4e8e0;}
+.tk-step:last-child::before{display:none;}
+.tk-step.done::before{background:#78a33b;}
+.tk-dot{width:28px;height:28px;border-radius:50%;flex-shrink:0;z-index:1;background:#fff;
+  border:2px solid #e4e8e0;display:grid;place-items:center;color:#9aa89f;font-size:.75rem;font-weight:700;}
+.tk-step.done .tk-dot{background:#78a33b;border-color:#78a33b;color:#fff;}
+.tk-step.current .tk-dot{border-color:#2f5d1f;color:#2f5d1f;box-shadow:0 0 0 5px rgba(120,163,59,.14);}
+.tk-step-body{flex:1;padding-top:2px;}
+.tk-step-body strong{display:block;font-size:.95rem;font-weight:600;color:#16261a;}
+.tk-step.pending .tk-step-body strong{color:#9aa89f;font-weight:500;}
+.tk-step-body span{display:block;font-size:.8rem;color:#6b7d70;margin-top:.15rem;}
+
+.tk-section{margin-bottom:1.8rem;}
+.tk-section-title{font-size:.72rem;font-weight:700;color:#9aa89f;text-transform:uppercase;
+  letter-spacing:.8px;margin-bottom:.8rem;}
+.tk-item{display:flex;align-items:center;gap:.9rem;padding:.75rem 0;border-bottom:1px solid #f2f4ef;}
+.tk-item:last-child{border-bottom:none;}
+.tk-item img{width:44px;height:44px;border-radius:9px;object-fit:cover;background:#f6f7f4;}
+.tk-item .info{flex:1;}
+.tk-item .info strong{display:block;font-size:.9rem;font-weight:600;}
+.tk-item .info span{font-size:.78rem;color:#6b7d70;}
+.tk-box{background:#fafbf8;border:1px solid #eef1ea;border-radius:10px;padding:.9rem 1.1rem;
+  font-size:.88rem;line-height:1.65;color:#3d4f42;}
+.tk-total{display:flex;justify-content:space-between;padding-top:.9rem;border-top:2px solid #2f5d1f;
+  margin-top:.6rem;font-weight:700;font-size:1.05rem;}
+
+.tk-again{background:none;border:1px solid #e4e8e0;border-radius:999px;padding:.7rem 1.4rem;
+  font-size:.85rem;font-weight:600;cursor:pointer;font-family:inherit;color:#3d4f42;
+  display:block;margin:1.5rem auto 0;transition:all .15s;}
+.tk-again:hover{border-color:#2f5d1f;color:#2f5d1f;}
+
+.spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;
+  border-radius:50%;animation:spin .65s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.hidden{display:none !important;}
+
+@media(max-width:520px){
+  .tk-wrap{padding:2rem 5vw 3rem;}
+  .tk-card{padding:1.5rem;}
+  .tk-head h1{font-size:1.6rem;}
+}
+</style>
+</head>
+<body>
+
+<nav class="tk-nav">
+  <a href="/" class="logo">Sake of Health</a>
+  <a href="/" class="back">← Back to store</a>
+</nav>
+
+<div class="tk-wrap">
+
+  <div id="formView">
+    <div class="tk-head">
+      <h1>Track Your Order</h1>
+      <p>Enter your Order ID and the phone number you used at checkout.</p>
+    </div>
+
+    <div class="tk-card">
+      <div id="errorBox"></div>
+      <form class="tk-form" id="trackForm">
+        <div class="row">
+          <label for="orderId">Order ID</label>
+          <input id="orderId" required placeholder="SOH-20260724-0001" autocomplete="off"
+                 style="text-transform:uppercase;letter-spacing:.5px"/>
+          <div class="hint">Find this in your order confirmation email or WhatsApp message.</div>
+        </div>
+        <div class="row">
+          <label for="phone">Phone number</label>
+          <input id="phone" required type="tel" inputmode="numeric" maxlength="10"
+                 placeholder="9876543210" autocomplete="tel"/>
+          <div class="hint">The 10-digit number you entered when placing the order.</div>
+        </div>
+        <button class="tk-btn" type="submit" id="submitBtn">Track Order</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="resultView" class="hidden"></div>
+
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  var STATUS_META = {
+    pending:          { label:'Order Received',    icon:'📥', msg:'We have your order and will confirm it shortly.' },
+    accepted:         { label:'Order Accepted',    icon:'✅', msg:'Your order is confirmed and will be prepared soon.' },
+    prepared:         { label:'Order Prepared',    icon:'📦', msg:'Your order is packed and ready to leave our facility.' },
+    out_for_delivery: { label:'Out for Delivery',  icon:'🚚', msg:'Your order is on the way to you right now.' },
+    delivered:        { label:'Delivered',         icon:'🎉', msg:'Your order has been delivered. Enjoy!' },
+    cancelled:        { label:'Cancelled',         icon:'✕',  msg:'This order was cancelled. Any payment will be refunded within 5–7 business days.' }
+  };
+
+  function esc(s){
+    return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function money(n){ return '₹' + Number(n||0).toLocaleString('en-IN'); }
+  function dt(d){
+    if(!d) return '';
+    return new Date(d).toLocaleString('en-IN',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit',hour12:true});
+  }
+
+  var form = document.getElementById('trackForm');
+  var btn = document.getElementById('submitBtn');
+  var errorBox = document.getElementById('errorBox');
+  var formView = document.getElementById('formView');
+  var resultView = document.getElementById('resultView');
+
+  // Prefill from URL
+  var params = new URLSearchParams(location.search);
+  if(params.get('orderId')) document.getElementById('orderId').value = params.get('orderId');
+  if(params.get('phone')) document.getElementById('phone').value = params.get('phone');
+
+  document.getElementById('phone').addEventListener('input', function(){
+    this.value = this.value.replace(/\D/g,'').slice(0,10);
+  });
+
+  form.addEventListener('submit', async function(e){
+    e.preventDefault();
+    errorBox.innerHTML = '';
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spin"></span> Looking up your order…';
+
+    try{
+      var res = await fetch('/api/shop/track', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          orderId: document.getElementById('orderId').value.trim(),
+          phone: document.getElementById('phone').value.trim()
+        })
+      });
+      var data = await res.json();
+      if(!res.ok) throw new Error(data.error || 'Could not find that order');
+      renderResult(data);
+    }catch(err){
+      errorBox.innerHTML = '<div class="tk-error">'+esc(err.message)+'</div>';
+      btn.disabled = false;
+      btn.textContent = 'Track Order';
+    }
+  });
+
+  function renderResult(o){
+    var meta = STATUS_META[o.status] || {label:o.status,icon:'📦',msg:''};
+    var flow = o.status === 'cancelled'
+      ? o.timeline.map(function(t){return t.status;})
+      : (o.flow || ['pending','accepted','prepared','out_for_delivery','delivered']);
+
+    var steps = flow.map(function(s){
+      var entry = o.timeline.filter(function(t){return t.status===s;}).pop();
+      var isDone = !!entry;
+      var isCurrent = o.status === s;
+      var m = STATUS_META[s] || {label:s};
+      return '<div class="tk-step '+(isDone?'done':'pending')+(isCurrent?' current':'')+'">'+
+        '<div class="tk-dot">'+(isDone?'✓':'')+'</div>'+
+        '<div class="tk-step-body"><strong>'+esc(m.label)+'</strong>'+
+        '<span>'+(entry?esc(dt(entry.at)):'Pending')+'</span></div></div>';
+    }).join('');
+
+    var addr = o.address || {};
+    var addrText = [addr.doorNo,addr.line1,addr.line2,addr.landmark,addr.city,addr.state,addr.pincode].filter(Boolean).join(', ');
+
+    var eta = '';
+    if(o.estimatedDelivery && o.status !== 'delivered' && o.status !== 'cancelled'){
+      eta = '<p style="margin-top:.6rem;font-size:.85rem;color:#2f5d1f;font-weight:600">'+
+        'Estimated delivery by '+esc(new Date(o.estimatedDelivery).toLocaleDateString('en-IN',
+          {weekday:'long',day:'numeric',month:'long'}))+'</p>';
+    }
+
+    resultView.innerHTML =
+      '<div class="tk-card">'+
+        '<div class="tk-status-hero">'+
+          '<div class="tk-status-icon">'+meta.icon+'</div>'+
+          '<h2>'+esc(meta.label)+'</h2>'+
+          '<p>'+esc(meta.msg)+'</p>'+ eta +
+          '<div class="tk-order-id">'+esc(o.orderId)+'</div>'+
+        '</div>'+
+
+        '<div class="tk-section"><div class="tk-section-title">Progress</div>'+
+          '<div class="tk-steps">'+steps+'</div></div>'+
+
+        '<div class="tk-section"><div class="tk-section-title">Your Items</div>'+
+          o.items.map(function(i){
+            return '<div class="tk-item">'+
+              (i.image?'<img src="'+esc(i.image)+'" alt="" onerror="this.style.visibility=\'hidden\'"/>':'<div style="width:44px;height:44px;background:#f6f7f4;border-radius:9px"></div>')+
+              '<div class="info"><strong>'+esc(i.name)+'</strong><span>Quantity: '+i.qty+'</span></div></div>';
+          }).join('')+
+          '<div class="tk-total"><span>Total</span><span>'+money(o.total)+'</span></div>'+
+          '<p style="font-size:.8rem;color:#6b7d70;margin-top:.5rem;text-align:right">'+
+          (o.paymentStatus==='paid'?'Payment received':'Cash on delivery')+'</p>'+
+        '</div>'+
+
+        '<div class="tk-section"><div class="tk-section-title">Delivering To</div>'+
+          '<div class="tk-box">'+esc(addrText)+'</div></div>'+
+
+        '<div class="tk-section" style="margin-bottom:0"><div class="tk-section-title">Order Placed</div>'+
+          '<div class="tk-box">'+esc(dt(o.placedAt))+'</div></div>'+
+      '</div>'+
+      '<button class="tk-again" id="againBtn">Track another order</button>';
+
+    formView.classList.add('hidden');
+    resultView.classList.remove('hidden');
+    window.scrollTo({top:0,behavior:'smooth'});
+
+    document.getElementById('againBtn').addEventListener('click', function(){
+      resultView.classList.add('hidden');
+      formView.classList.remove('hidden');
+      btn.disabled = false;
+      btn.textContent = 'Track Order';
+      document.getElementById('orderId').value = '';
+      document.getElementById('orderId').focus();
+    });
+  }
+
+  // Auto-track if both params present
+  if(params.get('orderId') && params.get('phone')){
+    form.dispatchEvent(new Event('submit'));
+  }
+})();
+</script>
+</body>
+</html>

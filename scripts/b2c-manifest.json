@@ -1,0 +1,307 @@
+{
+ "createdFrom": "sakeofhealth-main",
+ "files": {
+  "frontend/account.html": "c6e622ed02b59a0722504a8afe4d1cb2f34e6692eb863296685fe2e3bb7a0104",
+  "frontend/admin/admin.css": "f472ad0f4aa0adb134e285c48e0a5555e07e8b0aa4e1628315b19d9328a40b3e",
+  "frontend/admin/admin.js": "5a0ae89296592946656c9b5cce18279b0d1a9c229c4d40bbb2e07ea00af8bcdc",
+  "frontend/admin/analytics.html": "2153d2cc9a079e5a6202afce3fc58a3df9f169771ba5c745d92abf002ae71a19",
+  "frontend/admin/blog-legacy.html": "d8a3666aefdbf56aeb141e15a16b1ff5aafe0e25c85e84e84237b1c042f5a288",
+  "frontend/admin/blog.html": "47f3d294a97b142fe2c2f50d68418e68e43a4e83f8472314ce134c2a90ec2fc4",
+  "frontend/admin/coupons.html": "267dab04f08bd007cb0d079f8f3e8ed2f4c6b2dcfa08ec8501058513a0846881",
+  "frontend/admin/customers.html": "64d3f02c0e33fdfc03fae2293ba07556472ff504df90f42e67d56daec5c62592",
+  "frontend/admin/dashboard.html": "82b1769bba15c6c7b201c26223a9dc5297767194d3d8cb9582899440df82cbe1",
+  "frontend/admin/deliveries.html": "abed43bb0c388dc5d022261cc4eb683417c6c9e012388404e962c5b6a077e74f",
+  "frontend/admin/index.html": "aef6fea359c9aa82e88d250dff139d4cb1030caa025a1cc0f65ff16d506e0778",
+  "frontend/admin/orders.html": "0e21ff7a3bb890d1b445000b4de27100ccce05c0eb9478e71d9ea553753356cb",
+  "frontend/admin/page-analytics.js": "c5fc7e13511e4a873a24d1c8a7e875030931b4d861e825bce52cb150522f083f",
+  "frontend/admin/page-coupons.js": "a954685c4026dc8d8ff78f7c4b9ed80648d9b2e13e16ddc2a2471b5428772b4e",
+  "frontend/admin/page-customers.js": "80e1100df5eca454176bb7d2b408b84a0f4b84e0288b80dd7adc88eb9912982b",
+  "frontend/admin/page-dashboard.js": "e77ad948563945eb45e6de63beedc4815a5fb8d3005a72e3a18b8cba0b3a0686",
+  "frontend/admin/page-deliveries.js": "dd50915de4cc326cc2e73e846c11210918d063598dae9945aad2b1190dd3f82a",
+  "frontend/admin/page-orders.js": "c076f8ffe7a132d8b7297d20e5cdb92420c03a7c40515c48f965b928d6e55045",
+  "frontend/admin/page-products.js": "e43d30a020e7dc1fb1432caceaf8ef0abcf0415bdc5a2c81e6048e9c2db3f03b",
+  "frontend/admin/page-reports.js": "982aeef3fe9cfe178121009d8f73e1d7182e928923956c1036604081918970ed",
+  "frontend/admin/page-reviews.js": "979cd538ebdf9bd40bc65fbd725a3ffc3940c7026406e983b2668ec8ae120ef0",
+  "frontend/admin/page-settings.js": "9d519063f0169ec684e3b0256afdd483dc2f6958ce7c64a0afed6c549aff5a72",
+  "frontend/admin/page-staff.js": "625bdc78abf71d62eaeecdf0e1e00b818f11bb7b9bdedbdf68af75bb0c40f6fa",
+  "frontend/admin/print.css": "83046076bafbb5fee977c9bc3e503a362d0bbb8ce17e1d61bcabcc5c7be5c101",
+  "frontend/admin/print.html": "fceb153f37c815fb06734b45d42d54cbdf0c9b4964403901651764361fae5809",
+  "frontend/admin/print.js": "7393094fd8ba34d80515ff3a77ea103e484a978b2d1172ae5a4aed30ef0c0457",
+  "frontend/admin/products.html": "c8ba80e3cc83603b7670f6934ff7418033c5432b9595ec3794bc649dd6328e0d",
+  "frontend/admin/reports.html": "b1949d213b528e5254eb44e16ba1edac0aee105afe03ffdbe1f2af29e1893bfd",
+  "frontend/admin/reviews.html": "6258982d4a6f072a26775205ccfbef9b3a4908b904325c252580571dcefcf3b9",
+  "frontend/admin/settings.html": "84d470677eb11880cd5a93611a1c343c77e76999b1c7999761cc6327d86c3600",
+  "frontend/admin/staff.html": "ef3984634737a340e81b74f6747fef86d2f66287d55bde2348b63bd0e6b03a92",
+  "frontend/assets/banner/banner-1.jpg": "9a4a02b057a2ee9f4e422e7f57529ef8e9f06ec085b72bdcc9f249512a8cab20",
+  "frontend/assets/banner/banner-2.jpg": "d2a60c91f32a388ab10c54f7087e0590fffb66af4ecf0285e24dc65df315c1d6",
+  "frontend/assets/banner/banner-3.jpg": "164340b50ac8d21a17747eba2832e0edf8dd8780ee1ec8afe55f9f272f7afb3b",
+  "frontend/assets/banner/banner-4.jpg": "5be64b9ac77680211f3dd22950ebed860ebbcb7b1e1b8a3cad91bab2a1a913bf",
+  "frontend/assets/css/main.css": "5ad90228ec17d75b588d85066ff1be114d71260d0a2018833f5b936f57e7b217",
+  "frontend/assets/images/carousel/curcumin-1.png": "e1271d6974f0ff0c7e405d25911438de5110edeef1df54c1eb9a31a0d137c1ba",
+  "frontend/assets/images/carousel/curcumin-2.png": "1c3751f0b738e55567a090713c2a7c28ffef2cbd07bf0537f5483613f8cd7878",
+  "frontend/assets/images/carousel/curcumin-3.png": "0a36688769183bedabe0774bfcca18cdf41d19205d26ef7265dd34ee0f49670c",
+  "frontend/assets/images/carousel/curcumin-4.png": "914181f1d56753518c73bd77b43d4d048025746cc2ee80688a1ab75eb8f12378",
+  "frontend/assets/images/carousel/favicon.png": "c00347cc2b41b5efe88293659444bcd8c38058c8f476e2822ef7ad2f7c28d080",
+  "frontend/assets/images/carousel/iron-1.png": "455687a3d560222a4c76b752bff1241bbe53588f7c6834ce6e137206f8fd71ce",
+  "frontend/assets/images/carousel/iron-2.png": "c555086242cae94c3eb981bca32ebf6fc5fac70e4264f719f8b84ff3d5d56c6a",
+  "frontend/assets/images/carousel/iron-3.png": "65c443b8b888e19655c42b2c995ef85b70beee2f4511c05727549fa659788841",
+  "frontend/assets/images/carousel/iron-4.png": "12a8959f380a13baaaeb8bc315bb312471ef847bcdcfcacf94847050c8a7e2e7",
+  "frontend/assets/images/carousel/multivitamin-1.png": "084484315aeed5fb7ec522a2a302151f3884cb3dfe34ad91e7802a2c99572fce",
+  "frontend/assets/images/carousel/multivitamin-2.png": "6d17316a4ae16d073cf8ebac5fbf4d640dfc92daeab5fb62b789125bbc3acad7",
+  "frontend/assets/images/carousel/multivitamin-3.png": "24c994dcdebea127f14882cc7f3c12205528a6550cce5b13417008cc9c4742cb",
+  "frontend/assets/images/carousel/multivitamin-4.png": "422c8dfac35a86f01875f6f2cfcd8e1b3812350d1058bc6dcd277dc59ee3f8da",
+  "frontend/assets/images/carousel/probiotic-1.png": "b94a1a536ffd0436c496e4ecf57456641db07076c7038d2e2a799b3002f2d325",
+  "frontend/assets/images/carousel/probiotic-2.png": "4c7c1b887b5098957ba1ff0a0b831970e50c8eca74dd069f8e7cb3ddcdf91b22",
+  "frontend/assets/images/carousel/probiotic-3.png": "8e592d77860df4076cd0cac033dfe02875ef49e0b218e21e557390c7d3dae8b1",
+  "frontend/assets/images/carousel/probiotic-4.png": "14645e1b56a2390ef8400cb1e54942f8ee3634fc4c785b75efcb6876140e6e5a",
+  "frontend/assets/images/curcumin.png": "05f7bb7dcc765c5d018ce1aa146d50469c8c8af5c11cc3adcbaf97081df9949e",
+  "frontend/assets/images/iron.png": "b417b8cb41e6cf2562192966ed6d9776fa1d9b5e398315041a64b687c6c47804",
+  "frontend/assets/images/logo-mark.png": "41343003df6c192800be7f91c466fe4f4a975e0ec13fd64d8afc32c5ab65504b",
+  "frontend/assets/images/logo-mark.svg": "7e38eb541a338968590aad48265fc021489f153a95f72cf710ce76e7e79a745f",
+  "frontend/assets/images/multivitamin.png": "a52bf517b0aaa5354fcec82205001df40d5c89c0a1f6cd5cc76570f6eb9d4550",
+  "frontend/assets/images/probiotic.png": "036391be632fa6d11ece858c3ce0937a81867d8ba5ed3d86cb760486b60870ab",
+  "frontend/assets/js/app.js": "4573b156fb94ec619dca0c0dc9cb35021d286512f51df25f681a2c09afce90c3",
+  "frontend/assets/js/auth.js": "3bf71b4b72839393e2ca783ae23c02f9337da2633444d6eceed912eaea688c24",
+  "frontend/assets/js/location-picker.js": "029d3c1da4607f9892a53356ba195e1c98b822b567452a21ef01e8d8ab235322",
+  "frontend/assets/js/track.js": "f7aabc59f8ccbb7abbda784e306037f0244b3c342fc8c37950a5d8b4d13925a9",
+  "frontend/assets/vendor/qrcode.js": "79ec86f82856005b1c887905cfccfcfbec3821ca61c7fd5a952faa5f778f791c",
+  "frontend/blog/index.html": "a99df595bd139a7a25250581f2602362c67502c398f9a1c38123fc6c8e7e0566",
+  "frontend/blog/submit.html": "1c19ea43501b2e32bc5c50230207615b0a0cfd0c782669cc6a9905bde5c0b554",
+  "frontend/brand-story.html": "5374452973b4d202146ce97efaab546cd7f512652437b7e4c0fac32be5e9568f",
+  "frontend/categories/athletic.html": "6dac1f05e750211baba741a33e89b338a3fbb341ab5b878c365ed0d41086dbc6",
+  "frontend/categories/iron.html": "99f5e508c3894df410357c1ca201b8ede9760ba55aee938f893099fded6df831",
+  "frontend/categories/multivitamins.html": "f0628b236113a4bdee61b08b085811edd23b1914040f3d5637fc649b8664bb5a",
+  "frontend/checkout/index.html": "59b8094cb0ee7d84fa74d35a97fef578ef6682548d8008813ed94df6c3550abf",
+  "frontend/checkout/success.html": "7ca2cca29a67778e741e1f7e867b9f80f0d7209c2bad97f3a2f538562acea855",
+  "frontend/index.html": "64568018f03368149ceb5f73c500390f0815af34376f0de0aaaf4dc1457a2660",
+  "frontend/privacy-policy.html": "c15ce4837f33f68633de110fa0ec4b49ff063b661e0657f357bcb4e383a910be",
+  "frontend/products/curcumin.html": "58d30db51f79f134e1f1381dae7690ca9db6d57ef0f15c7a465d340eb286c5e1",
+  "frontend/products/iron.html": "61ed82cb8c1c5588d6151a258e70abd8b9bd7436daa9bc7f52e0004d6dfbed4f",
+  "frontend/products/multivitamin.html": "fb93b4c7355a8f00d71f8689dc6b4c36b4d3260114a5ccfe0c3a0504a43bba7f",
+  "frontend/products/probiotic.html": "f5592da4304b7f4eaa7aeeaf0a5c189ff3376953bb51de9aab4c7e6d2f4a0e8f",
+  "frontend/refund-policy.html": "0810c2b5e834b4fe0e1aba0de3ff22e931cc6f229a0f397ee6a8263dca968dcd",
+  "frontend/robots.txt": "1466929bbc972f2075514b130733b1d0ae27c9c342939231fd0e36051c21f750",
+  "frontend/terms.html": "dbf8f62bcb07688025a3ce1775f3264569de7d41ac9378545ce91e807b75f263",
+  "frontend/track.html": "87fdde2ace120be2d0b8a20b235737d40b13001cd5772b0c1a2d3c9c835f479b",
+  "index.js": "184e3706df9f29963b9048935a69063efab5079730bb78e33bccfbd5536f18f7",
+  "main.css": "f60772e283e739433a96de236a18e1e8e173f0da64288a0f955066d0a1fe73a0",
+  "package-lock.json": "d60a257cca0f903e4d08c68c4019f774ca6f7fbd5b67ee7cb1cb4b93f315b246",
+  "package.json": "77bade0b2a2deda4df24d382f3dc6c0cb9ff7f645f5f7746bd7ee3729529728b",
+  "src/middleware/adminAuth.js": "a84ef23f4ed5967664a5f6c049b010c61cbb7e26e38a7d1c8b19e1a90950012d",
+  "src/middleware/customerAuth.js": "79d355538030a3ba6d46df77ab2dffa7fd254eb0217fc0b06d1afd2d82800ece",
+  "src/middleware/idempotency.js": "8d0ee9b5835840d9411f7f1b6fca80ded30711a0604e26664a166279117b886c",
+  "src/routes/admin.js": "04159d96410900be6ed4880ab4520f3be21aa638acf7eff72f1b05ab6c63bae0",
+  "src/routes/auth.js": "cf59abbdffc83a46b866e2bb2d1f8a0375ee8f755e48ab8f2694e53bc7610db8",
+  "src/routes/blog.js": "8dc2e5f18e3fb37fdf9b43b002445719a93b4160c54e3c67447760cc871f5a59",
+  "src/routes/checkout.js": "d098ae6b87e770815a9f1cdf36645254c247cc5595c17594cd2dd1a2f9142e91",
+  "src/routes/shop.js": "e217cc155751ec59e04b93abb2d818cbc469e1f3c7324991d764332de02b49d4",
+  "src/routes/track.js": "1c0f583522165f92ff882a236e57c76d91bed0c16928271d43de2514dd8814ee",
+  "src/seed.js": "ee5f1ece9188d16b131dba742bf3eecdd8647f8d72a0149ac83d7e787d70453c",
+  "src/server.js": "0a64715c79fd1cde69ca9f0b09556a8d29e5e2590b4837991718371220b2e2d1",
+  "src/services/analytics.js": "6f41f4350b0b13e9320cb33940e0dcf553b48d161eb87ba64fce4da1d38a5740",
+  "src/services/blogStore.js": "5eff6f4ae8818d2737a2a63d7e85329e031fadcbd1186e6cbb8a69fde2520482",
+  "src/services/blogTemplate.js": "073bf8d51c913f3b51aeaddfcca6b06bc3ebb4c0a82755193b48078503efadd8",
+  "src/services/coupons.js": "39762e3b9e3350ea6959b9e9f369f00147c12f65c8937c3bdb20fd2182e644e5",
+  "src/services/db.js": "42ea307eb4b005a012000b105665aa827198233edeb09ce54c6acc582e7f4db4",
+  "src/services/notify.js": "bed862944f050c33053c530f22e301ed43859c2812008efb6b20546a621d3fb2",
+  "src/services/orders.js": "d5d09645a4dfbfd8a04b95b9c001bd2790142cfcdcb64f954485ffa8d369948f",
+  "src/services/payments.js": "8f1acacea037d9ab6066569ccd9cb8984a0efd05f1bff83ae0fb1293a66c8b64",
+  "src/services/reports.js": "de3b2912be45afb4840f1616f88ac9d443ecfcc890088350d7114516d36a4df2",
+  "src/services/store.js": "1dd63537ddaecb67d281a6294005de31c800356c5cda96331189131f4762aa4b",
+  "tests/b2c-regression.test.js": "af8e04466e6eb9c0a443bedc1477560e382916d7cefa2e0d458f4a235a9b4773"
+ },
+ "repins": [
+  {
+   "date": "2026-11-12",
+   "by": "Phase 0.5 (approved PHASE-0.5-CHANGE-SPECIFICATION)",
+   "changes": [
+    {
+     "file": "src/middleware/customerAuth.js",
+     "from": "0b6fd2503cf7cfa891dafc407265929c70b50740330f29bbe2a3233ccb9186b3",
+     "to": "79d355538030a3ba6d46df77ab2dffa7fd254eb0217fc0b06d1afd2d82800ece",
+     "reason": "0.5.1 BUG-001 separate customer secret, typ claim"
+    },
+    {
+     "file": "src/routes/auth.js",
+     "from": "8f3a223c8710456cec860947618768a9b973ddcf372d16795861c7f22973588c",
+     "to": "cf59abbdffc83a46b866e2bb2d1f8a0375ee8f755e48ab8f2694e53bc7610db8",
+     "reason": "0.5.1 BUG-001 503 when customer auth not configured"
+    },
+    {
+     "file": "src/middleware/adminAuth.js",
+     "from": "a748191143e67d8bc449a39359e1b583d6bf2d6ac5719aaedcd8d22ec8f10585",
+     "to": "a84ef23f4ed5967664a5f6c049b010c61cbb7e26e38a7d1c8b19e1a90950012d",
+     "reason": "0.5.1 BUG-001/015 admin secret only, typ claim, debug log removed; 0.5.9 BUG-016 no ?token="
+    },
+    {
+     "file": "src/routes/admin.js",
+     "from": "b8ec65dc7145c88d351c60dc38909dc17c3e1c3c7907a1df4e2e0eb8f95fa9ca",
+     "to": "04159d96410900be6ed4880ab4520f3be21aa638acf7eff72f1b05ab6c63bae0",
+     "reason": "0.5.2 BUG-005 permission middleware, delivery filter; 0.5.7 D10 cancel instead of delete; 0.5.8 passwordChangedAt"
+    },
+    {
+     "file": "src/routes/shop.js",
+     "from": "a25339ec59874683a7caa40ac709738e69e2cf8e532f9a7621d15dd18dd5c6fd",
+     "to": "e217cc155751ec59e04b93abb2d818cbc469e1f3c7324991d764332de02b49d4",
+     "reason": "0.5.3–0.5.5 BUG-002/004/006/028 quote, server pricing, payment binding"
+    },
+    {
+     "file": "src/routes/checkout.js",
+     "from": "5eb150bd77cf3238dd5fd67fcbdb35ef24b7a3df5d3fa098ec881a942004f163",
+     "to": "d098ae6b87e770815a9f1cdf36645254c247cc5595c17594cd2dd1a2f9142e91",
+     "reason": "0.5.4 BUG-002 gateway order from server-priced cart"
+    },
+    {
+     "file": "src/services/payments.js",
+     "from": "5d2fe7118572e779bd8b776112a31faf9ca35537ac09a2ae6e8c97e356fba8a4",
+     "to": "8f1acacea037d9ab6066569ccd9cb8984a0efd05f1bff83ae0fb1293a66c8b64",
+     "reason": "0.5.4–0.5.5 BUG-002/003/021 fail-closed Razorpay, Cashfree removed, B2B contract kept"
+    },
+    {
+     "file": "src/server.js",
+     "from": "c3ee3fe7a19f42a6d90862541d74443a7d112bbf3c3c771569f5dcee6d0e52fe",
+     "to": "9e223d5accb498e7fd8b279232e4588f0438d9ef4d0b7df1bf1561bbc98d51ce",
+     "reason": "0.5.5 B2C webhook mount; 0.5.8 BUG-008/018 no production seed, status-only /health; 0.5.10 blog article route"
+    },
+    {
+     "file": "src/services/orders.js",
+     "from": "6377dc1dcd34258e4b1e8d0a1a78eab506cb85d3c5d17298ec0623c0d4f26518",
+     "to": "d5d09645a4dfbfd8a04b95b9c001bd2790142cfcdcb64f954485ffa8d369948f",
+     "reason": "0.5.6–0.5.7 BUG-012/013 D10 payment status, numbering, cancelOrder"
+    },
+    {
+     "file": "src/seed.js",
+     "from": "767074d9882255b012df69425a4a8d17a8fb01928ecaa25e8884e24b5079d312",
+     "to": "ee5f1ece9188d16b131dba742bf3eecdd8647f8d72a0149ac83d7e787d70453c",
+     "reason": "0.5.8 BUG-008 refuses production, staff only with --with-staff"
+    },
+    {
+     "file": "src/services/blogTemplate.js",
+     "from": "b4638b66a601111c4bf3712d58910eb90181082ba5ea26e29e23fdbf549a643f",
+     "to": "073bf8d51c913f3b51aeaddfcca6b06bc3ebb4c0a82755193b48078503efadd8",
+     "reason": "0.5.10 BUG-007 escaped article body"
+    },
+    {
+     "file": "src/services/blogStore.js",
+     "from": "0d3bfc01282b3734370e035f3f8ca9351df277c8f2b57e2113a9b467c3a079ce",
+     "to": "5eff6f4ae8818d2737a2a63d7e85329e031fadcbd1186e6cbb8a69fde2520482",
+     "reason": "0.5.10 BUG-007 data under DATA_DIR/blog, legacy copied"
+    },
+    {
+     "file": "src/routes/blog.js",
+     "from": "7fb19efc30066db8e7568dbf18fb8dc64302d15535d98915779bb1ce66513373",
+     "to": "8dc2e5f18e3fb37fdf9b43b002445719a93b4160c54e3c67447760cc871f5a59",
+     "reason": "0.5.10 BUG-007 moderator roles, articles served from DATA_DIR"
+    },
+    {
+     "file": "frontend/admin/blog.html",
+     "from": "d8a3666aefdbf56aeb141e15a16b1ff5aafe0e25c85e84e84237b1c042f5a288",
+     "to": "47f3d294a97b142fe2c2f50d68418e68e43a4e83f8472314ce134c2a90ec2fc4",
+     "reason": "0.5.10 BUG-007 admin session instead of typed password"
+    },
+    {
+     "file": "frontend/checkout/index.html",
+     "from": "81b3dd677f5f0ad05055e501c2be8bb13edb388ad74de03554d8c56cc81f1da2",
+     "to": "97666d647a58f265d7f59220a6ea26714c3e4ffa1566e77e5e6d716d3b04aba1",
+     "reason": "0.5.4 BUG-002/028/032 server quote, no client amount, express hidden (D14)"
+    },
+    {
+     "file": "frontend/admin/page-orders.js",
+     "from": "a6ac8b725991381102d8c6ec05da5e2be2260fc587f7e1607b7ecb2c60776fad",
+     "to": "c076f8ffe7a132d8b7297d20e5cdb92420c03a7c40515c48f965b928d6e55045",
+     "reason": "0.5.7 D10 cancel with reason"
+    },
+    {
+     "file": "frontend/admin/page-deliveries.js",
+     "from": "5b221ff1bcc9265b52cbb25717007e2c5fb09b5c166e39109f7bbde851dca9b1",
+     "to": "dd50915de4cc326cc2e73e846c11210918d063598dae9945aad2b1190dd3f82a",
+     "reason": "0.5.2 BUG-005 agent view; 0.5.7 D10 cancel with reason"
+    },
+    {
+     "file": "frontend/admin/page-customers.js",
+     "from": "1dd31b0628ce206628923d0d5ff2f4c93c8d48811bc37bfbeb23b305a52e07cf",
+     "to": "80e1100df5eca454176bb7d2b408b84a0f4b84e0288b80dd7adc88eb9912982b",
+     "reason": "0.5.9 BUG-016 authorised CSV download"
+    },
+    {
+     "file": "frontend/admin/page-reports.js",
+     "from": "c5e6b85315a29986f54b649ea2c56481ae4ea80c58b449a01bd07416ec9d2dfe",
+     "to": "982aeef3fe9cfe178121009d8f73e1d7182e928923956c1036604081918970ed",
+     "reason": "0.5.9 BUG-016 authorised CSV download"
+    },
+    {
+     "file": "tests/b2c-regression.test.js",
+     "from": "0a667cd808f259ecaf6d5df9ef53709299d40c7a0b6b52d8a354fc40a3b77d8a",
+     "to": "af8e04466e6eb9c0a443bedc1477560e382916d7cefa2e0d458f4a235a9b4773",
+     "reason": "tests #7, #17, /health changed for approved fixes (docs/phase-0.5/CHANGED-TESTS.md)"
+    }
+   ]
+  },
+  {
+   "date": "2026-11-12",
+   "by": "Phase 0.5 (approved PHASE-0.5-CHANGE-SPECIFICATION)",
+   "changes": [
+    {
+     "file": "frontend/admin/admin.js",
+     "from": "1bde691dfd819353deb9a32eb381dd0e45832914804efcbebf364b3a22a13c6a",
+     "to": "59a49d020ce97b4e0b9cb3c34cf8d15bed6c2abedfee93b6adb24912fd1b7d23",
+     "reason": "0.5.2 BUG-005 menu by role, delivery to own board — not in the original 21-file list; approved by the owner on 2026-11-12 during 0.5.11"
+    }
+   ]
+  },
+  {
+   "date": "2026-11-12",
+   "by": "Phase 0.5 (approved PHASE-0.5-CHANGE-SPECIFICATION)",
+   "changes": [
+    {
+     "file": "frontend/checkout/index.html",
+     "from": "97666d647a58f265d7f59220a6ea26714c3e4ffa1566e77e5e6d716d3b04aba1",
+     "to": "59b8094cb0ee7d84fa74d35a97fef578ef6682548d8008813ed94df6c3550abf",
+     "reason": "0.5.4 BUG-002/028/032 server quote, no client amount, express hidden (D14); 0.5.11 empty cart shows ₹0 total"
+    }
+   ]
+  },
+  {
+   "date": "2026-11-12",
+   "by": "Phase 1 — central Admin Panel",
+   "changes": [
+    {
+     "file": "frontend/admin/admin.js",
+     "from": "59a49d020ce97b4e0b9cb3c34cf8d15bed6c2abedfee93b6adb24912fd1b7d23",
+     "to": "d989ea29d0c67154e2077df19a1a1fc78d87459b8a495ad8e29ec2022957e637",
+     "reason": "Central Admin Panel: one server-built sidebar from src/platform/registry.js; sign-in/out via /login (owner instruction 2026-11-12: build the central Admin Panel and shared shell)"
+    },
+    {
+     "file": "src/server.js",
+     "from": "9e223d5accb498e7fd8b279232e4588f0438d9ef4d0b7df1bf1561bbc98d51ce",
+     "to": "d7818e8ca54879e667e703f042b202e31f9b71428b81dbd01c7382b1fcefc196",
+     "reason": "Central Admin Panel: mount src/platform/routes.js (/login, /admin shell, /api/platform/*) with the admin login rate limit (owner instruction 2026-11-12)"
+    }
+   ]
+  },
+  {
+   "date": "2026-11-13",
+   "by": "Phase 1 — central Admin Panel",
+   "changes": [
+    {
+     "file": "frontend/admin/admin.js",
+     "from": "d989ea29d0c67154e2077df19a1a1fc78d87459b8a495ad8e29ec2022957e637",
+     "to": "5a0ae89296592946656c9b5cce18279b0d1a9c229c4d40bbb2e07ea00af8bcdc",
+     "reason": "Central Admin Panel (2): ERP session next to the staff session (one sign-in), sidebar request carries it, ERP-only staff supported (owner instruction 2026-11-13: consolidate the ERP screens and identities into /admin)"
+    }
+   ]
+  },
+  {
+   "date": "2026-11-13",
+   "by": "Phase 1 — shared identity",
+   "changes": [
+    {
+     "file": "src/server.js",
+     "from": "d7818e8ca54879e667e703f042b202e31f9b71428b81dbd01c7382b1fcefc196",
+     "to": "0a64715c79fd1cde69ca9f0b09556a8d29e5e2590b4837991718371220b2e2d1",
+     "reason": "Shared identity (3): two lines only — staff with a temporary password are refused on /api/admin until they change it at /login, and the change-password endpoint gets the same rate limit as sign-in (owner instruction 2026-11-13: initial role accounts must change their password at first login)"
+    }
+   ]
+  }
+ ]
+}

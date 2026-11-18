@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Athletic — Sake of Health</title>
+<link rel="icon" type="image/png" href="../assets/images/carousel/favicon.png"/>
+<link rel="apple-touch-icon" href="../assets/images/carousel/favicon.png"/>
+<meta name="description" content="Performance and recovery gummies. Curcumin for joints, Probiotics for gut health — your athletic edge, deliciously."/>
+<link href="https://api.fontshare.com/v2/css?f[]=recoleta@400,700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../assets/css/main.css?v=5"/>
+<style>
+body { padding-top: 72px; }
+.cat-hero { min-height: 52vh; background: linear-gradient(145deg, #0d1f08 0%, #1e4a14 55%, #2d6b22 100%); display: flex; align-items: center; padding: 4rem 5vw; position: relative; overflow: hidden; }
+.hero-bottles { position: absolute; right: 4vw; bottom: 0; display: flex; gap: -20px; }
+.cat-hero-bottle { height: min(320px, 45vw); filter: drop-shadow(0 30px 60px rgba(0,0,0,0.35)); animation: floatUp 3s ease-in-out infinite; transition: transform 0.4s ease; }
+.cat-hero-bottle:hover { transform: scale(1.08) translateY(-8px); z-index: 2; position: relative; }
+.cat-hero-bottle:nth-child(2) { animation-delay: 0.4s; margin-left: -40px; height: min(290px, 40vw); }
+@keyframes floatUp { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+.cat-hero-content { max-width: 560px; position: relative; z-index: 1; }
+.cat-hero-tag { font-size: 0.76rem; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 0.8rem; }
+.cat-hero-title { font-family: var(--ff-display); font-size: clamp(2.2rem, 5vw, 3.6rem); color: #fff; line-height: 1.1; margin-bottom: 1rem; }
+.cat-hero-sub { font-size: 1.05rem; color: rgba(255,255,255,0.7); font-weight: 300; margin-bottom: 2rem; }
+.cat-hero-pills { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 2rem; }
+
+/* Hero pill hover — pop/zoom */
+.cat-hero-pill {
+  background: rgba(255,255,255,0.12); color: #fff; padding: 0.35rem 0.9rem; border-radius: 50px;
+  font-size: 0.8rem; font-weight: 500; backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.18);
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(.34,1.56,.64,1), background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  cursor: default;
+}
+.cat-hero-pill:hover {
+  transform: scale(1.12) translateY(-3px);
+  background: rgba(255,255,255,0.28);
+  border-color: rgba(255,255,255,0.5);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+.products-section { background: var(--cream-dark); padding: 5rem 5vw; }
+.products-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.8rem; max-width: 1100px; margin: 0 auto; }
+
+/* Product card hover zoom + lift */
+.product-card { transition: transform 0.35s cubic-bezier(.2,.8,.2,1), box-shadow 0.35s ease; will-change: transform; }
+.product-card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(41,103,33,0.18); }
+.product-card-img { overflow: hidden; position: relative; }
+.product-card-img img { transition: transform 0.5s cubic-bezier(.2,.8,.2,1); }
+.product-card:hover .product-card-img img { transform: scale(1.12) rotate(-1deg); }
+.product-card .btn-primary { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+.product-card:hover .btn-primary { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(120,163,59,0.35); }
+
+.why-section { padding: 5rem 5vw; background: var(--cream); }
+.benefit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.4rem; max-width: 1100px; margin: 2.5rem auto 0; }
+
+/* Benefit card hover animation — zoom + lift + icon pop */
+.benefit-card {
+  background: #fff; border-radius: 18px; padding: 1.8rem;
+  border-top: 4px solid var(--green-mid);
+  transition: transform 0.35s cubic-bezier(.2,.8,.2,1), box-shadow 0.35s ease, border-top-color 0.35s ease, background 0.35s ease;
+  cursor: default;
+  will-change: transform;
+}
+.benefit-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 20px 40px rgba(41,103,33,0.18);
+  border-top-color: #78a33b;
+  background: #fdfdfb;
+}
+.benefit-icon {
+  font-size: 2rem; margin-bottom: 0.8rem;
+  display: inline-block;
+  transition: transform 0.4s cubic-bezier(.34,1.56,.64,1);
+}
+.benefit-card:hover .benefit-icon {
+  transform: scale(1.35) rotate(-8deg);
+}
+.benefit-title { font-weight: 600; margin-bottom: 0.4rem; transition: color 0.3s ease; }
+.benefit-card:hover .benefit-title { color: var(--green-deep, #1a4a12); }
+.benefit-desc { font-size: 0.87rem; color: var(--text-muted); font-weight: 300; line-height: 1.7; }
+
+.stack-section { background: linear-gradient(135deg, #0d1f08 0%, #296721 100%); padding: 5rem 5vw; text-align: center; color: #fff; }
+.stack-section h2 { font-family: var(--ff-display); font-size: clamp(1.8rem, 3.5vw, 2.8rem); color: #fff; margin-bottom: 1rem; }
+.stack-section p { color: rgba(255,255,255,0.65); max-width: 520px; margin: 0 auto 2rem; font-weight: 300; }
+.stack-products { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 2.5rem; }
+.stack-tag { background: rgba(255,255,255,0.12); color: #fff; padding: 0.5rem 1.2rem; border-radius: 50px; font-size: 0.85rem; font-weight: 500; border: 1px solid rgba(255,255,255,0.2); transition: transform 0.3s cubic-bezier(.34,1.56,.64,1), background 0.3s ease; display: inline-block; }
+.stack-tag:hover { transform: scale(1.08) translateY(-2px); background: rgba(255,255,255,0.25); }
+
+/* ============ FLOATING SOCIAL DOCK ============ */
+.soh-social-dock {
+  position: fixed; right: 1.2rem; bottom: 1.8rem; z-index: 9999;
+  display: flex; flex-direction: column; gap: 0.6rem;
+}
+.soh-social-btn {
+  width: 46px; height: 46px; display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; color: #fff; text-decoration: none; position: relative;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.22);
+  animation: sohFloat 3.4s ease-in-out infinite;
+  transition: transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s ease;
+  will-change: transform;
+}
+.soh-social-btn:nth-child(1) { animation-delay: 0s; }
+.soh-social-btn:nth-child(2) { animation-delay: .45s; }
+.soh-social-btn:nth-child(3) { animation-delay: .9s; }
+@keyframes sohFloat {
+  0%,100% { transform: translateY(0) rotate(0deg); }
+  50%     { transform: translateY(-9px) rotate(-3deg); }
+}
+.soh-social-btn:hover {
+  animation-play-state: paused;
+  transform: scale(1.22) rotate(8deg);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.32);
+}
+.soh-social-btn::after {
+  content: ""; position: absolute; inset: -4px; border-radius: 50%;
+  border: 2px solid currentColor; opacity: 0; pointer-events: none;
+}
+.soh-social-btn:hover::after { animation: sohHalo 1.1s ease-out infinite; }
+@keyframes sohHalo {
+  0%   { opacity: .55; transform: scale(1); }
+  100% { opacity: 0;   transform: scale(1.5); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .soh-social-btn { animation: none; }
+  .soh-social-btn:hover { transform: scale(1.1); }
+  .soh-social-btn:hover::after { animation: none; }
+}
+
+/* ============ INLINE ADD-TO-CART NOTICE (inside products section) ============ */
+.soh-cart-notice-slot {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows .45s cubic-bezier(.22,1,.36,1), margin-top .45s ease;
+}
+.soh-cart-notice-slot.open {
+  grid-template-rows: 1fr;
+  margin-top: 1.6rem;
+}
+.soh-cart-notice-inner { overflow: hidden; }
+.soh-cart-notice {
+  display: flex; align-items: center; gap: 1rem;
+  background: #fff;
+  border: 1px solid rgba(45,107,34,.18);
+  border-left: 5px solid #2d6b22;
+  border-radius: 14px;
+  padding: 1rem 1.3rem 1rem 1.05rem;
+  box-shadow: 0 10px 30px rgba(41,103,33,0.12);
+  position: relative; overflow: hidden;
+  opacity: 0; transform: translateY(-8px);
+  transition: opacity .4s ease .06s, transform .4s cubic-bezier(.22,1,.36,1) .06s;
+}
+.soh-cart-notice-slot.open .soh-cart-notice { opacity: 1; transform: translateY(0); }
+.soh-cart-notice-icon {
+  width: 38px; height: 38px; flex-shrink: 0; border-radius: 50%;
+  background: #2d6b22; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.05rem;
+}
+.soh-cart-notice-slot.open .soh-cart-notice-icon { animation: sohPop .55s cubic-bezier(.34,1.56,.64,1); }
+@keyframes sohPop { 0%{transform:scale(0)} 100%{transform:scale(1)} }
+.soh-cart-notice-text { flex: 1; min-width: 0; }
+.soh-cart-notice-title { font-weight: 600; font-size: .93rem; color: #14300d; margin-bottom: .15rem; }
+.soh-cart-notice-sub { font-size: .8rem; color: var(--text-muted); font-weight: 300; }
+.soh-cart-notice-actions { display: flex; align-items: center; gap: .6rem; flex-shrink: 0; }
+.soh-cart-notice-link {
+  font-size: .82rem; font-weight: 600; color: #2d6b22; text-decoration: none;
+  border: 1.5px solid rgba(45,107,34,.3); border-radius: 50px; padding: .42rem 1rem;
+  transition: background .25s ease, color .25s ease, transform .25s ease;
+  white-space: nowrap;
+}
+.soh-cart-notice-link:hover { background: #2d6b22; color: #fff; transform: translateY(-1px); }
+.soh-cart-notice-close {
+  background: none; border: none; cursor: pointer;
+  font-size: 1.2rem; line-height: 1; color: #999; padding: .2rem .3rem;
+  transition: color .2s ease;
+}
+.soh-cart-notice-close:hover { color: #333; }
+.soh-cart-notice-bar {
+  position: absolute; left: 0; bottom: 0; height: 3px; width: 100%;
+  background: rgba(45,107,34,.4); transform-origin: left;
+}
+.soh-cart-notice-slot.open .soh-cart-notice-bar { animation: sohBar 5s linear forwards; }
+@keyframes sohBar { from { transform: scaleX(1) } to { transform: scaleX(0) } }
+@media(max-width:600px){
+  .soh-cart-notice { flex-wrap: wrap; }
+  .soh-cart-notice-actions { width: 100%; justify-content: flex-end; }
+}
+
+@media(max-width:768px){ .hero-bottles{right:0;} .cat-hero-bottle{height:min(200px,40vw);} .cat-hero-bottle:nth-child(2){height:min(180px,36vw);} }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="/" class="logo">
+      <img src="../assets/images/logo-mark.png" class="logo-mark" alt="" aria-hidden="true"/>
+      <div><span class="logo-name">Sake of Health</span><span class="logo-tagline">Premium Gummies</span></div>
+    </a>
+    <nav class="nav-cats">
+      <a href="multivitamins.html" class="nav-cat">Multivitamins</a>
+      <a href="iron.html" class="nav-cat">Iron</a>
+      <a href="athletic.html" class="nav-cat active">Athletic</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="../checkout/" style="position:relative;display:inline-flex;"><button class="nav-cart" aria-label="Cart">🛒<span class="cart-count" style="display:none">0</span></button></a>
+      <a href="../checkout/" class="btn btn-primary btn-sm">Buy Now</a>
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu" onclick="toggleMobileMenu()"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+<div class="nav-mobile-menu" id="nav-mobile-menu">
+  <a href="multivitamins.html" class="nav-mobile-link">Multivitamins</a>
+  <a href="iron.html" class="nav-mobile-link">Iron</a>
+  <a href="athletic.html" class="nav-mobile-link active">Athletic</a>
+  <div class="nav-mobile-divider"></div>
+  <a href="../products/multivitamin.html" class="nav-mobile-link">Multivitamin Gummies</a>
+  <a href="../products/iron.html" class="nav-mobile-link">Iron Gummies</a>
+  <a href="../products/probiotic.html" class="nav-mobile-link">Probiotic &amp; Prebiotic</a>
+  <a href="../products/curcumin.html" class="nav-mobile-link">Curcumin Gummies</a>
+  <div class="nav-mobile-divider"></div>
+  <a href="../checkout/" class="nav-mobile-cta">🛒 View Cart &amp; Checkout</a>
+</div>
+
+<div class="cat-hero">
+  <div class="cat-hero-content reveal">
+    <div class="cat-hero-tag">Performance &amp; Recovery · Athletic</div>
+    <h1 class="cat-hero-title">Train harder. Recover smarter.</h1>
+    <p class="cat-hero-sub">Science-backed gummies for athletes and active lifestyles — reduce inflammation, protect your joints, and keep your gut in peak condition.</p>
+    <div class="cat-hero-pills">
+      <span class="cat-hero-pill">Curcumin 95%</span>
+      <span class="cat-hero-pill">Piperine (2000% boost)</span>
+      <span class="cat-hero-pill">1B CFU Probiotics</span>
+      <span class="cat-hero-pill">Boswellia</span>
+    </div>
+    <a href="../products/curcumin.html" class="btn btn-white">Shop Athletic Range →</a>
+  </div>
+  <div class="hero-bottles">
+    <img class="cat-hero-bottle" src="../assets/images/curcumin.png" alt="Curcumin Gummies" loading="eager"/>
+    <img class="cat-hero-bottle" src="../assets/images/probiotic.png" alt="Probiotic Gummies" loading="eager"/>
+  </div>
+</div>
+
+<section class="products-section">
+  <div style="text-align:center;margin-bottom:3rem;">
+    <p class="section-tag" style="color:var(--green-mid)">In This Category</p>
+    <h2 class="section-title reveal">Athletic range</h2>
+  </div>
+  <div class="products-row">
+    <a href="../products/curcumin.html" class="product-card reveal" style="text-decoration:none;color:inherit;">
+      <div class="product-card-img" style="background:linear-gradient(135deg,rgba(200,138,0,0.08) 0%,var(--cream) 100%)">
+        <img src="../assets/images/curcumin.png" alt="Curcumin Gummies" loading="lazy"/>
+      </div>
+      <div class="product-card-body">
+        <span class="cat-pill" style="background:rgba(200,138,0,0.1);color:var(--gold);margin-bottom:0.6rem;">Anti-Inflammatory</span>
+        <h3 class="product-card-name">Curcumin Gummies</h3>
+        <p class="product-card-desc">Curcumin · Turmeric · Piperine — reduce inflammation, protect joints, and speed recovery.</p>
+        <div class="product-card-footer">
+          <div class="price-section">
+            <span class="original-price" style="text-decoration:line-through;color:#999;font-size:0.9rem;">₹640</span>
+            <span class="discount-badge" style="background:var(--red);color:white;padding:0.1rem 0.5rem;border-radius:4px;font-size:0.7rem;margin-left:0.5rem;">10% OFF</span>
+            <span class="final-price" style="font-weight:bold;font-size:1.1rem;margin-left:0.5rem;">₹576</span>
+          </div>
+          <button class="btn btn-sm btn-primary" onclick="sohCartClick(event,'curcumin','Curcumin Gummies',649,'../assets/images/curcumin.png')">Add to Cart</button>
+        </div>
+      </div>
+    </a>
+    <a href="../products/probiotic.html" class="product-card reveal d1" style="text-decoration:none;color:inherit;">
+      <div class="product-card-img" style="background:linear-gradient(135deg,rgba(236,129,100,0.08) 0%,var(--cream) 100%)">
+        <img src="../assets/images/probiotic.png" alt="Probiotic Gummies" loading="lazy"/>
+      </div>
+      <div class="product-card-body">
+        <span class="cat-pill" style="background:rgba(236,129,100,0.1);color:var(--peach);margin-bottom:0.6rem;">Gut Health</span>
+        <h3 class="product-card-name">Probiotic &amp; Prebiotic</h3>
+        <p class="product-card-desc">ENZ Tribe · Fibres · Enzymes — healthy gut microbiome = better nutrient absorption and recovery.</p>
+        <div class="product-card-footer">
+         <div class="price-section">
+            <span class="original-price" style="text-decoration:line-through;color:#999;font-size:0.9rem;">₹695</span>
+            <span class="discount-badge" style="background:var(--red);color:white;padding:0.1rem 0.5rem;border-radius:4px;font-size:0.7rem;margin-left:0.5rem;">10% OFF</span>
+            <span class="final-price" style="font-weight:bold;font-size:1.1rem;margin-left:0.5rem;">₹626</span>
+          </div>
+          <button class="btn btn-sm btn-primary" onclick="sohCartClick(event,'probiotic','Probiotic &amp; Prebiotic Gummies',699,'../assets/images/probiotic.png')">Add to Cart</button>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <!-- Inline cart notice: appears right below the product grid -->
+  <div class="soh-cart-notice-slot" id="soh-cart-notice-slot" aria-live="polite">
+    <div class="soh-cart-notice-inner">
+      <div class="soh-cart-notice">
+        <div class="soh-cart-notice-icon">✓</div>
+        <div class="soh-cart-notice-text">
+          <div class="soh-cart-notice-title" id="soh-cart-notice-title">Added to cart</div>
+          <div class="soh-cart-notice-sub" id="soh-cart-notice-sub">Your product has been added successfully.</div>
+        </div>
+        <div class="soh-cart-notice-actions">
+          <a href="../checkout/" class="soh-cart-notice-link">View Cart →</a>
+          <button class="soh-cart-notice-close" onclick="sohHideNotice()" aria-label="Dismiss">&times;</button>
+        </div>
+        <div class="soh-cart-notice-bar" id="soh-cart-notice-bar"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="why-section">
+  <div style="text-align:center;margin-bottom:0.5rem;">
+    <p class="section-tag reveal">Why Athletic Gummies</p>
+    <h2 class="section-title reveal d1">Your gut and joints are your foundation.</h2>
+  </div>
+  <div class="benefit-grid">
+    <div class="benefit-card reveal"><div class="benefit-icon">🔥</div><h3 class="benefit-title">Reduce DOMS</h3><p class="benefit-desc">Curcumin is shown in 12+ clinical trials to significantly reduce delayed-onset muscle soreness — less downtime between sessions.</p></div>
+    <div class="benefit-card reveal d1"><div class="benefit-icon">🦴</div><h3 class="benefit-title">Protect your joints</h3><p class="benefit-desc">Curcumin + Boswellia address two inflammatory pathways. Daily use significantly reduces joint stiffness and long-term wear.</p></div>
+    <div class="benefit-card reveal d2"><div class="benefit-icon">🦠</div><h3 class="benefit-title">Gut = performance</h3><p class="benefit-desc">A healthy microbiome improves nutrient absorption by up to 30%. Better nutrition absorption means better training outcomes.</p></div>
+    <div class="benefit-card reveal d3"><div class="benefit-icon">⚡</div><h3 class="benefit-title">Bioavailability unlocked</h3><p class="benefit-desc">Piperine boosts curcumin absorption by 2000%. Without it, most curcumin passes through. We pair them at the correct clinical ratio.</p></div>
+  </div>
+</section>
+
+<div class="stack-section">
+  <h2>The athlete's daily stack</h2>
+  <div class="stack-products">
+    <span class="stack-tag">🟡 Curcumin Gummies (morning)</span>
+    <span class="stack-tag">🟠 Probiotic Gummies (morning)</span>
+    <span class="stack-tag">🟢 Multivitamins (optional)</span>
+  </div>
+  <p>Morning routine: two curcumin + two probiotic. Takes 10 seconds. Pays dividends for weeks.</p>
+  <a href="../checkout/" class="btn btn-white btn-lg">Build My Stack →</a>
+</div>
+
+<footer class="site-footer" style="margin-top:0;">
+  <div class="footer-grid container">
+    <div class="footer-brand">
+      <a href="/" class="logo" style="margin-bottom:1rem;">
+        <img src="../assets/images/logo-mark.png" class="logo-mark" alt="" aria-hidden="true"/>
+        <span class="logo-name">Sake of Health</span>
+      </a>
+      <p class="footer-desc">Premium gummy supplements crafted for everyday Indian wellness. Science-backed, deliciously made.</p>
+      <div style="display:flex;gap:0.6rem;margin-top:1.2rem;">
+        <a href="https://www.instagram.com/sake.of.health/" target="_blank" rel="noopener" style="width:36px;height:36px;background:#e1306c;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;text-decoration:none;">📷</a>
+        <a href="https://www.facebook.com/sake.of.health" target="_blank" rel="noopener" style="width:36px;height:36px;background:#1877f2;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;text-decoration:none;">📘</a>
+        <a href="https://wa.me/917483927125" target="_blank" rel="noopener" style="width:36px;height:36px;background:#25d366;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;text-decoration:none;">💬</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Categories</div>
+      <div class="footer-links">
+        <a href="multivitamins.html">Multivitamins</a>
+        <a href="iron.html">Iron</a>
+        <a href="athletic.html">Athletic</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Products</div>
+      <div class="footer-links">
+        <a href="../products/multivitamin.html">Multivitamin Gummies</a>
+        <a href="../products/iron.html">Iron Gummies</a>
+        <a href="../products/probiotic.html">Probiotic &amp; Prebiotic</a>
+        <a href="../products/curcumin.html">Curcumin Gummies</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Company</div>
+      <div class="footer-links">
+        <a href="../brand-story.html">Our Story</a>
+        <a href="../blog/">Wellness Blog</a>
+        <a href="../#contact">Contact</a>
+        <a href="../#faq">FAQ</a>
+        <a href="../refund-policy.html">Refund Policy</a>
+        <a href="../privacy-policy.html">Privacy Policy</a>
+        <a href="../terms.html">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom container">
+    <span>© 2025 Sake of Health. Made with love in India 🇮🇳</span>
+    <span>Minimal shipping charges apply.</span>
+  </div>
+  <div class="ixitek-note">Sake of Health is a brand of <strong>Ixitek Healthcare and Wellness Pvt. Ltd.</strong> — Registered in India · FSSAI Lic. No.: 11225998000107 · GF-001, No. 59 &amp; 60, 4th Main, 7th Cross, PP Layout, Bengaluru, Karnataka 560061</div>
+  <div style="text-align:center;padding:0 5vw 1.5rem;"><a href="/track.html" style="color:#78a33b;font-size:.82rem;text-decoration:none;">Track Your Order →</a></div>
+</footer>
+
+<!-- Floating social dock -->
+<div class="soh-social-dock" id="soh-social-dock">
+  <a class="soh-social-btn" href="https://www.instagram.com/sake.of.health/" target="_blank" rel="noopener" aria-label="Instagram" style="background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fdf497 5%,#fd5949 45%,#d6249f 60%,#285AEB 90%);color:#fff;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+  </a>
+  <a class="soh-social-btn" href="https://www.facebook.com/people/Sake-Of-Health/61589312395370/?ref=pl_edit_xav_ig_profile_page#" target="_blank" rel="noopener" aria-label="Facebook" style="background:#1877f2;color:#fff;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+  </a>
+  <a class="soh-social-btn" href="https://wa.me/917483927125" target="_blank" rel="noopener" aria-label="WhatsApp" style="background:#25d366;color:#fff;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+  </a>
+</div>
+
+<script src="../assets/js/track.js?v=3"></script>
+<script src="../assets/js/app.js?v=3"></script>
+<script>
+function toggleMobileMenu(){const m=document.getElementById('nav-mobile-menu'),b=document.getElementById('nav-hamburger');m.classList.toggle('open');b.classList.toggle('open');}
+document.addEventListener('click',function(e){const m=document.getElementById('nav-mobile-menu'),b=document.getElementById('nav-hamburger');if(m&&b&&!m.contains(e.target)&&!b.contains(e.target)){m.classList.remove('open');b.classList.remove('open');}});
+document.addEventListener('DOMContentLoaded',()=>{ sohTrack&&sohTrack('category_view',{category:'multivitamins'}); });
+
+/* ---------- Social dock robustness: re-parent to <html> so no transformed
+   ancestor can ever turn this fixed dock into an absolutely-positioned one. ---------- */
+(function(){
+  const dock = document.getElementById('soh-social-dock');
+  if (dock && dock.parentElement !== document.documentElement) {
+    document.documentElement.appendChild(dock);
+  }
+})();
+
+/* ---------- Inline cart notice (shows for 5 seconds) ---------- */
+let sohNoticeTimer = null;
+function sohHideNotice(){
+  clearTimeout(sohNoticeTimer);
+  document.getElementById('soh-cart-notice-slot').classList.remove('open');
+}
+function sohShowNotice(title, sub){
+  const slot  = document.getElementById('soh-cart-notice-slot');
+  const bar   = document.getElementById('soh-cart-notice-bar');
+  document.getElementById('soh-cart-notice-title').textContent = title;
+  document.getElementById('soh-cart-notice-sub').textContent   = sub;
+
+  clearTimeout(sohNoticeTimer);
+  slot.classList.remove('open');
+  bar.style.animation = 'none';
+  void bar.offsetWidth;
+  bar.style.animation = '';
+
+  requestAnimationFrame(() => {
+    slot.classList.add('open');
+    sohNoticeTimer = setTimeout(() => slot.classList.remove('open'), 5000);
+  });
+}
+
+/* ---------- Add to cart handler ---------- */
+function sohCartClick(e, id, name, price, img){
+  e.preventDefault();
+  e.stopPropagation();
+  try { sohAddToCart(id, name, price, img); } catch(err) { console.warn(err); }
+  sohShowNotice(name + ' added to your cart', 'Your product has been added successfully. Continue shopping or head to checkout.');
+  return false;
+}
+
+/* ---------- Social dock: cursor-reactive magnetic float ---------- */
+(function(){
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (window.matchMedia('(hover: none)').matches) return;
+  const btns = document.querySelectorAll('.soh-social-btn');
+  document.addEventListener('mousemove', e => {
+    btns.forEach(b => {
+      const r = b.getBoundingClientRect();
+      const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      const dx = e.clientX - cx, dy = e.clientY - cy;
+      const dist = Math.hypot(dx, dy) || 1;
+      if (dist < 190) {
+        const pull = (1 - dist / 190) * 16;
+        b.style.transform =
+          `translate(${(dx/dist*pull).toFixed(1)}px, ${(dy/dist*pull).toFixed(1)}px) scale(${(1 + (1-dist/190)*0.18).toFixed(3)})`;
+        b.style.animationPlayState = 'paused';
+      } else {
+        b.style.transform = '';
+        b.style.animationPlayState = 'running';
+      }
+    });
+  }, { passive: true });
+})();
+</script>
+</body>
+</html>

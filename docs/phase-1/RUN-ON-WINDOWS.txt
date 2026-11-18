@@ -1,0 +1,88 @@
+Sake of Health — D5 inspection and MySQL tests on your local MySQL 8 (Windows PowerShell)
+
+WHAT THIS CREATES — nothing else is created or changed:
+  - database  sakeofhealth_test                  (new, empty, for the tests only)
+  - account   soh_test@127.0.0.1                 ALL PRIVILEGES on sakeofhealth_test.* only
+  - account   soh_d5@127.0.0.1                   (temporary; removed in Step 9)
+                                                  SELECT on <db>.b2b_schema_migrations only,
+                                                  one line per database that has that table.
+                                                  No global privilege, no SHOW DATABASES,
+                                                  no other table.
+WHAT GETS READ:
+  - Step 5 (you, as root): table NAMES and COUNTS from information_schema — no table contents.
+  - Step 7 (script, as soh_d5): server version/settings, its own grants, and the rows of each
+    b2b_schema_migrations table (version, file name, checksum, date). Nothing else is
+    readable by that account, and the script stops if the account has any wider right.
+
+STEP 1 — Unpack a fresh copy (NOT inside your existing project folder)
+  Expand-Archive -Path "$HOME\Downloads\SakeOfHealth-phase-1-SOURCE.zip" -DestinationPath "$HOME\soh-d5-test"
+  cd "$HOME\soh-d5-test\sakeofhealth-main"
+  Get-ChildItem src\db\migrations -Filter "01[34]_*"
+    -> must print nothing (this copy has no 013/014)
+  (SOURCE = the commit id in the ZIP's file name)
+
+STEP 2 — Node and packages
+  node -v
+    -> v18 or newer
+  npm ci
+
+STEP 3 — Point PowerShell at mysql.exe (change the path if your version differs)
+  $mysql = "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe"
+  & $mysql --version
+    -> must say 8.x. If not found:  Get-ChildItem "C:\Program Files\MySQL" -Recurse -Filter mysql.exe
+
+STEP 4 — Create the test database, the test account and the (still empty) D5 account
+  & $mysql -u root -p
+    Type your root password, then paste these lines at "mysql>"
+    (choose your own two passwords; they stay on your computer):
+
+  CREATE DATABASE sakeofhealth_test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+  CREATE USER 'soh_test'@'127.0.0.1' IDENTIFIED BY 'choose-a-test-password';
+  GRANT ALL PRIVILEGES ON sakeofhealth_test.* TO 'soh_test'@'127.0.0.1';
+  CREATE USER 'soh_d5'@'127.0.0.1' IDENTIFIED BY 'choose-another-password';
+  exit
+
+    - If CREATE DATABASE says it already exists: stop and tell me. Do not reuse a database.
+    - soh_d5 has no rights yet.
+
+STEP 5 — Inventory: which databases contain this project's tables (read-only, as root)
+  & $mysql -u root -p --batch -e "source scripts/d5/inventory.sql" | Out-File -Encoding utf8 d5-inventory.tsv
+  notepad d5-inventory.tsv
+    -> one line per database: db, project_tables, has_migration_table, erp_core_tables
+
+STEP 6 — Grant the D5 account exactly what it needs, and nothing more
+  node scripts\d5-inspect.js grants --inventory d5-inventory.tsv --out d5-grants.sql
+  notepad d5-grants.sql
+    -> every line must look like:
+       GRANT SELECT ON `<database>`.`b2b_schema_migrations` TO 'soh_d5'@'127.0.0.1';
+       If any line is different, stop and tell me.
+  & $mysql -u root -p -e "source d5-grants.sql"
+
+STEP 7 — D5 inspection (read-only)
+  $env:D5_HOST = "127.0.0.1"
+  $env:D5_USER = "soh_d5"
+  node scripts\d5-inspect.js --inventory d5-inventory.tsv --out d5-report-local.md
+    (type the soh_d5 password at the hidden prompt)
+    If it says the account has more rights than it needs, it has read nothing; tell me.
+  notepad d5-report-local.md
+    -> send me d5-report-local.md and d5-inventory.tsv
+
+STEP 8 — MySQL tests on the throw-away database (several minutes)
+  $env:TEST_DB_HOST = "127.0.0.1"
+  $env:TEST_DB_USER = "soh_test"
+  $env:TEST_DB_NAME = "sakeofhealth_test"
+  node scripts\run-mysql-tests.js --out test-results-mysql
+    (type the soh_test password at the hidden prompt)
+    If Windows Firewall asks about Node.js, "Cancel" is fine; the tests use this computer only.
+  Compress-Archive -Path test-results-mysql -DestinationPath test-results-mysql.zip
+    -> send me test-results-mysql.zip (passwords are masked in it)
+
+STEP 9 — Tidy up
+  Remove-Item Env:D5_HOST, Env:D5_USER, Env:TEST_DB_HOST, Env:TEST_DB_USER, Env:TEST_DB_NAME
+  & $mysql -u root -p
+  DROP USER 'soh_d5'@'127.0.0.1';
+  exit
+    - DROP USER also removes every grant from Step 6.
+    - Keep soh_test and sakeofhealth_test: the next milestones run their database tests there.
+
+If any step prints an error, stop and send me the message.

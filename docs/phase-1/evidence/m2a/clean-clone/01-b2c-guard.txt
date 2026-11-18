@@ -1,0 +1,8 @@
+  note: existing coupling (frozen): src/modules/b2b/catalogue/service.js → services/db.js
+  note: existing coupling (frozen): src/modules/b2b/index.js → middleware/adminAuth.js
+  note: existing coupling (frozen): src/modules/b2b/notifications/service.js → services/notify.js
+  note: existing coupling (frozen): src/modules/b2b/payments/service.js → services/payments.js
+  note: existing coupling (frozen): src/modules/b2b/payments/service.js → services/payments.js
+  note: existing coupling (frozen): src/modules/b2b/routes/admin.js → middleware/adminAuth.js
+B2C protection OK — 108 protected files unchanged, no business code reaches into B2C
+exit=0

@@ -1,0 +1,18 @@
+$ node --test tests/db-test-safety.test.js   (phase-1 working tree on b9bed95 + this increment, 2026-11-13T10:43:50Z)
+TAP version 13
+# Subtest: with migrations 013/014 present, the MySQL test helper refuses before connecting
+ok 1 - with migrations 013/014 present, the MySQL test helper refuses before connecting
+  ---
+  duration_ms: 32.775292
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 72.853596
+exit=0

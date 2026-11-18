@@ -1,0 +1,66 @@
+$ node --test tests/b2c-orders.test.js   (phase-1 working tree on b9bed95 + this increment, 2026-11-13T10:44:06Z)
+TAP version 13
+# Subtest: BUG-012: marking an order delivered does not mark an unpaid order as paid
+ok 1 - BUG-012: marking an order delivered does not mark an unpaid order as paid
+  ---
+  duration_ms: 231.150841
+  type: 'test'
+  ...
+# Subtest: BUG-013: a new order number is never a duplicate, even after a gap in the day
+ok 2 - BUG-013: a new order number is never a duplicate, even after a gap in the day
+  ---
+  duration_ms: 13.831525
+  type: 'test'
+  ...
+# Subtest: BUG-013: order numbers keep increasing across many orders
+ok 3 - BUG-013: order numbers keep increasing across many orders
+  ---
+  duration_ms: 20.310535
+  type: 'test'
+  ...
+# Subtest: D10: "delete order" no longer removes the order
+ok 4 - D10: "delete order" no longer removes the order
+  ---
+  duration_ms: 6.266053
+  type: 'test'
+  ...
+# Subtest: D10: cancel requires a reason, keeps the order, records who/why/when
+ok 5 - D10: cancel requires a reason, keeps the order, records who/why/when
+  ---
+  duration_ms: 13.503108
+  type: 'test'
+  ...
+# Subtest: D10: a delivered order cannot be cancelled
+ok 6 - D10: a delivered order cannot be cancelled
+  ---
+  duration_ms: 5.001397
+  type: 'test'
+  ...
+# Subtest: D10: cancelling updates the customer totals; numbering stays unique after cancel
+ok 7 - D10: cancelling updates the customer totals; numbering stays unique after cancel
+  ---
+  duration_ms: 16.28192
+  type: 'test'
+  ...
+# Subtest: roles: support staff cannot cancel, either way
+ok 8 - roles: support staff cannot cancel, either way
+  ---
+  duration_ms: 12.028523
+  type: 'test'
+  ...
+# Subtest: D10: cancelling through the status menu also needs a reason and records it
+ok 9 - D10: cancelling through the status menu also needs a reason and records it
+  ---
+  duration_ms: 8.534716
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3411.378002
+exit=0

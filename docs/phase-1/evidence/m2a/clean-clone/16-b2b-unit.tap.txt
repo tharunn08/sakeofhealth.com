@@ -1,0 +1,108 @@
+$ node --test tests/b2b-unit.test.js  (clean clone of ca2426e, no 013/014, 2026-11-13T10:57:51Z)
+TAP version 13
+# Subtest: money: exact paise arithmetic, never floats
+ok 1 - money: exact paise arithmetic, never floats
+  ---
+  duration_ms: 1.861037
+  type: 'test'
+  ...
+# Subtest: validators: GSTIN checksum, PAN, mobile, pincode
+ok 2 - validators: GSTIN checksum, PAN, mobile, pincode
+  ---
+  duration_ms: 1.294799
+  type: 'test'
+  ...
+# Subtest: pricing: default margins (12% distributor, 18% retailer) on base price
+ok 3 - pricing: default margins (12% distributor, 18% retailer) on base price
+  ---
+  duration_ms: 0.525098
+  type: 'test'
+  ...
+# Subtest: pricing: precedence — account+product > account > product > category > default
+ok 4 - pricing: precedence — account+product > account > product > category > default
+  ---
+  duration_ms: 0.506001
+  type: 'test'
+  ...
+# Subtest: pricing: audience isolation, inactive and out-of-window rules ignored
+ok 5 - pricing: audience isolation, inactive and out-of-window rules ignored
+  ---
+  duration_ms: 0.147803
+  type: 'test'
+  ...
+# Subtest: pricing: quantity slabs, volume discounts and promotions
+ok 6 - pricing: quantity slabs, volume discounts and promotions
+  ---
+  duration_ms: 0.490076
+  type: 'test'
+  ...
+# Subtest: pricing: off-MRP margin mode and below-cost flag
+ok 7 - pricing: off-MRP margin mode and below-cost flag
+  ---
+  duration_ms: 0.121119
+  type: 'test'
+  ...
+# Subtest: MOQ and case quantity: MOQ 10, case 20 → 20/40/60 valid, 15 invalid
+ok 8 - MOQ and case quantity: MOQ 10, case 20 → 20/40/60 valid, 15 invalid
+  ---
+  duration_ms: 0.25049
+  type: 'test'
+  ...
+# Subtest: GST: intra-state splits CGST/SGST equally, inter-state is IGST
+ok 9 - GST: intra-state splits CGST/SGST equally, inter-state is IGST
+  ---
+  duration_ms: 0.306987
+  type: 'test'
+  ...
+# Subtest: invoice numbering: Indian financial year and 16-character limit
+ok 10 - invoice numbering: Indian financial year and 16-character limit
+  ---
+  duration_ms: 0.51036
+  type: 'test'
+  ...
+# Subtest: state machine: only defined transitions, per actor
+ok 11 - state machine: only defined transitions, per actor
+  ---
+  duration_ms: 0.340344
+  type: 'test'
+  ...
+# Subtest: RBAC: roles get only their permissions
+ok 12 - RBAC: roles get only their permissions
+  ---
+  duration_ms: 0.243844
+  type: 'test'
+  ...
+# Subtest: uploads: file type comes from the bytes, not the name
+ok 13 - uploads: file type comes from the bytes, not the name
+  ---
+  duration_ms: 0.484755
+  type: 'test'
+  ...
+# Subtest: import: header detection and CSV parsing
+ok 14 - import: header detection and CSV parsing
+  ---
+  duration_ms: 0.564839
+  type: 'test'
+  ...
+# Subtest: exports: spreadsheet formula injection is neutralised
+ok 15 - exports: spreadsheet formula injection is neutralised
+  ---
+  duration_ms: 0.283512
+  type: 'test'
+  ...
+# Subtest: migrations: files are ordered, idempotent and contain nothing destructive
+ok 16 - migrations: files are ordered, idempotent and contain nothing destructive
+  ---
+  duration_ms: 1.404267
+  type: 'test'
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 111.460734
+exit=0

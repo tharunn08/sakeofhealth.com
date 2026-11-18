@@ -1,0 +1,3 @@
+-- Migration 018 — notification workflow records (N5). No new tables: the change is one
+-- enum extension in 018_notification_workflow.js (recipients that are a plain address, such
+-- as the administrators' alert emails, which are not accounts or staff records).

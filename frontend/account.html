@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>My Account — Sake of Health</title>
+<link rel="icon" type="image/png" href="assets/images/carousel/favicon.png"/>
+<meta name="robots" content="noindex"/>
+<link href="https://api.fontshare.com/v2/css?f[]=recoleta@400,700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="assets/css/main.css?v=10"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;}
+body{background:#f8f4ee;font-family:var(--ff-body);color:var(--text);min-height:100vh;}
+.acc-nav{background:#fff;border-bottom:1px solid rgba(120,163,59,0.12);padding:0.9rem 5vw;display:flex;align-items:center;justify-content:space-between;}
+.acc-nav .logo-name{font-family:var(--ff-display);font-size:1.15rem;color:var(--green-deep);text-decoration:none;}
+.acc-wrap{max-width:420px;margin:3rem auto;padding:0 1.2rem;}
+.acc-card{background:#fff;border-radius:16px;padding:2.2rem;box-shadow:0 2px 12px rgba(0,0,0,0.05);}
+.acc-tabs{display:flex;gap:0.5rem;margin-bottom:1.6rem;background:var(--cream-dark, #f1ece2);border-radius:50px;padding:4px;}
+.acc-tab{flex:1;text-align:center;padding:0.6rem 1rem;border-radius:50px;border:none;background:none;font-family:inherit;font-weight:600;font-size:0.88rem;color:var(--text-muted);cursor:pointer;}
+.acc-tab.active{background:var(--green-deep);color:#fff;}
+.acc-title{font-family:var(--ff-display);font-size:1.4rem;color:var(--green-deep);margin-bottom:0.3rem;}
+.acc-sub{font-size:0.85rem;color:var(--text-muted);margin-bottom:1.4rem;}
+.acc-field{margin-bottom:1rem;}
+.acc-field label{display:block;font-size:0.8rem;font-weight:600;margin-bottom:0.4rem;color:var(--text);}
+.acc-field input{width:100%;padding:0.8rem 1rem;border:1.5px solid rgba(0,0,0,0.12);border-radius:10px;font-family:inherit;font-size:0.95rem;outline:none;transition:border-color 0.2s;}
+.acc-field input:focus{border-color:var(--green-deep);}
+.acc-btn{width:100%;padding:0.9rem;background:var(--green-deep);color:#fff;border:none;border-radius:10px;font-family:inherit;font-weight:600;font-size:1rem;cursor:pointer;margin-top:0.4rem;}
+.acc-btn:disabled{opacity:0.6;cursor:not-allowed;}
+.acc-err{color:#c0392b;font-size:0.83rem;margin-bottom:0.8rem;display:none;}
+.acc-guest{text-align:center;font-size:0.8rem;color:var(--text-muted);margin-top:1.4rem;}
+.acc-guest a{color:var(--green-deep);font-weight:600;text-decoration:none;}
+.acc-loggedin{text-align:center;}
+.acc-loggedin .avatar{width:56px;height:56px;border-radius:50%;background:var(--green-deep);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:700;margin:0 auto 1rem;}
+.acc-order-list{margin-top:1.2rem;text-align:left;}
+.acc-order{padding:0.8rem;border:1px solid rgba(0,0,0,0.08);border-radius:10px;margin-bottom:0.6rem;font-size:0.85rem;}
+.acc-order strong{display:block;color:var(--green-deep);}
+</style>
+</head>
+<body>
+
+<nav class="acc-nav">
+  <a href="index.html" class="logo-name">Sake of Health</a>
+  <a href="index.html" style="font-size:0.85rem;color:var(--text-muted);text-decoration:none;">← Back to store</a>
+</nav>
+
+<div class="acc-wrap">
+  <div class="acc-card">
+
+    <div id="acc-logged-out">
+      <div class="acc-tabs">
+        <button class="acc-tab active" id="tab-login" onclick="showTab('login')">Log In</button>
+        <button class="acc-tab" id="tab-signup" onclick="showTab('signup')">Sign Up</button>
+      </div>
+
+      <div id="pane-login">
+        <div class="acc-title">Welcome back</div>
+        <div class="acc-sub">Log in to see your order history and track faster.</div>
+        <div class="acc-err" id="login-err"></div>
+        <form id="login-form" onsubmit="return doLogin(event)">
+          <div class="acc-field"><label>Email</label><input type="email" id="login-email" required autocomplete="email"/></div>
+          <div class="acc-field"><label>Password</label><input type="password" id="login-password" required autocomplete="current-password"/></div>
+          <button class="acc-btn" type="submit" id="login-btn">Log In</button>
+        </form>
+      </div>
+
+      <div id="pane-signup" style="display:none;">
+        <div class="acc-title">Create your account</div>
+        <div class="acc-sub">Optional — you can always check out as a guest instead.</div>
+        <div class="acc-err" id="signup-err"></div>
+        <form id="signup-form" onsubmit="return doSignup(event)">
+          <div class="acc-field"><label>Name</label><input type="text" id="signup-name" autocomplete="name"/></div>
+          <div class="acc-field"><label>Email</label><input type="email" id="signup-email" required autocomplete="email"/></div>
+          <div class="acc-field"><label>Password</label><input type="password" id="signup-password" required minlength="8" autocomplete="new-password"/></div>
+          <button class="acc-btn" type="submit" id="signup-btn">Create Account</button>
+        </form>
+      </div>
+
+      <div class="acc-guest">Just here to order? <a href="index.html#products">Continue as guest →</a></div>
+      <div class="acc-guest" id="acc-b2b-link" style="display:none;margin-top:.5rem;">Retailer or distributor? <a href="/b2b/login">Business login →</a></div>
+    </div>
+
+    <div id="acc-logged-in" style="display:none;">
+      <div class="acc-loggedin">
+        <div class="avatar" id="acc-avatar">?</div>
+        <div class="acc-title" id="acc-name">—</div>
+        <div class="acc-sub" id="acc-email">—</div>
+        <button class="acc-btn" style="background:#fff;color:var(--green-deep);border:1.5px solid var(--green-deep);" onclick="doLogout()">Log Out</button>
+      </div>
+      <div class="acc-order-list" id="acc-orders"></div>
+    </div>
+
+  </div>
+</div>
+
+<script src="/config.js"></script>
+<script>if (window.SOH_CONFIG && window.SOH_CONFIG.b2bEnabled) { var b2bLink = document.getElementById('acc-b2b-link'); if (b2bLink) b2bLink.style.display = ''; }</script>
+<script src="assets/js/auth.js?v=1"></script>
+<script>
+function showTab(which) {
+  document.getElementById('tab-login').classList.toggle('active', which === 'login');
+  document.getElementById('tab-signup').classList.toggle('active', which === 'signup');
+  document.getElementById('pane-login').style.display = which === 'login' ? 'block' : 'none';
+  document.getElementById('pane-signup').style.display = which === 'signup' ? 'block' : 'none';
+}
+
+async function doLogin(e) {
+  e.preventDefault();
+  const btn = document.getElementById('login-btn');
+  const err = document.getElementById('login-err');
+  err.style.display = 'none';
+  btn.disabled = true; btn.textContent = 'Logging in…';
+
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+
+  try {
+    // Try admin credentials first, silently. If they match, go straight to
+    // the admin dashboard. Nothing here reveals whether admin login exists —
+    // a wrong attempt just falls through to the normal customer login.
+    const adminRes = await fetch('/api/admin/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email, password: password }),
+    });
+    if (adminRes.ok) {
+      const adminData = await adminRes.json();
+      localStorage.setItem('soh_admin_token', adminData.token);
+      localStorage.setItem('soh_admin_user', JSON.stringify(adminData.user));
+      window.location.href = '/admin/dashboard.html';
+      return false;
+    }
+  } catch (ex) {
+    // Admin check failed to reach the server — fall through to customer login.
+  }
+
+  try {
+    const user = await SohAuth.login(email, password);
+    renderLoggedIn(user);
+  } catch (ex) {
+    err.textContent = ex.message || 'Invalid email or password';
+    err.style.display = 'block';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Log In';
+  }
+  return false;
+}
+
+async function doSignup(e) {
+  e.preventDefault();
+  const btn = document.getElementById('signup-btn');
+  const err = document.getElementById('signup-err');
+  err.style.display = 'none';
+  btn.disabled = true; btn.textContent = 'Creating account…';
+  try {
+    const user = await SohAuth.signup(
+      document.getElementById('signup-email').value,
+      document.getElementById('signup-password').value,
+      document.getElementById('signup-name').value
+    );
+    renderLoggedIn(user);
+  } catch (ex) {
+    err.textContent = ex.message || 'Sign up failed';
+    err.style.display = 'block';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Create Account';
+  }
+  return false;
+}
+
+function doLogout() {
+  SohAuth.logout();
+  document.getElementById('acc-logged-in').style.display = 'none';
+  document.getElementById('acc-logged-out').style.display = 'block';
+}
+
+function renderLoggedIn(user) {
+  document.getElementById('acc-logged-out').style.display = 'none';
+  document.getElementById('acc-logged-in').style.display = 'block';
+  document.getElementById('acc-name').textContent = user.name || user.email;
+  document.getElementById('acc-email').textContent = user.email;
+  document.getElementById('acc-avatar').textContent = (user.name || user.email || '?').charAt(0).toUpperCase();
+  SohAuth.myOrders().then(function (orders) {
+    const list = document.getElementById('acc-orders');
+    if (!orders.length) { list.innerHTML = '<div class="acc-sub" style="text-align:center;">No orders yet.</div>'; return; }
+    list.innerHTML = orders.map(function (o) {
+      return '<div class="acc-order"><strong>' + o.orderId + '</strong>' + o.status + ' · ₹' + o.total + '</div>';
+    }).join('');
+  }).catch(function () {});
+}
+
+(function init() {
+  const user = SohAuth.currentUser();
+  if (user) renderLoggedIn(user);
+})();
+</script>
+</body>
+</html>

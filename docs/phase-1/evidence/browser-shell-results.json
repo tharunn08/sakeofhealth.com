@@ -1,0 +1,176 @@
+[
+ {
+  "view": "desktop",
+  "user": "admin@test.local",
+  "landed": "/admin/overview/dashboard",
+  "groups": [
+   "Overview",
+   "Sales & Orders",
+   "Business Accounts",
+   "Customers",
+   "Products & Catalogue",
+   "Inventory",
+   "Finance & Reports",
+   "Administration"
+  ],
+  "links": 22,
+  "unexpected_failed_requests": [],
+  "b2b_503_by_design": 34,
+  "pages_with_errors": [],
+  "not_active_or_redirected": []
+ },
+ {
+  "view": "desktop",
+  "user": "manager@ui.test",
+  "landed": "/admin/overview/dashboard",
+  "groups": [
+   "Overview",
+   "Sales & Orders",
+   "Business Accounts",
+   "Customers",
+   "Products & Catalogue",
+   "Inventory",
+   "Finance & Reports",
+   "Administration"
+  ],
+  "links": 22,
+  "unexpected_failed_requests": [],
+  "b2b_503_by_design": 34,
+  "pages_with_errors": [],
+  "not_active_or_redirected": []
+ },
+ {
+  "view": "desktop",
+  "user": "staff@ui.test",
+  "landed": "/admin/overview/dashboard",
+  "groups": [
+   "Overview",
+   "Sales & Orders",
+   "Business Accounts",
+   "Customers",
+   "Products & Catalogue"
+  ],
+  "links": 12,
+  "unexpected_failed_requests": [],
+  "b2b_503_by_design": 18,
+  "pages_with_errors": [],
+  "not_active_or_redirected": []
+ },
+ {
+  "view": "desktop",
+  "user": "delivery@ui.test",
+  "landed": "/admin/sales/deliveries",
+  "groups": [
+   "Sales & Orders"
+  ],
+  "links": 1,
+  "unexpected_failed_requests": [],
+  "b2b_503_by_design": 0,
+  "pages_with_errors": [],
+  "not_active_or_redirected": []
+ },
+ {
+  "view": "desktop",
+  "user": "sales@ui.test",
+  "landed": "/admin/overview/trade",
+  "groups": [
+   "Overview",
+   "Sales & Orders",
+   "Business Accounts",
+   "Products & Catalogue",
+   "Finance & Reports"
+  ],
+  "links": 7,
+  "unexpected_failed_requests": [],
+  "b2b_503_by_design": 17,
+  "pages_with_errors": [],
+  "not_active_or_redirected": []
+ },
+ {
+  "view": "mobile",
+  "user": "admin@test.local",
+  "landed": "/admin/overview/dashboard",
+  "groups": [
+   "Overview",
+   "Sales & Orders",
+   "Business Accounts",
+   "Customers",
+   "Products & Catalogue",
+   "Inventory",
+   "Finance & Reports",
+   "Administration"
+  ],
+  "links": 22,
+  "unexpected_failed_requests": [],
+  "b2b_503_by_design": 34,
+  "pages_with_errors": [],
+  "not_active_or_redirected": []
+ },
+ {
+  "view": "mobile",
+  "user": "manager@ui.test",
+  "landed": "/admin/overview/dashboard",
+  "groups": [
+   "Overview",
+   "Sales & Orders",
+   "Business Accounts",
+   "Customers",
+   "Products & Catalogue",
+   "Inventory",
+   "Finance & Reports",
+   "Administration"
+  ],
+  "links": 22,
+  "unexpected_failed_requests": [],
+  "b2b_503_by_design": 34,
+  "pages_with_errors": [],
+  "not_active_or_redirected": []
+ },
+ {
+  "view": "mobile",
+  "user": "staff@ui.test",
+  "landed": "/admin/overview/dashboard",
+  "groups": [
+   "Overview",
+   "Sales & Orders",
+   "Business Accounts",
+   "Customers",
+   "Products & Catalogue"
+  ],
+  "links": 12,
+  "unexpected_failed_requests": [],
+  "b2b_503_by_design": 18,
+  "pages_with_errors": [],
+  "not_active_or_redirected": []
+ },
+ {
+  "view": "mobile",
+  "user": "delivery@ui.test",
+  "landed": "/admin/sales/deliveries",
+  "groups": [
+   "Sales & Orders"
+  ],
+  "links": 1,
+  "unexpected_failed_requests": [],
+  "b2b_503_by_design": 0,
+  "pages_with_errors": [],
+  "not_active_or_redirected": []
+ },
+ {
+  "view": "mobile",
+  "user": "sales@ui.test",
+  "landed": "/admin/overview/trade",
+  "groups": [
+   "Overview",
+   "Sales & Orders",
+   "Business Accounts",
+   "Products & Catalogue",
+   "Finance & Reports"
+  ],
+  "links": 7,
+  "unexpected_failed_requests": [],
+  "b2b_503_by_design": 17,
+  "pages_with_errors": [],
+  "not_active_or_redirected": []
+ }
+]

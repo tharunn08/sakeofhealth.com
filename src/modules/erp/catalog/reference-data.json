@@ -1,0 +1,1056 @@
+{
+ "version": "2026-11-06+p13+qc+adj+notif",
+ "note": "Reference data for the ERP. Loaded only by scripts/erp-reference-data.js with explicit confirmation (decision D14). Never removes or changes existing rows.",
+ "permissions": [
+  {
+   "code": "catalog.pricing.edit",
+   "module": "catalog",
+   "description": "Pricing edit (catalog)",
+   "is_sensitive": false
+  },
+  {
+   "code": "catalog.pricing.import",
+   "module": "catalog",
+   "description": "Pricing import (catalog)",
+   "is_sensitive": false
+  },
+  {
+   "code": "catalog.pricing.publish",
+   "module": "catalog",
+   "description": "Pricing publish (catalog)",
+   "is_sensitive": true
+  },
+  {
+   "code": "catalog.pricing.view",
+   "module": "catalog",
+   "description": "Pricing view (catalog)",
+   "is_sensitive": false
+  },
+  {
+   "code": "catalog.products.edit",
+   "module": "catalog",
+   "description": "Products edit (catalog)",
+   "is_sensitive": false
+  },
+  {
+   "code": "catalog.products.view",
+   "module": "catalog",
+   "description": "Products view (catalog)",
+   "is_sensitive": false
+  },
+  {
+   "code": "catalog.schemes.edit",
+   "module": "catalog",
+   "description": "Schemes edit (catalog)",
+   "is_sensitive": false
+  },
+  {
+   "code": "catalog.tax.edit",
+   "module": "catalog",
+   "description": "Tax edit (catalog)",
+   "is_sensitive": false
+  },
+  {
+   "code": "core.approvals.decide",
+   "module": "core",
+   "description": "Approvals decide (core)",
+   "is_sensitive": true
+  },
+  {
+   "code": "core.approvals.unconfigured",
+   "module": "core",
+   "description": "Approve requests while approval thresholds are not configured (fail-safe; Super Admin only)",
+   "is_sensitive": true
+  },
+  {
+   "code": "core.approvals.view",
+   "module": "core",
+   "description": "Approvals view (core)",
+   "is_sensitive": false
+  },
+  {
+   "code": "core.audit.view",
+   "module": "core",
+   "description": "Audit view (core)",
+   "is_sensitive": false
+  },
+  {
+   "code": "core.jobs.view",
+   "module": "core",
+   "description": "Jobs view (core)",
+   "is_sensitive": false
+  },
+  {
+   "code": "core.monitoring.view",
+   "module": "core",
+   "description": "Monitoring view (core)",
+   "is_sensitive": false
+  },
+  {
+   "code": "core.roles.edit",
+   "module": "core",
+   "description": "Roles edit (core)",
+   "is_sensitive": true
+  },
+  {
+   "code": "core.roles.view",
+   "module": "core",
+   "description": "Roles view (core)",
+   "is_sensitive": false
+  },
+  {
+   "code": "core.self.view",
+   "module": "core",
+   "description": "Self view (core)",
+   "is_sensitive": false
+  },
+  {
+   "code": "core.settings.edit",
+   "module": "core",
+   "description": "Settings edit (core)",
+   "is_sensitive": true
+  },
+  {
+   "code": "core.settings.view",
+   "module": "core",
+   "description": "Settings view (core)",
+   "is_sensitive": false
+  },
+  {
+   "code": "core.staff.create",
+   "module": "core",
+   "description": "Staff create (core)",
+   "is_sensitive": false
+  },
+  {
+   "code": "core.staff.edit",
+   "module": "core",
+   "description": "Staff edit (core)",
+   "is_sensitive": false
+  },
+  {
+   "code": "core.staff.view",
+   "module": "core",
+   "description": "Staff view (core)",
+   "is_sensitive": false
+  },
+  {
+   "code": "finance.bank.import",
+   "module": "finance",
+   "description": "Bank import (finance)",
+   "is_sensitive": false
+  },
+  {
+   "code": "finance.bank.reconcile",
+   "module": "finance",
+   "description": "Bank reconcile (finance)",
+   "is_sensitive": false
+  },
+  {
+   "code": "finance.payables.create",
+   "module": "finance",
+   "description": "Payables create (finance)",
+   "is_sensitive": false
+  },
+  {
+   "code": "finance.payables.pay",
+   "module": "finance",
+   "description": "Payables pay (finance)",
+   "is_sensitive": true
+  },
+  {
+   "code": "finance.payables.view",
+   "module": "finance",
+   "description": "Payables view (finance)",
+   "is_sensitive": false
+  },
+  {
+   "code": "finance.receivables.allocate",
+   "module": "finance",
+   "description": "Receivables allocate (finance)",
+   "is_sensitive": false
+  },
+  {
+   "code": "finance.receivables.view",
+   "module": "finance",
+   "description": "Receivables view (finance)",
+   "is_sensitive": false
+  },
+  {
+   "code": "finance.reports.view",
+   "module": "finance",
+   "description": "Reports view (finance)",
+   "is_sensitive": false
+  },
+  {
+   "code": "inventory.adjust.propose",
+   "module": "inventory",
+   "description": "Propose stock adjustments and opening balances (posted after approval)",
+   "is_sensitive": false
+  },
+  {
+   "code": "inventory.count",
+   "module": "inventory",
+   "description": "Count (inventory)",
+   "is_sensitive": false
+  },
+  {
+   "code": "inventory.disposition.approve",
+   "module": "inventory",
+   "description": "Disposition approve (inventory)",
+   "is_sensitive": true
+  },
+  {
+   "code": "inventory.disposition.propose",
+   "module": "inventory",
+   "description": "Disposition propose (inventory)",
+   "is_sensitive": false
+  },
+  {
+   "code": "inventory.trace",
+   "module": "inventory",
+   "description": "Trace (inventory)",
+   "is_sensitive": false
+  },
+  {
+   "code": "inventory.transfer",
+   "module": "inventory",
+   "description": "Transfer (inventory)",
+   "is_sensitive": false
+  },
+  {
+   "code": "inventory.view",
+   "module": "inventory",
+   "description": "View (inventory)",
+   "is_sensitive": false
+  },
+  {
+   "code": "network.gst.verify",
+   "module": "network",
+   "description": "Gst verify (network)",
+   "is_sensitive": false
+  },
+  {
+   "code": "network.map.view",
+   "module": "network",
+   "description": "Map view (network)",
+   "is_sensitive": false
+  },
+  {
+   "code": "network.mapping.edit",
+   "module": "network",
+   "description": "Mapping edit (network)",
+   "is_sensitive": false
+  },
+  {
+   "code": "network.territories.edit",
+   "module": "network",
+   "description": "Territories edit (network)",
+   "is_sensitive": false
+  },
+  {
+   "code": "procurement.po.create",
+   "module": "procurement",
+   "description": "Po create (procurement)",
+   "is_sensitive": false
+  },
+  {
+   "code": "procurement.pr.create",
+   "module": "procurement",
+   "description": "Pr create (procurement)",
+   "is_sensitive": false
+  },
+  {
+   "code": "procurement.pr.view",
+   "module": "procurement",
+   "description": "Pr view (procurement)",
+   "is_sensitive": false
+  },
+  {
+   "code": "procurement.rfq.award",
+   "module": "procurement",
+   "description": "Rfq award (procurement)",
+   "is_sensitive": true
+  },
+  {
+   "code": "procurement.rfq.create",
+   "module": "procurement",
+   "description": "Rfq create (procurement)",
+   "is_sensitive": false
+  },
+  {
+   "code": "procurement.rfq.view",
+   "module": "procurement",
+   "description": "Rfq view (procurement)",
+   "is_sensitive": false
+  },
+  {
+   "code": "recalls.activate",
+   "module": "recalls",
+   "description": "Activate (recalls)",
+   "is_sensitive": true
+  },
+  {
+   "code": "recalls.close",
+   "module": "recalls",
+   "description": "Close (recalls)",
+   "is_sensitive": true
+  },
+  {
+   "code": "recalls.create",
+   "module": "recalls",
+   "description": "Create (recalls)",
+   "is_sensitive": false
+  },
+  {
+   "code": "recalls.view",
+   "module": "recalls",
+   "description": "View (recalls)",
+   "is_sensitive": false
+  },
+  {
+   "code": "reports.export",
+   "module": "reports",
+   "description": "Export (reports)",
+   "is_sensitive": false
+  },
+  {
+   "code": "returns.approve",
+   "module": "returns",
+   "description": "Approve (returns)",
+   "is_sensitive": true
+  },
+  {
+   "code": "returns.create",
+   "module": "returns",
+   "description": "Create (returns)",
+   "is_sensitive": false
+  },
+  {
+   "code": "returns.inspect",
+   "module": "returns",
+   "description": "Inspect (returns)",
+   "is_sensitive": false
+  },
+  {
+   "code": "sales.catalogue.view",
+   "module": "sales",
+   "description": "Catalogue view (sales)",
+   "is_sensitive": false
+  },
+  {
+   "code": "sales.collections.confirm",
+   "module": "sales",
+   "description": "Collections confirm (sales)",
+   "is_sensitive": false
+  },
+  {
+   "code": "sales.collections.create",
+   "module": "sales",
+   "description": "Collections create (sales)",
+   "is_sensitive": false
+  },
+  {
+   "code": "sales.orders.create",
+   "module": "sales",
+   "description": "Orders create (sales)",
+   "is_sensitive": false
+  },
+  {
+   "code": "sales.otp.override.request",
+   "module": "sales",
+   "description": "Otp override request (sales)",
+   "is_sensitive": false
+  },
+  {
+   "code": "sales.retailers.create",
+   "module": "sales",
+   "description": "Retailers create (sales)",
+   "is_sensitive": false
+  },
+  {
+   "code": "sales.retailers.view",
+   "module": "sales",
+   "description": "Retailers view (sales)",
+   "is_sensitive": false
+  },
+  {
+   "code": "sales.self.view",
+   "module": "sales",
+   "description": "Self view (sales)",
+   "is_sensitive": false
+  },
+  {
+   "code": "sales.visits.create",
+   "module": "sales",
+   "description": "Visits create (sales)",
+   "is_sensitive": false
+  },
+  {
+   "code": "vendors.create",
+   "module": "vendors",
+   "description": "Create (vendors)",
+   "is_sensitive": false
+  },
+  {
+   "code": "vendors.products.approve",
+   "module": "vendors",
+   "description": "Products approve (vendors)",
+   "is_sensitive": true
+  },
+  {
+   "code": "vendors.verify",
+   "module": "vendors",
+   "description": "Verify (vendors)",
+   "is_sensitive": false
+  },
+  {
+   "code": "vendors.view",
+   "module": "vendors",
+   "description": "View (vendors)",
+   "is_sensitive": false
+  },
+  {
+   "code": "warehouse.grn.create",
+   "module": "warehouse",
+   "description": "Grn create (warehouse)",
+   "is_sensitive": false
+  },
+  {
+   "code": "warehouse.grn.post",
+   "module": "warehouse",
+   "description": "Grn post (warehouse)",
+   "is_sensitive": false
+  },
+  {
+   "code": "sales.beats.edit",
+   "module": "sales",
+   "description": "Create and change salesman beats (routes)",
+   "is_sensitive": false
+  },
+  {
+   "code": "sales.targets.edit",
+   "module": "sales",
+   "description": "Set monthly salesman targets",
+   "is_sensitive": false
+  },
+  {
+   "code": "sales.reports.view",
+   "module": "sales",
+   "description": "Salesman performance and target achievement",
+   "is_sensitive": false
+  },
+  {
+   "code": "sales.office_orders.create",
+   "module": "sales",
+   "description": "Place orders on behalf of a customer from the office",
+   "is_sensitive": false
+  },
+  {
+   "code": "network.accounts.create",
+   "module": "network",
+   "description": "Create business accounts from the office (e.g. super stockists)",
+   "is_sensitive": false
+  },
+  {
+   "code": "notifications.view",
+   "module": "notifications",
+   "description": "View notification history and delivery status (contacts masked)",
+   "is_sensitive": false
+  },
+  {
+   "code": "notifications.contacts.view",
+   "module": "notifications",
+   "description": "See recipients’ full email and mobile in notifications",
+   "is_sensitive": false
+  },
+  {
+   "code": "notifications.send.trade",
+   "module": "notifications",
+   "description": "Send and resend notifications to retailers and distributors",
+   "is_sensitive": false
+  },
+  {
+   "code": "notifications.send.salesmen",
+   "module": "notifications",
+   "description": "Send and resend notifications to salesmen",
+   "is_sensitive": false
+  },
+  {
+   "code": "notifications.send.vendors",
+   "module": "notifications",
+   "description": "Send and resend notifications to suppliers and manufacturers",
+   "is_sensitive": false
+  },
+  {
+   "code": "notifications.send.staff",
+   "module": "notifications",
+   "description": "Send and resend notifications to internal staff",
+   "is_sensitive": false
+  },
+  {
+   "code": "notifications.send.promotional",
+   "module": "notifications",
+   "description": "Write promotional notifications to business accounts that have consented (opted-out and unconsented recipients are skipped)",
+   "is_sensitive": false
+  },
+  {
+   "code": "notifications.promotional.approve",
+   "module": "notifications",
+   "description": "Approve promotional sends above the approval threshold",
+   "is_sensitive": true
+  },
+  {
+   "code": "notifications.templates.manage",
+   "module": "notifications",
+   "description": "Record message templates and their provider approval",
+   "is_sensitive": false
+  },
+  {
+   "code": "notifications.optout.manage",
+   "module": "notifications",
+   "description": "Record consent, opt-ins and opt-outs",
+   "is_sensitive": false
+  },
+  {
+   "code": "locations.view",
+   "module": "locations",
+   "description": "See salesman and event locations, history and the map",
+   "is_sensitive": false
+  },
+  {
+   "code": "locations.capture",
+   "module": "locations",
+   "description": "Record own location (GPS or typed in) during work",
+   "is_sensitive": false
+  },
+  {
+   "code": "events.view",
+   "module": "events",
+   "description": "See events, their stock and sales (event staff: only their events)",
+   "is_sensitive": false
+  },
+  {
+   "code": "events.manage",
+   "module": "events",
+   "description": "Create, open and close events; assign event staff",
+   "is_sensitive": false
+  },
+  {
+   "code": "events.sell",
+   "module": "events",
+   "description": "Sell at the counter of an assigned event; take payments; record returns",
+   "is_sensitive": false
+  },
+  {
+   "code": "events.sales.void",
+   "module": "events",
+   "description": "Void a counter invoice (reason required; stock goes back)",
+   "is_sensitive": false
+  },
+  {
+   "code": "events.reports.view",
+   "module": "events",
+   "description": "Event-wise sales reports",
+   "is_sensitive": false
+  },
+  {
+   "code": "shop_stock.view",
+   "module": "shop_stock",
+   "description": "Online-shop stock: mode, shadow results, discrepancies, exceptions",
+   "is_sensitive": false
+  },
+  {
+   "code": "shop_stock.resolve",
+   "module": "shop_stock",
+   "description": "Explain discrepancies; request refunds and close shop stock exceptions",
+   "is_sensitive": false
+  },
+  {
+   "code": "shop_stock.refund.pay",
+   "module": "shop_stock",
+   "description": "Refund a paid shop checkout that could not get stock, through the payment gateway (two-factor sign-in)",
+   "is_sensitive": true
+  },
+  {
+   "code": "offline.view",
+   "module": "offline",
+   "description": "See offline-synchronised operations of all staff",
+   "is_sensitive": false
+  },
+  {
+   "code": "offline.resolve",
+   "module": "offline",
+   "description": "Retry, resolve or discard failed and conflicting offline operations",
+   "is_sensitive": false
+  },
+  {
+   "code": "customers.view",
+   "module": "customers",
+   "description": "Unified customer list and order history (contacts masked)",
+   "is_sensitive": false
+  },
+  {
+   "code": "customers.contacts.view",
+   "module": "customers",
+   "description": "See customers’ full email and mobile",
+   "is_sensitive": false
+  },
+  {
+   "code": "customers.link.manage",
+   "module": "customers",
+   "description": "Confirm or correct how customer records are linked",
+   "is_sensitive": false
+  }
+ ],
+ "roles": [
+  {
+   "code": "super_admin",
+   "name": "Super Admin",
+   "permissions": [
+    "catalog.pricing.edit",
+    "catalog.pricing.import",
+    "catalog.pricing.publish",
+    "catalog.pricing.view",
+    "catalog.products.edit",
+    "catalog.products.view",
+    "catalog.schemes.edit",
+    "catalog.tax.edit",
+    "core.approvals.decide",
+    "core.approvals.unconfigured",
+    "core.approvals.view",
+    "core.audit.view",
+    "core.jobs.view",
+    "core.monitoring.view",
+    "core.roles.edit",
+    "core.roles.view",
+    "core.self.view",
+    "core.settings.edit",
+    "core.settings.view",
+    "core.staff.create",
+    "core.staff.edit",
+    "core.staff.view",
+    "finance.bank.import",
+    "finance.bank.reconcile",
+    "finance.payables.create",
+    "finance.payables.pay",
+    "finance.payables.view",
+    "finance.receivables.allocate",
+    "finance.receivables.view",
+    "finance.reports.view",
+    "inventory.count",
+    "inventory.disposition.approve",
+    "inventory.disposition.propose",
+    "inventory.trace",
+    "inventory.transfer",
+    "inventory.view",
+    "network.gst.verify",
+    "network.map.view",
+    "network.mapping.edit",
+    "network.territories.edit",
+    "procurement.po.create",
+    "procurement.pr.create",
+    "procurement.pr.view",
+    "procurement.rfq.award",
+    "procurement.rfq.create",
+    "procurement.rfq.view",
+    "recalls.activate",
+    "recalls.close",
+    "recalls.create",
+    "recalls.view",
+    "reports.export",
+    "returns.approve",
+    "returns.create",
+    "returns.inspect",
+    "sales.catalogue.view",
+    "sales.collections.confirm",
+    "sales.collections.create",
+    "sales.orders.create",
+    "sales.otp.override.request",
+    "sales.retailers.create",
+    "sales.retailers.view",
+    "sales.self.view",
+    "sales.visits.create",
+    "vendors.create",
+    "vendors.products.approve",
+    "vendors.verify",
+    "vendors.view",
+    "warehouse.grn.create",
+    "warehouse.grn.post",
+    "sales.beats.edit",
+    "sales.targets.edit",
+    "sales.reports.view",
+    "sales.office_orders.create",
+    "network.accounts.create",
+    "inventory.adjust.propose",
+    "notifications.view",
+    "notifications.contacts.view",
+    "notifications.send.trade",
+    "notifications.send.salesmen",
+    "notifications.send.vendors",
+    "notifications.send.staff",
+    "notifications.send.promotional",
+    "notifications.promotional.approve",
+    "notifications.templates.manage",
+    "notifications.optout.manage",
+    "locations.view",
+    "locations.capture",
+    "events.view",
+    "events.manage",
+    "events.sell",
+    "events.sales.void",
+    "events.reports.view",
+    "shop_stock.view",
+    "shop_stock.resolve",
+    "offline.view",
+    "offline.resolve",
+    "customers.view",
+    "customers.contacts.view",
+    "customers.link.manage",
+    "shop_stock.refund.pay"
+   ]
+  },
+  {
+   "code": "business_admin",
+   "name": "Business Admin",
+   "permissions": [
+    "catalog.pricing.edit",
+    "catalog.pricing.import",
+    "catalog.pricing.view",
+    "catalog.products.edit",
+    "catalog.products.view",
+    "catalog.schemes.edit",
+    "catalog.tax.edit",
+    "core.approvals.decide",
+    "core.approvals.view",
+    "core.audit.view",
+    "core.monitoring.view",
+    "core.self.view",
+    "core.settings.view",
+    "core.staff.view",
+    "inventory.trace",
+    "inventory.view",
+    "network.gst.verify",
+    "network.map.view",
+    "network.mapping.edit",
+    "network.territories.edit",
+    "recalls.activate",
+    "recalls.close",
+    "recalls.create",
+    "recalls.view",
+    "reports.export",
+    "returns.approve",
+    "returns.create",
+    "returns.inspect",
+    "vendors.create",
+    "vendors.products.approve",
+    "vendors.verify",
+    "vendors.view",
+    "sales.office_orders.create",
+    "network.accounts.create",
+    "sales.reports.view",
+    "notifications.view",
+    "notifications.contacts.view",
+    "notifications.send.trade",
+    "notifications.send.salesmen",
+    "notifications.send.vendors",
+    "notifications.send.staff",
+    "notifications.send.promotional",
+    "notifications.promotional.approve",
+    "notifications.templates.manage",
+    "notifications.optout.manage",
+    "locations.view",
+    "locations.capture",
+    "events.view",
+    "events.manage",
+    "events.sell",
+    "events.sales.void",
+    "events.reports.view",
+    "shop_stock.view",
+    "shop_stock.resolve",
+    "offline.view",
+    "offline.resolve",
+    "customers.view",
+    "customers.contacts.view",
+    "customers.link.manage",
+    "shop_stock.refund.pay"
+   ]
+  },
+  {
+   "code": "sales_manager",
+   "name": "Sales Manager",
+   "permissions": [
+    "catalog.pricing.view",
+    "catalog.products.view",
+    "core.approvals.decide",
+    "core.approvals.view",
+    "core.self.view",
+    "inventory.view",
+    "network.map.view",
+    "network.mapping.edit",
+    "reports.export",
+    "returns.approve",
+    "returns.create",
+    "sales.catalogue.view",
+    "sales.retailers.create",
+    "sales.retailers.view",
+    "sales.beats.edit",
+    "sales.targets.edit",
+    "sales.reports.view",
+    "sales.office_orders.create",
+    "notifications.view",
+    "notifications.send.trade",
+    "notifications.send.salesmen",
+    "locations.view",
+    "events.view",
+    "events.manage",
+    "events.sales.void",
+    "events.reports.view",
+    "offline.view",
+    "offline.resolve",
+    "customers.view"
+   ]
+  },
+  {
+   "code": "salesman",
+   "name": "Salesman",
+   "permissions": [
+    "core.self.view",
+    "sales.catalogue.view",
+    "sales.collections.create",
+    "sales.orders.create",
+    "sales.otp.override.request",
+    "sales.retailers.create",
+    "sales.retailers.view",
+    "sales.self.view",
+    "sales.visits.create",
+    "locations.capture"
+   ]
+  },
+  {
+   "code": "event_staff",
+   "name": "Event Staff",
+   "permissions": [
+    "events.view",
+    "events.sell",
+    "locations.capture",
+    "core.self.view"
+   ]
+  },
+  {
+   "code": "procurement_manager",
+   "name": "Procurement Manager",
+   "permissions": [
+    "catalog.pricing.view",
+    "catalog.products.view",
+    "core.approvals.decide",
+    "core.approvals.view",
+    "core.self.view",
+    "inventory.view",
+    "procurement.po.create",
+    "procurement.pr.create",
+    "procurement.pr.view",
+    "procurement.rfq.award",
+    "procurement.rfq.create",
+    "procurement.rfq.view",
+    "reports.export",
+    "vendors.create",
+    "vendors.products.approve",
+    "vendors.verify",
+    "vendors.view",
+    "notifications.view",
+    "notifications.send.vendors"
+   ]
+  },
+  {
+   "code": "procurement_executive",
+   "name": "Procurement Executive",
+   "permissions": [
+    "catalog.products.view",
+    "core.self.view",
+    "inventory.view",
+    "procurement.po.create",
+    "procurement.pr.create",
+    "procurement.pr.view",
+    "procurement.rfq.create",
+    "procurement.rfq.view",
+    "vendors.create",
+    "vendors.view"
+   ]
+  },
+  {
+   "code": "warehouse_manager",
+   "name": "Warehouse Manager",
+   "permissions": [
+    "catalog.products.view",
+    "core.approvals.decide",
+    "core.approvals.view",
+    "core.self.view",
+    "inventory.count",
+    "inventory.disposition.approve",
+    "inventory.disposition.propose",
+    "inventory.trace",
+    "inventory.transfer",
+    "inventory.view",
+    "returns.approve",
+    "returns.inspect",
+    "warehouse.grn.create",
+    "warehouse.grn.post",
+    "inventory.adjust.propose",
+    "events.view",
+    "shop_stock.view",
+    "offline.view"
+   ]
+  },
+  {
+   "code": "inventory_executive",
+   "name": "Inventory Executive",
+   "permissions": [
+    "catalog.products.view",
+    "core.self.view",
+    "inventory.count",
+    "inventory.disposition.propose",
+    "inventory.trace",
+    "inventory.transfer",
+    "inventory.view",
+    "returns.inspect",
+    "warehouse.grn.create",
+    "inventory.adjust.propose",
+    "events.view",
+    "shop_stock.view"
+   ]
+  },
+  {
+   "code": "finance_manager",
+   "name": "Finance Manager",
+   "permissions": [
+    "catalog.pricing.view",
+    "core.approvals.decide",
+    "core.approvals.view",
+    "core.audit.view",
+    "core.self.view",
+    "finance.bank.import",
+    "finance.bank.reconcile",
+    "finance.payables.create",
+    "finance.payables.pay",
+    "finance.payables.view",
+    "finance.receivables.allocate",
+    "finance.receivables.view",
+    "finance.reports.view",
+    "inventory.view",
+    "reports.export",
+    "sales.collections.confirm",
+    "vendors.view",
+    "notifications.view",
+    "notifications.send.trade",
+    "events.view",
+    "events.reports.view",
+    "shop_stock.view",
+    "shop_stock.resolve",
+    "customers.view",
+    "shop_stock.refund.pay"
+   ]
+  },
+  {
+   "code": "accountant",
+   "name": "Accountant",
+   "permissions": [
+    "core.self.view",
+    "finance.bank.import",
+    "finance.bank.reconcile",
+    "finance.payables.create",
+    "finance.receivables.allocate",
+    "finance.receivables.view",
+    "finance.reports.view",
+    "inventory.view",
+    "vendors.view",
+    "events.reports.view"
+   ]
+  },
+  {
+   "code": "distributor_manager",
+   "name": "Distributor Manager",
+   "permissions": [
+    "catalog.products.view",
+    "core.self.view",
+    "inventory.view",
+    "network.gst.verify",
+    "network.map.view",
+    "network.mapping.edit",
+    "network.territories.edit",
+    "reports.export",
+    "returns.create",
+    "network.accounts.create"
+   ]
+  },
+  {
+   "code": "customer_support",
+   "name": "Customer Support",
+   "permissions": [
+    "catalog.products.view",
+    "core.self.view",
+    "inventory.view",
+    "network.map.view",
+    "returns.create",
+    "notifications.view",
+    "notifications.contacts.view",
+    "notifications.send.trade",
+    "notifications.optout.manage",
+    "customers.view",
+    "customers.contacts.view",
+    "customers.link.manage",
+    "shop_stock.view"
+   ]
+  },
+  {
+   "code": "auditor",
+   "name": "Auditor",
+   "permissions": [
+    "catalog.pricing.view",
+    "catalog.products.view",
+    "core.approvals.view",
+    "core.audit.view",
+    "core.jobs.view",
+    "core.monitoring.view",
+    "core.roles.view",
+    "core.self.view",
+    "core.settings.view",
+    "core.staff.view",
+    "finance.payables.view",
+    "finance.receivables.view",
+    "finance.reports.view",
+    "inventory.trace",
+    "inventory.view",
+    "network.map.view",
+    "procurement.pr.view",
+    "procurement.rfq.view",
+    "recalls.view",
+    "reports.export",
+    "vendors.view",
+    "sales.reports.view",
+    "notifications.view",
+    "locations.view",
+    "events.view",
+    "events.reports.view",
+    "shop_stock.view",
+    "offline.view",
+    "customers.view"
+   ]
+  },
+  {
+   "code": "quality_control",
+   "name": "Quality Control",
+   "permissions": [
+    "catalog.products.view",
+    "core.self.view",
+    "inventory.view",
+    "inventory.trace",
+    "inventory.disposition.propose",
+    "returns.inspect",
+    "recalls.view",
+    "recalls.create",
+    "warehouse.grn.create"
+   ]
+  }
+ ]
+}

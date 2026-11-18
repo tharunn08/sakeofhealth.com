@@ -1,0 +1,2 @@
+-- 015 identity bootstrap — no new tables. The guarded changes are in 015_identity_bootstrap.js:
+-- a "must change password at next sign-in" flag on the three MySQL account tables.

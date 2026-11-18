@@ -1,0 +1,18 @@
+not ok 1 - every existing B2C and B2B admin page is in the one registry, at /admin/<group>/<page>
+not ok 2 - each registered page is served by the one shell with its page script
+not ok 3 - /admin opens the shell home; old page addresses keep working
+not ok 4 - the sidebar needs a login
+not ok 5 - admin sees every module in one sidebar, grouped
+not ok 6 - for every role, the sidebar shows exactly the pages whose data the server lets them open
+not ok 7 - delivery agents get only their board; business-only roles get no shop pages
+not ok 8 - with the business platform off, its pages are neither listed nor served
+not ok 9 - /login is one sign-in page for staff and shop customers
+not ok 10 - staff sign in at /login and land in the admin panel
+not ok 11 - shop customers sign in at /login and land in their account
+not ok 12 - someone who is both staff and a customer (same e-mail and password) chooses where to go
+not ok 13 - a wrong password gets one generic answer, whatever the account type
+not ok 14 - /login is rate-limited like the admin login
+not ok 15 - the old admin sign-in address now goes to /login
+# tests 15
+# pass 0
+# fail 15

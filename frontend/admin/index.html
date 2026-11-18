@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Sign In — Sake of Health</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="icon" type="image/png" href="/assets/images/carousel/favicon.png"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="admin.css"/>
+</head>
+<body>
+<div class="login-wrap">
+  <form class="login-card" id="loginForm" autocomplete="on">
+    <div class="login-logo">S</div>
+    <h1>Sign In</h1>
+    <p class="sub">Sake of Health Sign In panel</p>
+
+    <div id="alertBox"></div>
+
+    <div class="field">
+      <label for="email">Email address</label>
+      <input class="input" type="email" id="email" name="email" required
+             autocomplete="username" placeholder="@Gmail.com" autofocus/>
+    </div>
+
+    <div class="field">
+      <label for="password">Password</label>
+      <input class="input" type="password" id="password" name="password" required
+             autocomplete="current-password" placeholder="••••••••"/>
+    </div>
+
+    <button class="btn btn-primary btn-block btn-lg mt-20" type="submit" id="submitBtn">
+      Sign in
+    </button>
+
+    <p style="text-align:center;margin-top:22px;font-size:12px;color:var(--ink-4);">
+      <a href="/" style="color:var(--ink-3);">← Back to store</a>
+    </p>
+  </form>
+</div>
+
+<script src="/config.js"></script>
+<script src="admin.js"></script>
+<script>
+(function(){
+  var A = window.Admin;
+  var form = document.getElementById('loginForm');
+  var btn = document.getElementById('submitBtn');
+  var box = document.getElementById('alertBox');
+
+  function alertMsg(msg, type){
+    box.innerHTML = '<div class="alert alert-'+type+'">'+A.icon(type==='error'?'alert':'check')+'<span>'+A.esc(msg)+'</span></div>';
+  }
+
+  if (new URLSearchParams(location.search).get('expired')) {
+    alertMsg('Your session expired. Please sign in again.','warn');
+  }
+
+  // Already signed in? go straight through
+  if (A.Auth.token()) {
+    A.api.get('/me').then(function(){ location.replace('dashboard.html'); }).catch(function(){ A.Auth.clear(); });
+  }
+
+  form.addEventListener('submit', async function(e){
+    e.preventDefault();
+    box.innerHTML = '';
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Signing in…';
+    try {
+      var res = await fetch('/api/admin/login', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          email: document.getElementById('email').value.trim(),
+          password: document.getElementById('password').value
+        })
+      });
+      var data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Sign in failed');
+      A.Auth.set(data.token, data.user);
+      btn.innerHTML = A.icon('check')+' Welcome back';
+      setTimeout(function(){ location.href='dashboard.html'; }, 250);
+    } catch(err){
+      alertMsg(err.message, 'error');
+      btn.disabled = false;
+      btn.textContent = 'Sign in';
+      document.getElementById('password').value = '';
+      document.getElementById('password').focus();
+    }
+  });
+})();
+</script>
+</body>
+</html>

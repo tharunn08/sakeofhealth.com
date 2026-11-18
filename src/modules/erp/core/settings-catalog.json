@@ -1,0 +1,228 @@
+{
+  "note": "Business values the platform reads from the EXISTING b2b_settings table. None of them is inserted by the migrations. While a key is absent the platform uses the fail-safe behaviour listed here, never the proposal. Setting a key requires core.settings.edit and an approval by a different person; who approved it and when is kept in the audit log.",
+  "settings": [
+    {
+      "key": "inventory.grn.min_shelf_life_pct",
+      "type": "integer 0-100",
+      "proposal": 60,
+      "status": "pending_business_decision",
+      "decision": "D1",
+      "while_unset": "No automatic accept/reject on shelf life. Each GRN line shows life left; the receiver must tick 'shelf life reviewed' per line before posting."
+    },
+    {
+      "key": "inventory.dispatch.min_shelf_life_pct.retailer",
+      "type": "integer 0-100",
+      "proposal": 60,
+      "status": "pending_business_decision",
+      "decision": "D2",
+      "while_unset": "FEFO allocation exactly as today (existing behaviour); near-expiry stock is reported, not blocked."
+    },
+    {
+      "key": "inventory.dispatch.min_shelf_life_pct.distributor",
+      "type": "integer 0-100",
+      "proposal": null,
+      "status": "pending_business_decision",
+      "decision": "D2",
+      "while_unset": "FEFO allocation exactly as today (existing behaviour); near-expiry stock is reported, not blocked."
+    },
+    {
+      "key": "inventory.near_expiry_pct",
+      "type": "integer 0-100",
+      "proposal": 30,
+      "status": "pending_business_decision",
+      "decision": "D2",
+      "while_unset": "Near-expiry report lists lots by days to expiry only; no percentage flag."
+    },
+    {
+      "key": "tax.invoice_hsn_source",
+      "type": "enum: product_master | supplier_invoice",
+      "proposal": "supplier_invoice",
+      "status": "pending_ca_review",
+      "decision": "D3",
+      "while_unset": "Invoices print products.hsn_code exactly as today. Imports report HSN conflicts but never overwrite HSN."
+    },
+    {
+      "key": "tax.hsn_min_digits",
+      "type": "integer 4|6|8",
+      "proposal": null,
+      "status": "pending_ca_review",
+      "decision": "D3",
+      "while_unset": "No digit-count rule enforced beyond the existing format check."
+    },
+    {
+      "key": "tax.require_approved_rate_for_new_price_lists",
+      "type": "boolean",
+      "proposal": true,
+      "status": "pending_ca_review",
+      "decision": "D4",
+      "while_unset": "Existing B2B keeps using products.gst_rate unchanged. A NEW price list cannot be published for a product with no approved b2b_tax_rates row (fail closed for the new flow only)."
+    },
+    {
+      "key": "pricing.tiers_enabled",
+      "type": "set of retailer|distributor|super_stockist",
+      "proposal": [
+        "retailer",
+        "distributor",
+        "super_stockist"
+      ],
+      "status": "pending_business_decision",
+      "decision": "D5",
+      "while_unset": "Only the tiers the existing B2B already sells (retailer, distributor). Super-stockist accounts cannot be approved or priced."
+    },
+    {
+      "key": "pricing.tier_for_account_type",
+      "type": "map",
+      "proposal": {
+        "retailer": "PTR",
+        "distributor": "PTD",
+        "super_stockist": "PTSS"
+      },
+      "status": "pending_business_decision",
+      "decision": "D5",
+      "while_unset": "Existing pricing engine precedence (rules, product prices, default margins) \u2014 unchanged."
+    },
+    {
+      "key": "pricing.pass_scheme_to_buyers",
+      "type": "boolean or per tier",
+      "proposal": null,
+      "status": "pending_business_decision",
+      "decision": "D5",
+      "while_unset": "The brand's scheme % is recorded as purchase-side information only; no selling discount is created from it."
+    },
+    {
+      "key": "approvals.po.value_bands",
+      "type": "list of {min_amount, steps, permission}",
+      "proposal": null,
+      "status": "pending_business_decision",
+      "decision": "D6",
+      "while_unset": "Every PO needs approval by a Super Admin (one step, not the requester)."
+    },
+    {
+      "key": "approvals.price_list.steps",
+      "type": "integer",
+      "proposal": 1,
+      "status": "pending_business_decision",
+      "decision": "D6",
+      "while_unset": "One approval by a Super Admin other than the submitter."
+    },
+    {
+      "key": "approvals.supplier_payment.value_bands",
+      "type": "list",
+      "proposal": null,
+      "status": "pending_business_decision",
+      "decision": "D6",
+      "while_unset": "Every supplier payment needs Super Admin approval."
+    },
+    {
+      "key": "procurement.match.tolerance",
+      "type": "{qty_units, price_pct, amount_rupees}",
+      "proposal": null,
+      "status": "pending_business_decision",
+      "decision": "D8",
+      "while_unset": "Zero tolerance: any difference between PO, GRN and bill blocks payment until resolved."
+    },
+    {
+      "key": "procurement.grn.qty_variance_pct",
+      "type": "number",
+      "proposal": null,
+      "status": "pending_business_decision",
+      "decision": "D6",
+      "while_unset": "Any received quantity different from the dispatch notice needs warehouse-manager approval."
+    },
+    {
+      "key": "sales.otp",
+      "type": "{length, expiry_min, max_attempts, resend_cooldown_s, max_resends, stock_hold_min}",
+      "proposal": {
+        "length": 6,
+        "expiry_min": 10,
+        "max_attempts": 5,
+        "resend_cooldown_s": 60,
+        "max_resends": 3,
+        "stock_hold_min": 30
+      },
+      "status": "pending_business_decision",
+      "decision": "D7",
+      "while_unset": "Salesman OTP ordering is switched off (the feature cannot run without approved values)."
+    },
+    {
+      "key": "b2c.feed.enabled",
+      "type": "boolean",
+      "proposal": false,
+      "status": "pending_business_decision",
+      "decision": "D12",
+      "while_unset": "The read-only online-shop feed does not run; online sales are not posted to the ledger."
+    },
+    {
+      "key": "retention.years.tax_documents",
+      "type": "integer",
+      "proposal": 8,
+      "status": "pending_ca_review",
+      "decision": "D15",
+      "while_unset": "Nothing is ever purged."
+    },
+    {
+      "key": "notifications.limits",
+      "type": "{max_recipients, max_sends_per_hour, promo_approval_over}",
+      "proposal": {
+        "max_recipients": 500,
+        "max_sends_per_hour": 20,
+        "promo_approval_over": 100
+      },
+      "status": "decided",
+      "decision": "D5 (notifications, 16 Nov 2026)",
+      "while_unset": "The owner's initial limits apply: at most 500 recipients per send, 20 sends per administrator per hour, promotional sends above 100 recipients need a second person's approval."
+    },
+    {
+      "key": "notifications.provider_rates",
+      "type": "{email, whatsapp, sms} messages per minute, 1-6000",
+      "proposal": {
+        "email": 30,
+        "whatsapp": 60,
+        "sms": 60
+      },
+      "status": "pending_business_decision",
+      "decision": "N3 (provider throughput; depends on the SMTP / Meta tier / MSG91 plan chosen)",
+      "while_unset": "The worker hands at most 30 emails, 60 WhatsApp messages and 60 SMS per minute to the providers; the rest wait in the queue (no attempt is used up). Set to the limits of the plans actually bought."
+    },
+    {
+      "key": "inventory.b2c_stock_mode",
+      "type": "one of off, shadow, enforce",
+      "proposal": "shadow",
+      "status": "pending_business_decision",
+      "decision": "3b.3 / 3b.4 (owner sequence: shadow first, then enforcement)",
+      "while_unset": "off: the online shop behaves exactly as today; the business ledger is not involved in shop checkouts."
+    },
+    {
+      "key": "inventory.b2c_warehouse_id",
+      "type": "integer (id of the warehouse of type online_shop that ships shop orders)",
+      "proposal": null,
+      "status": "pending_business_decision",
+      "decision": "3b.3",
+      "while_unset": "The shop stock layer cannot run in shadow or enforce mode; it stays off."
+    },
+    {
+      "key": "inventory.b2c_hold_minutes",
+      "type": "integer 5-120",
+      "proposal": 30,
+      "status": "pending_business_decision",
+      "decision": "3b.4",
+      "while_unset": "A stock hold made at Pay lasts 30 minutes, then is released if no paid order used it."
+    },
+    {
+      "key": "inventory.b2c_auto_refund",
+      "type": "boolean",
+      "proposal": true,
+      "status": "pending_business_decision",
+      "decision": "3b decision 3 (paid but short: refund)",
+      "while_unset": "A paid shop checkout that cannot get stock is recorded as an exception and refunded only when staff press Refund (shop_stock.resolve)."
+    },
+    {
+      "key": "customers.import.enabled",
+      "type": "boolean",
+      "proposal": true,
+      "status": "pending_business_decision",
+      "decision": "N4",
+      "while_unset": "Shop customers are linked into the unified customer list only when staff run the import from the Customers screen."
+    }
+  ]
+}

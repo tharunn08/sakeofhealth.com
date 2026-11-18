@@ -1,0 +1,2 @@
+MySQL suites registered: 14 b2b-platform, erp-foundation, erp-catalog, erp-procurement, erp-operations, erp-integrations, erp-federation.mysql, identity-seed.mysql, notifications-reliability.mysql, inventory-ledger.mysql, notifications-center.mysql, notifications-consent.mysql, notifications-workflow.mysql, operations-channels.mysql
+STATUS: NOT RUN — MySQL 8 unavailable in the build environment (see mysql-unavailable.log)

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Blog Admin — Sake of Health</title>
+<meta name="robots" content="noindex, nofollow"/>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--green:#296721;--red:#c13b10;--cream:#fdf8f2;--border:rgba(0,0,0,0.1);--muted:#6b7280;--text:#1a1a1a;}
+body{font-family:'Sora',sans-serif;background:#f3f4f6;color:var(--text);min-height:100vh;}
+.topbar{background:var(--green);color:#fff;padding:0.9rem 2rem;display:flex;align-items:center;justify-content:space-between;}
+.topbar-title{font-weight:600;font-size:1rem;}
+.topbar-sub{font-size:0.78rem;opacity:0.7;}
+.logout-btn{background:rgba(255,255,255,0.15);border:none;color:#fff;padding:0.4rem 1rem;border-radius:6px;cursor:pointer;font-size:0.82rem;font-family:inherit;}
+.main{max-width:1100px;margin:0 auto;padding:2rem;}
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:2rem;}
+.tab{padding:0.7rem 1.5rem;border:none;background:none;cursor:pointer;font-family:inherit;font-size:0.9rem;font-weight:500;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px;transition:color 0.2s;}
+.tab.active{color:var(--green);border-bottom-color:var(--green);}
+.section{display:none;}.section.active{display:block;}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem;}
+.stat-card{background:#fff;border-radius:12px;padding:1.4rem;box-shadow:0 1px 6px rgba(0,0,0,0.06);}
+.stat-num{font-size:2rem;font-weight:700;color:var(--green);}
+.stat-label{font-size:0.78rem;color:var(--muted);margin-top:0.2rem;}
+.post-card{background:#fff;border-radius:12px;padding:1.5rem;margin-bottom:1rem;box-shadow:0 1px 6px rgba(0,0,0,0.06);}
+.post-header{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:0.6rem;}
+.post-title{font-weight:600;font-size:0.95rem;line-height:1.4;}
+.post-meta{font-size:0.76rem;color:var(--muted);margin-bottom:0.5rem;}
+.post-excerpt{font-size:0.83rem;color:var(--muted);line-height:1.6;margin-bottom:1rem;}
+.post-content-preview{background:#f9fafb;border-radius:8px;padding:1rem;font-size:0.82rem;line-height:1.7;color:var(--text);margin-bottom:1rem;max-height:200px;overflow-y:auto;white-space:pre-wrap;display:none;}
+.post-content-preview.open{display:block;}
+.post-actions{display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;}
+.btn-approve{background:var(--green);color:#fff;border:none;padding:0.5rem 1.2rem;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;font-family:inherit;transition:opacity 0.2s;}
+.btn-reject{background:var(--red);color:#fff;border:none;padding:0.5rem 1.2rem;border-radius:8px;cursor:pointer;font-size:0.82rem;font-weight:600;font-family:inherit;transition:opacity 0.2s;}
+.btn-approve:hover,.btn-reject:hover{opacity:0.85;}
+.btn-preview{background:#f3f4f6;border:none;padding:0.5rem 1rem;border-radius:8px;cursor:pointer;font-size:0.78rem;font-family:inherit;}
+.badge{display:inline-block;padding:0.2rem 0.7rem;border-radius:50px;font-size:0.72rem;font-weight:600;}
+.badge-pending{background:rgba(245,166,35,0.1);color:#b45309;}
+.badge-published{background:rgba(41,103,33,0.1);color:var(--green);}
+.empty{text-align:center;padding:4rem 2rem;color:var(--muted);}
+.empty-icon{font-size:2.5rem;margin-bottom:0.8rem;}
+
+/* Login overlay */
+.login-overlay{position:fixed;inset:0;background:#f3f4f6;display:flex;align-items:center;justify-content:center;z-index:999;}
+.login-card{background:#fff;border-radius:16px;padding:2.5rem;width:100%;max-width:380px;box-shadow:0 4px 30px rgba(0,0,0,0.1);}
+.login-title{font-size:1.3rem;font-weight:700;color:var(--green);margin-bottom:0.3rem;}
+.login-sub{font-size:0.82rem;color:var(--muted);margin-bottom:1.8rem;}
+.login-input{width:100%;padding:0.8rem 1rem;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:0.95rem;outline:none;transition:border-color 0.2s;margin-bottom:0.8rem;}
+.login-input:focus{border-color:var(--green);}
+.login-btn{width:100%;padding:0.9rem;background:var(--green);color:#fff;border:none;border-radius:10px;font-family:inherit;font-weight:600;font-size:1rem;cursor:pointer;}
+.login-err{color:var(--red);font-size:0.8rem;margin-bottom:0.6rem;display:none;}
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:#1a1a1a;color:#fff;padding:0.8rem 1.4rem;border-radius:10px;font-size:0.85rem;opacity:0;transition:opacity 0.3s;z-index:9999;}
+.toast.show{opacity:1;}
+a.view-link{color:var(--green);text-decoration:none;font-size:0.78rem;font-weight:600;}
+</style>
+</head>
+<body>
+
+<!-- Login Overlay -->
+<div class="login-overlay" id="login-overlay">
+  <div class="login-card">
+    <div class="login-title">🔐 Blog Admin</div>
+    <div class="login-sub">Sake of Health — editorial dashboard</div>
+    <div class="login-err" id="login-err">Incorrect password</div>
+    <input class="login-input" id="login-pass" type="password" placeholder="Admin password" onkeydown="if(event.key==='Enter')login()"/>
+    <button class="login-btn" onclick="login()">Sign In →</button>
+  </div>
+</div>
+
+<!-- Admin UI -->
+<div id="admin-ui" style="display:none;">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title">Sake of Health · Blog Admin</div>
+      <div class="topbar-sub">Editorial review dashboard</div>
+    </div>
+    <button class="logout-btn" onclick="logout()">Sign Out</button>
+  </div>
+
+  <div class="main">
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num" id="stat-pending">—</div><div class="stat-label">Pending Review</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-published">—</div><div class="stat-label">Published Articles</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-today">—</div><div class="stat-label">New Today</div></div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('pending')">⏳ Pending Review</button>
+      <button class="tab" onclick="switchTab('published')">✅ Published</button>
+    </div>
+
+    <div class="section active" id="tab-pending">
+      <div id="pending-list"></div>
+    </div>
+    <div class="section" id="tab-published">
+      <div id="published-list"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let TOKEN = sessionStorage.getItem('soh_admin_token') || '';
+const TODAY = new Date().toDateString();
+
+function login() {
+  TOKEN = document.getElementById('login-pass').value.trim();
+  if (!TOKEN) return;
+  sessionStorage.setItem('soh_admin_token', TOKEN);
+  loadData();
+}
+
+function logout() {
+  TOKEN = '';
+  sessionStorage.removeItem('soh_admin_token');
+  document.getElementById('admin-ui').style.display = 'none';
+  document.getElementById('login-overlay').style.display = 'flex';
+}
+
+function showToast(msg, ok = true) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = ok ? '#1a1a1a' : '#c13b10';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+async function api(path, method = 'GET', body) {
+  const res = await fetch(`/api/blog${path}`, {
+    method,
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${TOKEN}` },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const data = await res.json();
+  if (res.status === 401) {
+    document.getElementById('login-err').style.display = 'block';
+    document.getElementById('login-overlay').style.display = 'flex';
+    document.getElementById('admin-ui').style.display = 'none';
+    throw new Error('Unauthorized');
+  }
+  if (!res.ok) throw new Error(data.error || 'Request failed');
+  return data;
+}
+
+async function loadData() {
+  try {
+    const all = await api('/pending');
+    const published = all.filter(p => p.status === 'published');
+    const pending = all.filter(p => p.status === 'pending');
+    const todayNew = pending.filter(p => new Date(p.submittedAt).toDateString() === TODAY).length;
+
+    document.getElementById('stat-pending').textContent = pending.length;
+    document.getElementById('stat-published').textContent = published.length;
+    document.getElementById('stat-today').textContent = todayNew;
+
+    renderPending(pending);
+    renderPublished(published);
+
+    document.getElementById('login-overlay').style.display = 'none';
+    document.getElementById('admin-ui').style.display = 'block';
+  } catch (e) {
+    if (e.message !== 'Unauthorized') {
+      document.getElementById('login-err').style.display = 'block';
+      document.getElementById('login-err').textContent = 'Could not connect to server';
+    }
+    document.getElementById('login-overlay').style.display = 'flex';
+  }
+}
+
+function renderPending(posts) {
+  const el = document.getElementById('pending-list');
+  if (!posts.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><div>No pending submissions</div></div>'; return; }
+  el.innerHTML = posts.map(p => `
+    <div class="post-card" id="card-${p.id}">
+      <div class="post-header">
+        <div>
+          <div class="post-title">${esc(p.title)}</div>
+          <div class="post-meta"><span class="badge badge-pending">Pending</span> &nbsp;${esc(p.category)} · by ${esc(p.authorName)} &lt;${esc(p.authorEmail)}&gt; · ${esc(p.readTime)} · submitted ${new Date(p.submittedAt).toLocaleDateString('en-IN')}</div>
+        </div>
+      </div>
+      <div class="post-excerpt">${esc(p.excerpt)}</div>
+      <div class="post-content-preview" id="content-${p.id}">${esc(p.content)}</div>
+      <div class="post-actions">
+        <button class="btn-approve" onclick="approve('${p.id}')">✓ Approve & Publish</button>
+        <button class="btn-reject" onclick="reject('${p.id}')">✕ Reject</button>
+        <button class="btn-preview" onclick="toggleContent('${p.id}')">Read Full Article</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderPublished(posts) {
+  const el = document.getElementById('published-list');
+  if (!posts.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">📝</div><div>No published articles yet</div></div>'; return; }
+  el.innerHTML = posts.map(p => `
+    <div class="post-card">
+      <div class="post-header">
+        <div>
+          <div class="post-title">${esc(p.title)}</div>
+          <div class="post-meta"><span class="badge badge-published">Published</span> &nbsp;${esc(p.category)} · by ${esc(p.authorName)} · ${esc(p.readTime)} · ${new Date(p.publishedAt).toLocaleDateString('en-IN')}</div>
+        </div>
+        <a class="view-link" href="/blog/${esc(p.slug)}.html" target="_blank">View →</a>
+      </div>
+      <div class="post-excerpt">${esc(p.excerpt)}</div>
+    </div>
+  `).join('');
+}
+
+async function approve(id) {
+  const btn = document.querySelector(`#card-${id} .btn-approve`);
+  btn.disabled = true; btn.textContent = 'Publishing…';
+  try {
+    const data = await api(`/approve/${id}`, 'POST');
+    document.getElementById(`card-${id}`).remove();
+    showToast(`✓ Published: ${data.post.title}`);
+    loadData();
+  } catch (e) { showToast(e.message, false); btn.disabled = false; btn.textContent = '✓ Approve & Publish'; }
+}
+
+async function reject(id) {
+  if (!confirm('Reject this submission? This cannot be undone.')) return;
+  try {
+    await api(`/reject/${id}`, 'POST');
+    document.getElementById(`card-${id}`).remove();
+    showToast('Submission rejected');
+    loadData();
+  } catch (e) { showToast(e.message, false); }
+}
+
+function toggleContent(id) {
+  const el = document.getElementById(`content-${id}`);
+  const btn = el.previousElementSibling.previousElementSibling.querySelector('.btn-preview') ||
+               el.nextElementSibling.querySelector('.btn-preview');
+  el.classList.toggle('open');
+  const allBtns = document.querySelectorAll(`#card-${id} .btn-preview`);
+  allBtns.forEach(b => b.textContent = el.classList.contains('open') ? 'Hide Article' : 'Read Full Article');
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', i === (name === 'pending' ? 0 : 1)));
+  document.querySelectorAll('.section').forEach((s, i) => s.classList.toggle('active', i === (name === 'pending' ? 0 : 1)));
+}
+
+function esc(s) { return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// Auto-login if token already stored
+if (TOKEN) loadData();
+else { document.getElementById('login-overlay').style.display = 'flex'; }
+</script>
+</body>
+</html>

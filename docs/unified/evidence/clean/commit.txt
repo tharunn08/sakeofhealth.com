@@ -1,0 +1,2 @@
+commit: 9c46935 Shop stock: a MySQL outage after "enforce" fails closed; otherwise the shop works as today
+013/014 files: 0

@@ -1,0 +1,42 @@
+node_modules/
+.env
+data/*.json
+!data/.gitkeep
+*.log
+.DS_Store
+backups/
+
+# ── Secrets and private data: never commit ──
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+# Uploaded business documents / import files (B2B_PRIVATE_DIR) and data dumps
+private/
+sakeofhealth-private/
+sakeofhealth-data/
+uploads/
+*.sql
+*.sql.gz
+!src/db/migrations/*.sql
+# Local tooling
+coverage/
+.idea/
+.vscode/
+
+tmp/
+
+# ERP migrations keep their reviewed SQL beside them (SHA-pinned) — must be committed
+!src/db/migrations/sql/*.sql
+
+# Initial-account credential reports (scripts/seed-accounts.js writes them outside the project; never commit one)
+local-credentials-*.txt
+test-results/
+
+# Local database audit and validation artifacts
+d5-grants.sql
+d5-inventory.tsv
+d5-report-local.md
+validation-report-*.json
+validation-report-*.md

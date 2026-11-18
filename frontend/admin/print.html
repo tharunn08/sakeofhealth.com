@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Print — Sake of Health</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="icon" type="image/png" href="/assets/images/carousel/favicon.png"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/admin/print.css?v=1"/>
+</head>
+<body>
+
+<div class="pc-bar">
+  <h1>Print <small id="count"></small></h1>
+
+  <div class="pc-field" id="docSeg">
+    <label>Document</label>
+    <div class="pc-seg" role="group" aria-label="Document type">
+      <button type="button" data-pref="doc" data-value="label">Delivery label</button>
+      <button type="button" data-pref="doc" data-value="bill">Bill / invoice</button>
+    </div>
+  </div>
+
+  <div class="pc-field" id="labelOpts">
+    <label>Label paper</label>
+    <div class="pc-seg" role="group" aria-label="Label paper">
+      <button type="button" data-pref="labelPaper" data-value="label">4 × 6 in label</button>
+      <button type="button" data-pref="labelPaper" data-value="a4">A4 · 4 per sheet</button>
+    </div>
+  </div>
+
+  <div class="pc-field" id="billOpts">
+    <label>Bill paper</label>
+    <div class="pc-seg" role="group" aria-label="Bill paper">
+      <button type="button" data-pref="billPaper" data-value="a4">A4</button>
+      <button type="button" data-pref="billPaper" data-value="a5">A5</button>
+    </div>
+  </div>
+
+  <label class="pc-check"><input type="checkbox" id="showItems"/> Show items on label</label>
+  <label class="pc-check"><input type="checkbox" id="showAmount"/> Show amount on label</label>
+
+  <button type="button" class="pc-btn" id="senderBtn">Sender details</button>
+  <button type="button" class="pc-btn" id="closeBtn">Back</button>
+  <button type="button" class="pc-btn primary" id="printBtn">Print</button>
+
+  <div class="pc-note" id="hint"></div>
+</div>
+
+<div class="pc-sender" id="senderPanel">
+  <div class="pc-sender-grid">
+    <div class="pc-field"><label for="s_businessName">Business name (printed as "From")</label><input id="s_businessName" maxlength="120"/></div>
+    <div class="pc-field"><label for="s_phone">Phone</label><input id="s_phone" maxlength="30"/></div>
+    <div class="pc-field"><label for="s_email">Email</label><input id="s_email" maxlength="120"/></div>
+    <div class="pc-field"><label for="s_gstin">GSTIN (optional, printed on bills)</label><input id="s_gstin" maxlength="15"/></div>
+    <div class="pc-field wide"><label for="s_address">Return / pickup address</label><textarea id="s_address" maxlength="300" placeholder="Door no, street, area, city, state, pincode"></textarea></div>
+    <div class="pc-field wide"><label for="s_footer">Note at the bottom of bills</label><textarea id="s_footer" maxlength="300"></textarea></div>
+  </div>
+  <div style="margin-top:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+    <button type="button" class="pc-btn primary" id="senderSave">Save sender details</button>
+    <span id="senderMsg" style="font-size:13px;color:#5a6b5f"></span>
+  </div>
+</div>
+
+<main class="pc-stage" id="stage"><div class="pc-alert info">Loading orders…</div></main>
+
+<script src="/assets/vendor/qrcode.js"></script>
+<script src="/admin/print.js?v=1"></script>
+</body>
+</html>

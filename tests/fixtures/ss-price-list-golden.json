@@ -1,0 +1,6258 @@
+{
+ "source": "SS Price list 09.10.2026 FMCG.xlsx, sheet \"SS Price List\" (values as computed by Excel)",
+ "rows": [
+  {
+   "row": 7,
+   "sap": "14001851",
+   "desc": "Organic Brown Sugar",
+   "uom": "500gm",
+   "hsn_as_in_sheet": "17010000",
+   "mrp": 90,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 74.53,
+    "ptd_incl": 72.46,
+    "ptd_ex": 69.01,
+    "ptss_incl": 69.01,
+    "ptss_ex": 65.72
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G7-L7",
+    "ptr_incl": "=G7/(100%+I7)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 8,
+   "sap": "14003634",
+   "desc": "Organic Brown Sugar",
+   "uom": "1kg",
+   "hsn_as_in_sheet": "17010000",
+   "mrp": 170,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 140.79,
+    "ptd_incl": 136.88,
+    "ptd_ex": 130.36,
+    "ptss_incl": 130.36,
+    "ptss_ex": 124.15
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G8-L8",
+    "ptr_incl": "=G8/(100%+I8)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 9,
+   "sap": "14004019",
+   "desc": "Organic Brown Sugar",
+   "uom": "50gm",
+   "hsn_as_in_sheet": "17010000",
+   "mrp": 10,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 8.28,
+    "ptd_incl": 8.05,
+    "ptd_ex": 7.67,
+    "ptss_incl": 7.67,
+    "ptss_ex": 7.3
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G9-L9",
+    "ptr_incl": "=G9/(100%+I9)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 11,
+   "sap": "15006189",
+   "desc": "Jaggery Powder",
+   "uom": "500gm",
+   "hsn_as_in_sheet": "17010000",
+   "mrp": 75,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 62.11,
+    "ptd_incl": 60.39,
+    "ptd_ex": 57.51,
+    "ptss_incl": 57.51,
+    "ptss_ex": 54.77
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G11-L11",
+    "ptr_incl": "=G11/(100%+I11)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 12,
+   "sap": "14003635",
+   "desc": "Organic Jaggery Powder",
+   "uom": "500gm",
+   "hsn_as_in_sheet": "17010000",
+   "mrp": 120,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 99.38,
+    "ptd_incl": 96.62,
+    "ptd_ex": 92.02,
+    "ptss_incl": 92.02,
+    "ptss_ex": 87.64
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G12-L12",
+    "ptr_incl": "=G12/(100%+I12)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 14,
+   "sap": "15006161",
+   "desc": "Honey",
+   "uom": "250gm",
+   "hsn_as_in_sheet": "4090000",
+   "mrp": 150,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 124.22,
+    "ptd_incl": 120.77,
+    "ptd_ex": 115.02,
+    "ptss_incl": 113.93,
+    "ptss_ex": 108.5
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G14-L14",
+    "ptr_incl": "=G14/(100%+I14)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 15,
+   "sap": "15006162",
+   "desc": "Honey",
+   "uom": "500gm",
+   "hsn_as_in_sheet": "4090000",
+   "mrp": 260,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 215.32,
+    "ptd_incl": 209.34,
+    "ptd_ex": 199.37,
+    "ptss_incl": 197.49,
+    "ptss_ex": 188.09
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G15-L15",
+    "ptr_incl": "=G15/(100%+I15)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 17,
+   "sap": "14001485",
+   "desc": "Rock Salt",
+   "uom": "100g",
+   "hsn_as_in_sheet": "25010020",
+   "mrp": 10,
+   "gst_bp": 0,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 8.7,
+    "ptd_incl": 8.05,
+    "ptd_ex": 8.05,
+    "ptss_incl": 7.67,
+    "ptss_ex": 7.67
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G17-L17",
+    "ptr_incl": "=G17/(100%+I17)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 18,
+   "sap": "14001847",
+   "desc": "Rock Salt",
+   "uom": "1kg",
+   "hsn_as_in_sheet": "25010020",
+   "mrp": 120,
+   "gst_bp": 0,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 104.35,
+    "ptd_incl": 96.62,
+    "ptd_ex": 96.62,
+    "ptss_incl": 92.02,
+    "ptss_ex": 92.02
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G18-L18",
+    "ptr_incl": "=G18/(100%+I18)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 19,
+   "sap": "14003002",
+   "desc": "Rock Salt Free Flow Fine Grain",
+   "uom": "1kg",
+   "hsn_as_in_sheet": "25010020",
+   "mrp": 109,
+   "gst_bp": 0,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 94.78,
+    "ptd_incl": 87.76,
+    "ptd_ex": 87.76,
+    "ptss_incl": 83.58,
+    "ptss_ex": 83.58
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G19-L19",
+    "ptr_incl": "=G19/(100%+I19)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 20,
+   "sap": "15006077",
+   "desc": "Pink Salt (Iodised)",
+   "uom": "1kg",
+   "hsn_as_in_sheet": "25010020",
+   "mrp": 80,
+   "gst_bp": 0,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 69.57,
+    "ptd_incl": 64.41,
+    "ptd_ex": 64.41,
+    "ptss_incl": 61.34,
+    "ptss_ex": 61.34
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G20-L20",
+    "ptr_incl": "=G20/(100%+I20)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 21,
+   "sap": "15006345",
+   "desc": "Pink Salt (Iodised)",
+   "uom": "100gm",
+   "hsn_as_in_sheet": "25010020",
+   "mrp": 10,
+   "gst_bp": 0,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 8.7,
+    "ptd_incl": 8.05,
+    "ptd_ex": 8.05,
+    "ptss_incl": 7.67,
+    "ptss_ex": 7.67
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G21-L21",
+    "ptr_incl": "=G21/(100%+I21)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 23,
+   "sap": "14003672",
+   "desc": "Ojasvita Chocolate Box",
+   "uom": "200gm",
+   "hsn_as_in_sheet": "21060000",
+   "mrp": 135,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 111.8,
+    "ptd_incl": 108.7,
+    "ptd_ex": 103.52,
+    "ptss_incl": 102.55,
+    "ptss_ex": 97.67
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G23-L23",
+    "ptr_incl": "=G23/(100%+I23)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 24,
+   "sap": "14003679",
+   "desc": "Ojasvita Chocolate Box",
+   "uom": "500gm",
+   "hsn_as_in_sheet": "21060000",
+   "mrp": 280,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 231.88,
+    "ptd_incl": 225.44,
+    "ptd_ex": 214.7,
+    "ptss_incl": 212.68,
+    "ptss_ex": 202.55
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G24-L24",
+    "ptr_incl": "=G24/(100%+I24)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 25,
+   "sap": "14003684",
+   "desc": "Ojasvita Chocolate Petjar",
+   "uom": "1 Kg",
+   "hsn_as_in_sheet": "21060000",
+   "mrp": 535,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 443.06,
+    "ptd_incl": 430.76,
+    "ptd_ex": 410.25,
+    "ptss_incl": 406.38,
+    "ptss_ex": 387.03
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G25-L25",
+    "ptr_incl": "=G25/(100%+I25)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 26,
+   "sap": "14003686",
+   "desc": "Ojasvita Chocolate Foil Pack",
+   "uom": "1 Kg",
+   "hsn_as_in_sheet": "21060000",
+   "mrp": 510,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 422.36,
+    "ptd_incl": 410.63,
+    "ptd_ex": 391.08,
+    "ptss_incl": 387.39,
+    "ptss_ex": 368.94
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G26-L26",
+    "ptr_incl": "=G26/(100%+I26)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 27,
+   "sap": "14003683",
+   "desc": "Ojasvita ChocoMalt Box",
+   "uom": "500gm",
+   "hsn_as_in_sheet": "21060000",
+   "mrp": 230,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 190.48,
+    "ptd_incl": 185.19,
+    "ptd_ex": 176.37,
+    "ptss_incl": 174.71,
+    "ptss_ex": 166.39
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G27-L27",
+    "ptr_incl": "=G27/(100%+I27)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 28,
+   "sap": "14004008",
+   "desc": "Ojasvita Choco Malt Box",
+   "uom": "200gm",
+   "hsn_as_in_sheet": "21060000",
+   "mrp": 115,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 95.24,
+    "ptd_incl": 92.59,
+    "ptd_ex": 88.18,
+    "ptss_incl": 87.35,
+    "ptss_ex": 83.19
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G28-L28",
+    "ptr_incl": "=G28/(100%+I28)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 29,
+   "sap": "14003682",
+   "desc": "Ojasvita Choco Malt Pet Jar",
+   "uom": "500gm",
+   "hsn_as_in_sheet": "21060000",
+   "mrp": 245,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 202.9,
+    "ptd_incl": 197.26,
+    "ptd_ex": 187.87,
+    "ptss_incl": 186.09,
+    "ptss_ex": 177.23
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G29-L29",
+    "ptr_incl": "=G29/(100%+I29)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 30,
+   "sap": "14003687",
+   "desc": "Ojasvita Choco Malt Pet Jar",
+   "uom": "1 Kg",
+   "hsn_as_in_sheet": "21060000",
+   "mrp": 469,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 388.41,
+    "ptd_incl": 377.62,
+    "ptd_ex": 359.64,
+    "ptss_incl": 356.25,
+    "ptss_ex": 339.29
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G30-L30",
+    "ptr_incl": "=G30/(100%+I30)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 32,
+   "sap": "14000018",
+   "desc": "Chyawanprash",
+   "uom": "250gm",
+   "hsn_as_in_sheet": "30049011",
+   "mrp": 110,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 87.3,
+    "ptd_incl": 84.88,
+    "ptd_ex": 80.84,
+    "ptss_incl": 80.08,
+    "ptss_ex": 76.27
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G32-L32",
+    "ptr_incl": "=G32/(100%+I32)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 33,
+   "sap": "14000019",
+   "desc": "Chyawanprash",
+   "uom": "500gm",
+   "hsn_as_in_sheet": "30049011",
+   "mrp": 215,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 170.63,
+    "ptd_incl": 165.9,
+    "ptd_ex": 158,
+    "ptss_incl": 156.51,
+    "ptss_ex": 149.06
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G33-L33",
+    "ptr_incl": "=G33/(100%+I33)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 34,
+   "sap": "14000013",
+   "desc": "Chyawanprash",
+   "uom": "1kg",
+   "hsn_as_in_sheet": "30049011",
+   "mrp": 410,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 325.4,
+    "ptd_incl": 316.36,
+    "ptd_ex": 301.3,
+    "ptss_incl": 298.45,
+    "ptss_ex": 284.24
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G34-L34",
+    "ptr_incl": "=G34/(100%+I34)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 35,
+   "sap": "14003589",
+   "desc": "Swarna Kesariprash",
+   "uom": "450g",
+   "hsn_as_in_sheet": "30049011",
+   "mrp": 699,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 554.76,
+    "ptd_incl": 539.35,
+    "ptd_ex": 513.67,
+    "ptss_incl": 508.82,
+    "ptss_ex": 484.59
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G35-L35",
+    "ptr_incl": "=G35/(100%+I35)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 36,
+   "sap": "14003590",
+   "desc": "Swarna Kesariprash",
+   "uom": "1Kg",
+   "hsn_as_in_sheet": "30049011",
+   "mrp": 1499,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 1189.68,
+    "ptd_incl": 1156.64,
+    "ptd_ex": 1101.56,
+    "ptss_incl": 1091.17,
+    "ptss_ex": 1039.21
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G36-L36",
+    "ptr_incl": "=G36/(100%+I36)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 37,
+   "sap": "14003591",
+   "desc": "Dateprash With Walnuts",
+   "uom": "450g",
+   "hsn_as_in_sheet": "30049011",
+   "mrp": 699,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 554.76,
+    "ptd_incl": 539.35,
+    "ptd_ex": 513.67,
+    "ptss_incl": 508.82,
+    "ptss_ex": 484.59
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G37-L37",
+    "ptr_incl": "=G37/(100%+I37)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 38,
+   "sap": "14003592",
+   "desc": "Dateprash With Walnuts",
+   "uom": "1Kg",
+   "hsn_as_in_sheet": "30049011",
+   "mrp": 1499,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 1189.68,
+    "ptd_incl": 1156.64,
+    "ptd_ex": 1101.56,
+    "ptss_incl": 1091.17,
+    "ptss_ex": 1039.21
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G38-L38",
+    "ptr_incl": "=G38/(100%+I38)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 39,
+   "sap": "14003593",
+   "desc": "Fig Honeyprash",
+   "uom": "450g",
+   "hsn_as_in_sheet": "30049011",
+   "mrp": 699,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 554.76,
+    "ptd_incl": 539.35,
+    "ptd_ex": 513.67,
+    "ptss_incl": 508.82,
+    "ptss_ex": 484.59
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G39-L39",
+    "ptr_incl": "=G39/(100%+I39)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 40,
+   "sap": "14003594",
+   "desc": "Fig Honeyprash",
+   "uom": "1Kg",
+   "hsn_as_in_sheet": "30049011",
+   "mrp": 1499,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 1189.68,
+    "ptd_incl": 1156.64,
+    "ptd_ex": 1101.56,
+    "ptss_incl": 1091.17,
+    "ptss_ex": 1039.21
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G40-L40",
+    "ptr_incl": "=G40/(100%+I40)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 42,
+   "sap": "15005893",
+   "desc": "Millet Crispy Bar",
+   "uom": "25gm",
+   "hsn_as_in_sheet": "21069099",
+   "mrp": 50,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 41.41,
+    "ptd_incl": 40.26,
+    "ptd_ex": 38.34,
+    "ptss_incl": 38.34,
+    "ptss_ex": 36.51
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G42-L42",
+    "ptr_incl": "=G42/(100%+I42)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 43,
+   "sap": "15005894",
+   "desc": "Choco Dry Fruit Bar",
+   "uom": "25gm",
+   "hsn_as_in_sheet": "21069099",
+   "mrp": 50,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 41.41,
+    "ptd_incl": 40.26,
+    "ptd_ex": 38.34,
+    "ptss_incl": 38.34,
+    "ptss_ex": 36.51
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G43-L43",
+    "ptr_incl": "=G43/(100%+I43)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 44,
+   "sap": "15005895",
+   "desc": "Choco Berry Protein Bar",
+   "uom": "25gm",
+   "hsn_as_in_sheet": "21069099",
+   "mrp": 60,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 49.69,
+    "ptd_incl": 48.31,
+    "ptd_ex": 46.01,
+    "ptss_incl": 46.01,
+    "ptss_ex": 43.82
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G44-L44",
+    "ptr_incl": "=G44/(100%+I44)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 45,
+   "sap": "15005896",
+   "desc": "Super Seed Bar",
+   "uom": "25gm",
+   "hsn_as_in_sheet": "21069099",
+   "mrp": 60,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 49.69,
+    "ptd_incl": 48.31,
+    "ptd_ex": 46.01,
+    "ptss_incl": 46.01,
+    "ptss_ex": 43.82
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G45-L45",
+    "ptr_incl": "=G45/(100%+I45)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 46,
+   "sap": "15005897",
+   "desc": "Dates Ragi Bar",
+   "uom": "25gm",
+   "hsn_as_in_sheet": "21069099",
+   "mrp": 60,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 49.69,
+    "ptd_incl": 48.31,
+    "ptd_ex": 46.01,
+    "ptss_incl": 46.01,
+    "ptss_ex": 43.82
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G46-L46",
+    "ptr_incl": "=G46/(100%+I46)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 48,
+   "sap": "14003280",
+   "desc": "Cow's Pure Ghee Sachet Jar",
+   "uom": "10ml 60 Units",
+   "hsn_as_in_sheet": "4059020",
+   "mrp": 600,
+   "gst_bp": 500,
+   "retailer_margin_bp": 800,
+   "distributor_margin_bp": 400,
+   "ss_margin_bp": 300,
+   "scheme_bp": 600,
+   "expected": {
+    "ptr_ex": 529.1,
+    "ptd_incl": 534.19,
+    "ptd_ex": 508.75,
+    "ptss_incl": 518.63,
+    "ptss_ex": 493.93
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G48-L48",
+    "ptr_incl": "=G48/(100%+I48)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 49,
+   "sap": "15006506",
+   "desc": "Cow's Pure Ghee Jar",
+   "uom": "100ml",
+   "hsn_as_in_sheet": "4059020",
+   "mrp": 105,
+   "gst_bp": 500,
+   "retailer_margin_bp": 800,
+   "distributor_margin_bp": 400,
+   "ss_margin_bp": 300,
+   "scheme_bp": 600,
+   "expected": {
+    "ptr_ex": 92.59,
+    "ptd_incl": 93.48,
+    "ptd_ex": 89.03,
+    "ptss_incl": 90.76,
+    "ptss_ex": 86.44
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G49-L49",
+    "ptr_incl": "=G49/(100%+I49)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 50,
+   "sap": "15006507",
+   "desc": "Cow's Pure Ghee Jar",
+   "uom": "200ml",
+   "hsn_as_in_sheet": "4059020",
+   "mrp": 205,
+   "gst_bp": 500,
+   "retailer_margin_bp": 800,
+   "distributor_margin_bp": 400,
+   "ss_margin_bp": 300,
+   "scheme_bp": 600,
+   "expected": {
+    "ptr_ex": 180.78,
+    "ptd_incl": 182.51,
+    "ptd_ex": 173.82,
+    "ptss_incl": 177.19,
+    "ptss_ex": 168.75
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G50-L50",
+    "ptr_incl": "=G50/(100%+I50)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 51,
+   "sap": "15006508",
+   "desc": "Cow's Pure Ghee Jar",
+   "uom": "500ml",
+   "hsn_as_in_sheet": "4059020",
+   "mrp": 485,
+   "gst_bp": 500,
+   "retailer_margin_bp": 800,
+   "distributor_margin_bp": 400,
+   "ss_margin_bp": 300,
+   "scheme_bp": 600,
+   "expected": {
+    "ptr_ex": 427.69,
+    "ptd_incl": 431.8,
+    "ptd_ex": 411.24,
+    "ptss_incl": 419.22,
+    "ptss_ex": 399.26
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G51-L51",
+    "ptr_incl": "=G51/(100%+I51)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 52,
+   "sap": "15006510",
+   "desc": "Cow's Pure Ghee Ceka Pack",
+   "uom": "500ml",
+   "hsn_as_in_sheet": "4059020",
+   "mrp": 470,
+   "gst_bp": 500,
+   "retailer_margin_bp": 800,
+   "distributor_margin_bp": 400,
+   "ss_margin_bp": 300,
+   "scheme_bp": 600,
+   "expected": {
+    "ptr_ex": 414.46,
+    "ptd_incl": 418.45,
+    "ptd_ex": 398.52,
+    "ptss_incl": 406.26,
+    "ptss_ex": 386.91
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G52-L52",
+    "ptr_incl": "=G52/(100%+I52)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 53,
+   "sap": "15006509",
+   "desc": "Cow's Pure Ghee Jar",
+   "uom": "1liter",
+   "hsn_as_in_sheet": "4059020",
+   "mrp": 950,
+   "gst_bp": 500,
+   "retailer_margin_bp": 800,
+   "distributor_margin_bp": 400,
+   "ss_margin_bp": 300,
+   "scheme_bp": 600,
+   "expected": {
+    "ptr_ex": 837.74,
+    "ptd_incl": 845.8,
+    "ptd_ex": 805.52,
+    "ptss_incl": 821.17,
+    "ptss_ex": 782.07
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G53-L53",
+    "ptr_incl": "=G53/(100%+I53)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 54,
+   "sap": "15006511",
+   "desc": "Cow's Pure Ghee Ceka Pack",
+   "uom": "1liter",
+   "hsn_as_in_sheet": "4059020",
+   "mrp": 925,
+   "gst_bp": 500,
+   "retailer_margin_bp": 800,
+   "distributor_margin_bp": 400,
+   "ss_margin_bp": 300,
+   "scheme_bp": 600,
+   "expected": {
+    "ptr_ex": 815.7,
+    "ptd_incl": 823.54,
+    "ptd_ex": 784.32,
+    "ptss_incl": 799.55,
+    "ptss_ex": 761.48
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G54-L54",
+    "ptr_incl": "=G54/(100%+I54)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 55,
+   "sap": "15006519",
+   "desc": "Cow's Pure Ghee Ceka Pack",
+   "uom": "900ml",
+   "hsn_as_in_sheet": "4059020",
+   "mrp": 835,
+   "gst_bp": 500,
+   "retailer_margin_bp": 800,
+   "distributor_margin_bp": 400,
+   "ss_margin_bp": 300,
+   "scheme_bp": 600,
+   "expected": {
+    "ptr_ex": 736.33,
+    "ptd_incl": 743.41,
+    "ptd_ex": 708.01,
+    "ptss_incl": 721.76,
+    "ptss_ex": 687.39
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G55-L55",
+    "ptr_incl": "=G55/(100%+I55)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 56,
+   "sap": "15006514",
+   "desc": "Cow's Pure Ghee Tin",
+   "uom": "1liter",
+   "hsn_as_in_sheet": "4059020",
+   "mrp": 950,
+   "gst_bp": 500,
+   "retailer_margin_bp": 800,
+   "distributor_margin_bp": 400,
+   "ss_margin_bp": 300,
+   "scheme_bp": 600,
+   "expected": {
+    "ptr_ex": 837.74,
+    "ptd_incl": 845.8,
+    "ptd_ex": 805.52,
+    "ptss_incl": 821.17,
+    "ptss_ex": 782.07
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G56-L56",
+    "ptr_incl": "=G56/(100%+I56)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 57,
+   "sap": "15006512",
+   "desc": "Cow's Pure Ghee Pouch",
+   "uom": "1liter",
+   "hsn_as_in_sheet": "4059020",
+   "mrp": 910,
+   "gst_bp": 500,
+   "retailer_margin_bp": 800,
+   "distributor_margin_bp": 400,
+   "ss_margin_bp": 300,
+   "scheme_bp": 600,
+   "expected": {
+    "ptr_ex": 802.47,
+    "ptd_incl": 810.19,
+    "ptd_ex": 771.61,
+    "ptss_incl": 786.59,
+    "ptss_ex": 749.13
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G57-L57",
+    "ptr_incl": "=G57/(100%+I57)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 58,
+   "sap": "15006513",
+   "desc": "Cow's Pure Ghee Pouch with Snapfit Jar Free",
+   "uom": "2liter",
+   "hsn_as_in_sheet": "4059020",
+   "mrp": 1820,
+   "gst_bp": 500,
+   "retailer_margin_bp": 800,
+   "distributor_margin_bp": 400,
+   "ss_margin_bp": 300,
+   "scheme_bp": 600,
+   "expected": {
+    "ptr_ex": 1604.94,
+    "ptd_incl": 1620.37,
+    "ptd_ex": 1543.21,
+    "ptss_incl": 1573.17,
+    "ptss_ex": 1498.26
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G58-L58",
+    "ptr_incl": "=G58/(100%+I58)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 59,
+   "sap": "15006515",
+   "desc": "Cow's Pure Ghee Tin",
+   "uom": "5liter",
+   "hsn_as_in_sheet": "4059020",
+   "mrp": 4650,
+   "gst_bp": 500,
+   "retailer_margin_bp": 800,
+   "distributor_margin_bp": 400,
+   "ss_margin_bp": 300,
+   "scheme_bp": 600,
+   "expected": {
+    "ptr_ex": 4100.53,
+    "ptd_incl": 4139.96,
+    "ptd_ex": 3942.82,
+    "ptss_incl": 4019.38,
+    "ptss_ex": 3827.98
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G59-L59",
+    "ptr_incl": "=G59/(100%+I59)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 60,
+   "sap": "15006516",
+   "desc": "Cow's Pure Ghee Tin",
+   "uom": "15kg",
+   "hsn_as_in_sheet": "4059020",
+   "mrp": 15300,
+   "gst_bp": 500,
+   "retailer_margin_bp": 800,
+   "distributor_margin_bp": 400,
+   "ss_margin_bp": 300,
+   "scheme_bp": 600,
+   "expected": {
+    "ptr_ex": 13492.06,
+    "ptd_incl": 13621.79,
+    "ptd_ex": 12973.13,
+    "ptss_incl": 13225.04,
+    "ptss_ex": 12595.28
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G60-L60",
+    "ptr_incl": "=G60/(100%+I60)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 61,
+   "sap": "15006503",
+   "desc": "Cow's Pure Ghee",
+   "uom": "7ml",
+   "hsn_as_in_sheet": "4059020",
+   "mrp": 10,
+   "gst_bp": 500,
+   "retailer_margin_bp": 800,
+   "distributor_margin_bp": 400,
+   "ss_margin_bp": 300,
+   "scheme_bp": 600,
+   "expected": {
+    "ptr_ex": 8.82,
+    "ptd_incl": 8.9,
+    "ptd_ex": 8.48,
+    "ptss_incl": 8.64,
+    "ptss_ex": 8.23
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G61-L61",
+    "ptr_incl": "=G61/(100%+I61)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 63,
+   "sap": "15006517",
+   "desc": "Cow's Premium Ghee Ceka Pack",
+   "uom": "500ml",
+   "hsn_as_in_sheet": "4059020",
+   "mrp": 535,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1200,
+   "distributor_margin_bp": 400,
+   "ss_margin_bp": 300,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 454.93,
+    "ptd_incl": 459.31,
+    "ptd_ex": 437.44,
+    "ptss_incl": 445.93,
+    "ptss_ex": 424.7
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G63-L63",
+    "ptr_incl": "=G63/(100%+I63)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 64,
+   "sap": "15006518",
+   "desc": "Cow's Premium Ghee  Ceka pack",
+   "uom": "1liter",
+   "hsn_as_in_sheet": "4059020",
+   "mrp": 1050,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1200,
+   "distributor_margin_bp": 400,
+   "ss_margin_bp": 300,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 892.86,
+    "ptd_incl": 901.44,
+    "ptd_ex": 858.51,
+    "ptss_incl": 875.18,
+    "ptss_ex": 833.5
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G64-L64",
+    "ptr_incl": "=G64/(100%+I64)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 66,
+   "sap": "15005334",
+   "desc": "A2 Bilona Ghee",
+   "uom": "500ml",
+   "hsn_as_in_sheet": "4059020",
+   "mrp": 1500,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1200,
+   "distributor_margin_bp": 400,
+   "ss_margin_bp": 300,
+   "scheme_bp": 1000,
+   "expected": {
+    "ptr_ex": 1275.51,
+    "ptd_incl": 1287.77,
+    "ptd_ex": 1226.45,
+    "ptss_incl": 1250.26,
+    "ptss_ex": 1190.72
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G66-L66",
+    "ptr_incl": "=G66/(100%+I66)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 68,
+   "sap": "15006176",
+   "desc": "Hing Powder (Asafoetida)",
+   "uom": "50gm",
+   "hsn_as_in_sheet": "9100000",
+   "mrp": 109,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1000,
+   "expected": {
+    "ptr_ex": 90.27,
+    "ptd_incl": 87.76,
+    "ptd_ex": 83.58,
+    "ptss_incl": 83.58,
+    "ptss_ex": 79.6
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G68-L68",
+    "ptr_incl": "=G68/(100%+I68)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 69,
+   "sap": "15005170",
+   "desc": "Black Pepper Powder",
+   "uom": "100g",
+   "hsn_as_in_sheet": "9100000",
+   "mrp": 165,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 0,
+   "expected": {
+    "ptr_ex": 136.65,
+    "ptd_incl": 132.85,
+    "ptd_ex": 126.52,
+    "ptss_incl": 126.52,
+    "ptss_ex": 120.5
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G69-L69",
+    "ptr_incl": "=G69/(100%+I69)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 70,
+   "sap": "15005169",
+   "desc": "Black Pepper Whole",
+   "uom": "100g",
+   "hsn_as_in_sheet": "9100000",
+   "mrp": 160,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 0,
+   "expected": {
+    "ptr_ex": 132.51,
+    "ptd_incl": 128.82,
+    "ptd_ex": 122.69,
+    "ptss_incl": 122.69,
+    "ptss_ex": 116.85
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G70-L70",
+    "ptr_incl": "=G70/(100%+I70)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 71,
+   "sap": "15004411",
+   "desc": "Coriander Powder",
+   "uom": "100g",
+   "hsn_as_in_sheet": "9100000",
+   "mrp": 40,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 0,
+   "expected": {
+    "ptr_ex": 33.13,
+    "ptd_incl": 32.21,
+    "ptd_ex": 30.68,
+    "ptss_incl": 30.68,
+    "ptss_ex": 29.22
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G71-L71",
+    "ptr_incl": "=G71/(100%+I71)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 72,
+   "sap": "15005070",
+   "desc": "Kitchen King Masala",
+   "uom": "100g",
+   "hsn_as_in_sheet": "9100000",
+   "mrp": 80,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 0,
+   "expected": {
+    "ptr_ex": 66.25,
+    "ptd_incl": 64.41,
+    "ptd_ex": 61.34,
+    "ptss_incl": 61.34,
+    "ptss_ex": 58.42
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G72-L72",
+    "ptr_incl": "=G72/(100%+I72)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 73,
+   "sap": "15005071",
+   "desc": "Red Chilli Powder",
+   "uom": "100g",
+   "hsn_as_in_sheet": "9100000",
+   "mrp": 70,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 0,
+   "expected": {
+    "ptr_ex": 57.97,
+    "ptd_incl": 56.36,
+    "ptd_ex": 53.68,
+    "ptss_incl": 53.68,
+    "ptss_ex": 51.12
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G73-L73",
+    "ptr_incl": "=G73/(100%+I73)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 74,
+   "sap": "15005166",
+   "desc": "Turmeric Powder",
+   "uom": "100g",
+   "hsn_as_in_sheet": "9100000",
+   "mrp": 45,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 0,
+   "expected": {
+    "ptr_ex": 37.27,
+    "ptd_incl": 36.23,
+    "ptd_ex": 34.5,
+    "ptss_incl": 34.5,
+    "ptss_ex": 32.86
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G74-L74",
+    "ptr_incl": "=G74/(100%+I74)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 76,
+   "sap": "15006173",
+   "desc": "Amla Candy Plain",
+   "uom": "400gm",
+   "hsn_as_in_sheet": "20080000",
+   "mrp": 205,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 169.77,
+    "ptd_incl": 165.06,
+    "ptd_ex": 157.2,
+    "ptss_incl": 155.72,
+    "ptss_ex": 148.3
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G76-L76",
+    "ptr_incl": "=G76/(100%+I76)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 77,
+   "sap": "15006174",
+   "desc": "Amla Candy Mango",
+   "uom": "400gm",
+   "hsn_as_in_sheet": "20080000",
+   "mrp": 205,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 169.77,
+    "ptd_incl": 165.06,
+    "ptd_ex": 157.2,
+    "ptss_incl": 155.72,
+    "ptss_ex": 148.3
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G77-L77",
+    "ptr_incl": "=G77/(100%+I77)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 78,
+   "sap": "15006175",
+   "desc": "Amla Candy Paan",
+   "uom": "400gm",
+   "hsn_as_in_sheet": "20080000",
+   "mrp": 205,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 169.77,
+    "ptd_incl": 165.06,
+    "ptd_ex": 157.2,
+    "ptss_incl": 155.72,
+    "ptss_ex": 148.3
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G78-L78",
+    "ptr_incl": "=G78/(100%+I78)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 80,
+   "sap": "14003692",
+   "desc": "Madhukari Herbal Tea",
+   "uom": "100g",
+   "hsn_as_in_sheet": "30049011",
+   "mrp": 150,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 124.22,
+    "ptd_incl": 120.77,
+    "ptd_ex": 115.02,
+    "ptss_incl": 113.93,
+    "ptss_ex": 108.5
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G80-L80",
+    "ptr_incl": "=G80/(100%+I80)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 82,
+   "sap": "15006239",
+   "desc": "Mango Pickle Mustard Oil",
+   "uom": "300gm",
+   "hsn_as_in_sheet": "20019000",
+   "mrp": 109,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1375,
+   "expected": {
+    "ptr_ex": 90.27,
+    "ptd_incl": 87.76,
+    "ptd_ex": 83.58,
+    "ptss_incl": 83.58,
+    "ptss_ex": 79.6
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G82-L82",
+    "ptr_incl": "=G82/(100%+I82)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 83,
+   "sap": "15006243",
+   "desc": "Lemon Pickle Mustard Oil",
+   "uom": "300gm",
+   "hsn_as_in_sheet": "20019000",
+   "mrp": 109,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1375,
+   "expected": {
+    "ptr_ex": 90.27,
+    "ptd_incl": 87.76,
+    "ptd_ex": 83.58,
+    "ptss_incl": 83.58,
+    "ptss_ex": 79.6
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G83-L83",
+    "ptr_incl": "=G83/(100%+I83)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 84,
+   "sap": "15006241",
+   "desc": "Mixed Pickle Mustard Oil",
+   "uom": "300gm",
+   "hsn_as_in_sheet": "20019000",
+   "mrp": 109,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1375,
+   "expected": {
+    "ptr_ex": 90.27,
+    "ptd_incl": 87.76,
+    "ptd_ex": 83.58,
+    "ptss_incl": 83.58,
+    "ptss_ex": 79.6
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G84-L84",
+    "ptr_incl": "=G84/(100%+I84)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 85,
+   "sap": "15006240",
+   "desc": "Mango Pickle Rice Bran ",
+   "uom": "300gm",
+   "hsn_as_in_sheet": "20019000",
+   "mrp": 109,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1375,
+   "expected": {
+    "ptr_ex": 90.27,
+    "ptd_incl": 87.76,
+    "ptd_ex": 83.58,
+    "ptss_incl": 83.58,
+    "ptss_ex": 79.6
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G85-L85",
+    "ptr_incl": "=G85/(100%+I85)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 86,
+   "sap": "15006242",
+   "desc": "Mixed Pickle Rice Bran",
+   "uom": "300gm",
+   "hsn_as_in_sheet": "20019000",
+   "mrp": 109,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1375,
+   "expected": {
+    "ptr_ex": 90.27,
+    "ptd_incl": 87.76,
+    "ptd_ex": 83.58,
+    "ptss_incl": 83.58,
+    "ptss_ex": 79.6
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G86-L86",
+    "ptr_incl": "=G86/(100%+I86)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 87,
+   "sap": "15006244",
+   "desc": "Lemon Pickle Rice Bran",
+   "uom": "300gm",
+   "hsn_as_in_sheet": "20019000",
+   "mrp": 109,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1375,
+   "expected": {
+    "ptr_ex": 90.27,
+    "ptd_incl": 87.76,
+    "ptd_ex": 83.58,
+    "ptss_incl": 83.58,
+    "ptss_ex": 79.6
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G87-L87",
+    "ptr_incl": "=G87/(100%+I87)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 88,
+   "sap": "15006245",
+   "desc": "Choondu Pickle Mustard Oil",
+   "uom": "500gm",
+   "hsn_as_in_sheet": "20019000",
+   "mrp": 189,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1375,
+   "expected": {
+    "ptr_ex": 156.52,
+    "ptd_incl": 152.17,
+    "ptd_ex": 144.92,
+    "ptss_incl": 144.92,
+    "ptss_ex": 138.02
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G88-L88",
+    "ptr_incl": "=G88/(100%+I88)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 89,
+   "sap": "15006246",
+   "desc": "Gorkeri Pickle Mustard Oil",
+   "uom": "500gm",
+   "hsn_as_in_sheet": "20019000",
+   "mrp": 189,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1375,
+   "expected": {
+    "ptr_ex": 156.52,
+    "ptd_incl": 152.17,
+    "ptd_ex": 144.92,
+    "ptss_incl": 144.92,
+    "ptss_ex": 138.02
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G89-L89",
+    "ptr_incl": "=G89/(100%+I89)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 90,
+   "sap": "15006247",
+   "desc": "Red Chilli Stuffed Pickle Mustard Oil",
+   "uom": "500gm",
+   "hsn_as_in_sheet": "20019000",
+   "mrp": 229,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1375,
+   "expected": {
+    "ptr_ex": 189.65,
+    "ptd_incl": 184.38,
+    "ptd_ex": 175.6,
+    "ptss_incl": 175.6,
+    "ptss_ex": 167.24
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G90-L90",
+    "ptr_incl": "=G90/(100%+I90)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 91,
+   "sap": "15005701",
+   "desc": "Green Chilli Pickle Mustard Oil",
+   "uom": "500gm",
+   "hsn_as_in_sheet": "20019000",
+   "mrp": 185,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1375,
+   "expected": {
+    "ptr_ex": 153.21,
+    "ptd_incl": 148.95,
+    "ptd_ex": 141.86,
+    "ptss_incl": 141.86,
+    "ptss_ex": 135.1
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G91-L91",
+    "ptr_incl": "=G91/(100%+I91)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 92,
+   "sap": "15006248",
+   "desc": "Tomato Pickle Mustard Oil",
+   "uom": "500gm",
+   "hsn_as_in_sheet": "20019000",
+   "mrp": 189,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1375,
+   "expected": {
+    "ptr_ex": 156.52,
+    "ptd_incl": 152.17,
+    "ptd_ex": 144.92,
+    "ptss_incl": 144.92,
+    "ptss_ex": 138.02
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G92-L92",
+    "ptr_incl": "=G92/(100%+I92)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 93,
+   "sap": "15006249",
+   "desc": "Garlic Pickle Mustard Oil",
+   "uom": "500gm",
+   "hsn_as_in_sheet": "20019000",
+   "mrp": 189,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1375,
+   "expected": {
+    "ptr_ex": 156.52,
+    "ptd_incl": 152.17,
+    "ptd_ex": 144.92,
+    "ptss_incl": 144.92,
+    "ptss_ex": 138.02
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G93-L93",
+    "ptr_incl": "=G93/(100%+I93)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 94,
+   "sap": "15006250",
+   "desc": "Mixed Pickle Mustard Oil",
+   "uom": "500gm",
+   "hsn_as_in_sheet": "20019000",
+   "mrp": 149,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1375,
+   "expected": {
+    "ptr_ex": 123.4,
+    "ptd_incl": 119.97,
+    "ptd_ex": 114.26,
+    "ptss_incl": 114.26,
+    "ptss_ex": 108.82
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G94-L94",
+    "ptr_incl": "=G94/(100%+I94)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 95,
+   "sap": "15006251",
+   "desc": "Mango Pickle Mustard Oil",
+   "uom": "500gm",
+   "hsn_as_in_sheet": "20019000",
+   "mrp": 149,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1375,
+   "expected": {
+    "ptr_ex": 123.4,
+    "ptd_incl": 119.97,
+    "ptd_ex": 114.26,
+    "ptss_incl": 114.26,
+    "ptss_ex": 108.82
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G95-L95",
+    "ptr_incl": "=G95/(100%+I95)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 96,
+   "sap": "15006252",
+   "desc": "Lemon Pickle Mustard Oil",
+   "uom": "500gm",
+   "hsn_as_in_sheet": "20019000",
+   "mrp": 149,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1375,
+   "expected": {
+    "ptr_ex": 123.4,
+    "ptd_incl": 119.97,
+    "ptd_ex": 114.26,
+    "ptss_incl": 114.26,
+    "ptss_ex": 108.82
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G96-L96",
+    "ptr_incl": "=G96/(100%+I96)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 98,
+   "sap": "14003631",
+   "desc": "Organic Virgin Coconut Oil",
+   "uom": "100ml",
+   "hsn_as_in_sheet": "15131900",
+   "mrp": 180,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1000,
+   "expected": {
+    "ptr_ex": 149.07,
+    "ptd_incl": 144.93,
+    "ptd_ex": 138.03,
+    "ptss_incl": 138.03,
+    "ptss_ex": 131.46
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G98-L98",
+    "ptr_incl": "=G98/(100%+I98)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 99,
+   "sap": "14003632",
+   "desc": "Organic Virgin Coconut Oil",
+   "uom": "200ml",
+   "hsn_as_in_sheet": "15131900",
+   "mrp": 359,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1000,
+   "expected": {
+    "ptr_ex": 297.31,
+    "ptd_incl": 289.05,
+    "ptd_ex": 275.29,
+    "ptss_incl": 275.29,
+    "ptss_ex": 262.18
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G99-L99",
+    "ptr_incl": "=G99/(100%+I99)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 100,
+   "sap": "14003633",
+   "desc": "Organic Virgin Coconut Oil",
+   "uom": "300ml",
+   "hsn_as_in_sheet": "15131900",
+   "mrp": 515,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1000,
+   "expected": {
+    "ptr_ex": 426.5,
+    "ptd_incl": 414.65,
+    "ptd_ex": 394.9,
+    "ptss_incl": 394.9,
+    "ptss_ex": 376.1
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G100-L100",
+    "ptr_incl": "=G100/(100%+I100)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 102,
+   "sap": "15005784",
+   "desc": "Daily Choice Basmati Rice",
+   "uom": "1kg",
+   "hsn_as_in_sheet": "10060000",
+   "mrp": 180,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1000,
+   "distributor_margin_bp": 500,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1000,
+   "expected": {
+    "ptr_ex": 155.84,
+    "ptd_incl": 155.84,
+    "ptd_ex": 148.42,
+    "ptss_incl": 148.42,
+    "ptss_ex": 141.35
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G102-L102",
+    "ptr_incl": "=G102/(100%+I102)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 103,
+   "sap": "14004162",
+   "desc": "Sona Masuri Gold Rice",
+   "uom": "1kg",
+   "hsn_as_in_sheet": "10060000",
+   "mrp": 150,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 500,
+   "ss_margin_bp": 500,
+   "scheme_bp": 833,
+   "expected": {
+    "ptr_ex": 124.22,
+    "ptd_incl": 124.22,
+    "ptd_ex": 118.3,
+    "ptss_incl": 118.3,
+    "ptss_ex": 112.67
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G103-L103",
+    "ptr_incl": "=G103/(100%+I103)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 104,
+   "sap": "14004073",
+   "desc": "Sona Masuri Super Quality Steam\u00a0Rice",
+   "uom": "1kg",
+   "hsn_as_in_sheet": "10060000",
+   "mrp": 115,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 500,
+   "ss_margin_bp": 500,
+   "scheme_bp": 833,
+   "expected": {
+    "ptr_ex": 95.24,
+    "ptd_incl": 95.24,
+    "ptd_ex": 90.7,
+    "ptss_incl": 90.7,
+    "ptss_ex": 86.38
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G104-L104",
+    "ptr_incl": "=G104/(100%+I104)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 105,
+   "sap": "14004075",
+   "desc": "Lashkari Kollam Premium",
+   "uom": "1kg",
+   "hsn_as_in_sheet": "10060000",
+   "mrp": 150,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 500,
+   "ss_margin_bp": 500,
+   "scheme_bp": 833,
+   "expected": {
+    "ptr_ex": 124.22,
+    "ptd_incl": 124.22,
+    "ptd_ex": 118.3,
+    "ptss_incl": 118.3,
+    "ptss_ex": 112.67
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G105-L105",
+    "ptr_incl": "=G105/(100%+I105)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 107,
+   "sap": "15006257",
+   "desc": "Aloe Vera Juice",
+   "uom": "1000ml",
+   "hsn_as_in_sheet": "20099000",
+   "mrp": 320,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2500,
+   "distributor_margin_bp": 1000,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1667,
+   "expected": {
+    "ptr_ex": 243.81,
+    "ptd_incl": 232.73,
+    "ptd_ex": 221.65,
+    "ptss_incl": 219.56,
+    "ptss_ex": 209.1
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G107-L107",
+    "ptr_incl": "=G107/(100%+I107)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 108,
+   "sap": "15006254",
+   "desc": "Aloe Vera Triphala Juice",
+   "uom": "500ml",
+   "hsn_as_in_sheet": "20099000",
+   "mrp": 210,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2500,
+   "distributor_margin_bp": 1000,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1667,
+   "expected": {
+    "ptr_ex": 160,
+    "ptd_incl": 152.73,
+    "ptd_ex": 145.46,
+    "ptss_incl": 144.08,
+    "ptss_ex": 137.22
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G108-L108",
+    "ptr_incl": "=G108/(100%+I108)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 109,
+   "sap": "15006258",
+   "desc": "Amla Juice",
+   "uom": "1000ml",
+   "hsn_as_in_sheet": "20099000",
+   "mrp": 320,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2500,
+   "distributor_margin_bp": 1000,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1667,
+   "expected": {
+    "ptr_ex": 243.81,
+    "ptd_incl": 232.73,
+    "ptd_ex": 221.65,
+    "ptss_incl": 219.56,
+    "ptss_ex": 209.1
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G109-L109",
+    "ptr_incl": "=G109/(100%+I109)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 110,
+   "sap": "15006256",
+   "desc": "Karela Jamun Juice",
+   "uom": "1000ml",
+   "hsn_as_in_sheet": "20099000",
+   "mrp": 400,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2500,
+   "distributor_margin_bp": 1000,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1667,
+   "expected": {
+    "ptr_ex": 304.76,
+    "ptd_incl": 290.91,
+    "ptd_ex": 277.06,
+    "ptss_incl": 274.44,
+    "ptss_ex": 261.37
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G110-L110",
+    "ptr_incl": "=G110/(100%+I110)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 111,
+   "sap": "15006255",
+   "desc": "Karela Jamun Juice",
+   "uom": "500ml",
+   "hsn_as_in_sheet": "20099000",
+   "mrp": 220,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2500,
+   "distributor_margin_bp": 1000,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1667,
+   "expected": {
+    "ptr_ex": 167.62,
+    "ptd_incl": 160,
+    "ptd_ex": 152.38,
+    "ptss_incl": 150.94,
+    "ptss_ex": 143.75
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G111-L111",
+    "ptr_incl": "=G111/(100%+I111)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 112,
+   "sap": "15006259",
+   "desc": "Giloy Juice",
+   "uom": "500ml",
+   "hsn_as_in_sheet": "20099000",
+   "mrp": 200,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2500,
+   "distributor_margin_bp": 1000,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1667,
+   "expected": {
+    "ptr_ex": 152.38,
+    "ptd_incl": 145.45,
+    "ptd_ex": 138.52,
+    "ptss_incl": 137.22,
+    "ptss_ex": 130.69
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G112-L112",
+    "ptr_incl": "=G112/(100%+I112)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 113,
+   "sap": "15006260",
+   "desc": "Giloy Juice",
+   "uom": "1000ml",
+   "hsn_as_in_sheet": "20099000",
+   "mrp": 340,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2500,
+   "distributor_margin_bp": 1000,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1667,
+   "expected": {
+    "ptr_ex": 259.05,
+    "ptd_incl": 247.27,
+    "ptd_ex": 235.5,
+    "ptss_incl": 233.27,
+    "ptss_ex": 222.16
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G113-L113",
+    "ptr_incl": "=G113/(100%+I113)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 114,
+   "sap": "15006261",
+   "desc": "Giloy Tulsi\u00a0Juice",
+   "uom": "500ml",
+   "hsn_as_in_sheet": "20099000",
+   "mrp": 200,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2500,
+   "distributor_margin_bp": 1000,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1667,
+   "expected": {
+    "ptr_ex": 152.38,
+    "ptd_incl": 145.45,
+    "ptd_ex": 138.52,
+    "ptss_incl": 137.22,
+    "ptss_ex": 130.69
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G114-L114",
+    "ptr_incl": "=G114/(100%+I114)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 115,
+   "sap": "15006262",
+   "desc": "Giloy Tulsi\u00a0Juice",
+   "uom": "1000ml",
+   "hsn_as_in_sheet": "20099000",
+   "mrp": 340,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2500,
+   "distributor_margin_bp": 1000,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1667,
+   "expected": {
+    "ptr_ex": 259.05,
+    "ptd_incl": 247.27,
+    "ptd_ex": 235.5,
+    "ptss_incl": 233.27,
+    "ptss_ex": 222.16
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G115-L115",
+    "ptr_incl": "=G115/(100%+I115)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 116,
+   "sap": "15006269",
+   "desc": "Wheatgrass Juice",
+   "uom": "1000ml",
+   "hsn_as_in_sheet": "30049011",
+   "mrp": 360,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2500,
+   "distributor_margin_bp": 1000,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1667,
+   "expected": {
+    "ptr_ex": 274.29,
+    "ptd_incl": 261.82,
+    "ptd_ex": 249.35,
+    "ptss_incl": 247,
+    "ptss_ex": 235.24
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G116-L116",
+    "ptr_incl": "=G116/(100%+I116)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 117,
+   "sap": "15006267",
+   "desc": "Raw Noni Juice",
+   "uom": "1000ml",
+   "hsn_as_in_sheet": "30049011",
+   "mrp": 820,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2500,
+   "distributor_margin_bp": 1000,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1667,
+   "expected": {
+    "ptr_ex": 624.76,
+    "ptd_incl": 596.36,
+    "ptd_ex": 567.96,
+    "ptss_incl": 562.6,
+    "ptss_ex": 535.81
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G117-L117",
+    "ptr_incl": "=G117/(100%+I117)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 118,
+   "sap": "15006271",
+   "desc": "Moringa Juice",
+   "uom": "1000ml",
+   "hsn_as_in_sheet": "30049011",
+   "mrp": 500,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2500,
+   "distributor_margin_bp": 1000,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1667,
+   "expected": {
+    "ptr_ex": 380.95,
+    "ptd_incl": 363.64,
+    "ptd_ex": 346.32,
+    "ptss_incl": 343.06,
+    "ptss_ex": 326.72
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G118-L118",
+    "ptr_incl": "=G118/(100%+I118)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 119,
+   "sap": "15006253",
+   "desc": "Apple Cider Vinegar Juice",
+   "uom": "500ml",
+   "hsn_as_in_sheet": "22090010",
+   "mrp": 450,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 2500,
+   "distributor_margin_bp": 1000,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1667,
+   "expected": {
+    "ptr_ex": 305.08,
+    "ptd_incl": 327.27,
+    "ptd_ex": 277.35,
+    "ptss_incl": 308.75,
+    "ptss_ex": 261.65
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G119-L119",
+    "ptr_incl": "=G119/(100%+I119)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 120,
+   "sap": "15006263",
+   "desc": "Artho Fix Juice",
+   "uom": "1000ml",
+   "hsn_as_in_sheet": "30049011",
+   "mrp": 480,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2500,
+   "distributor_margin_bp": 1000,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1667,
+   "expected": {
+    "ptr_ex": 365.71,
+    "ptd_incl": 349.09,
+    "ptd_ex": 332.47,
+    "ptss_incl": 329.33,
+    "ptss_ex": 313.65
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G120-L120",
+    "ptr_incl": "=G120/(100%+I120)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 121,
+   "sap": "15006264",
+   "desc": "His Vitality Juice",
+   "uom": "1000ml",
+   "hsn_as_in_sheet": "30049011",
+   "mrp": 500,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2500,
+   "distributor_margin_bp": 1000,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1667,
+   "expected": {
+    "ptr_ex": 380.95,
+    "ptd_incl": 363.64,
+    "ptd_ex": 346.32,
+    "ptss_incl": 343.06,
+    "ptss_ex": 326.72
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G121-L121",
+    "ptr_incl": "=G121/(100%+I121)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 122,
+   "sap": "15006265",
+   "desc": "Shape up Juice",
+   "uom": "1000ml",
+   "hsn_as_in_sheet": "30049011",
+   "mrp": 450,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2500,
+   "distributor_margin_bp": 1000,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1667,
+   "expected": {
+    "ptr_ex": 342.86,
+    "ptd_incl": 327.27,
+    "ptd_ex": 311.69,
+    "ptss_incl": 308.75,
+    "ptss_ex": 294.05
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G122-L122",
+    "ptr_incl": "=G122/(100%+I122)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 123,
+   "sap": "15006268",
+   "desc": "Arjuna Garcinia Juice",
+   "uom": "1000ml",
+   "hsn_as_in_sheet": "30049011",
+   "mrp": 360,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2500,
+   "distributor_margin_bp": 1000,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1667,
+   "expected": {
+    "ptr_ex": 274.29,
+    "ptd_incl": 261.82,
+    "ptd_ex": 249.35,
+    "ptss_incl": 247,
+    "ptss_ex": 235.24
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G123-L123",
+    "ptr_incl": "=G123/(100%+I123)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 124,
+   "sap": "15006270",
+   "desc": "Her Care Juice",
+   "uom": "1000ml",
+   "hsn_as_in_sheet": "30049011",
+   "mrp": 520,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2500,
+   "distributor_margin_bp": 1000,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1667,
+   "expected": {
+    "ptr_ex": 396.19,
+    "ptd_incl": 378.18,
+    "ptd_ex": 360.17,
+    "ptss_incl": 356.77,
+    "ptss_ex": 339.78
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G124-L124",
+    "ptr_incl": "=G124/(100%+I124)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 127,
+   "sap": "14003637",
+   "desc": "Anti Acne Gel",
+   "uom": "10gm",
+   "hsn_as_in_sheet": "33049990",
+   "mrp": 85,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 62.64,
+    "ptd_incl": 68.44,
+    "ptd_ex": 58,
+    "ptss_incl": 64.57,
+    "ptss_ex": 54.72
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G127-L127",
+    "ptr_incl": "=G127/(100%+I127)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 128,
+   "sap": "14003652",
+   "desc": "Aloe vera Gel",
+   "uom": "100ml",
+   "hsn_as_in_sheet": "33049910",
+   "mrp": 109,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 80.32,
+    "ptd_incl": 87.76,
+    "ptd_ex": 74.37,
+    "ptss_incl": 82.79,
+    "ptss_ex": 70.16
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G128-L128",
+    "ptr_incl": "=G128/(100%+I128)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 129,
+   "sap": "14003649",
+   "desc": "Aloevera Vit E Cream",
+   "uom": "100g",
+   "hsn_as_in_sheet": "33049910",
+   "mrp": 119,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 87.69,
+    "ptd_incl": 95.81,
+    "ptd_ex": 81.19,
+    "ptss_incl": 90.39,
+    "ptss_ex": 76.6
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G129-L129",
+    "ptr_incl": "=G129/(100%+I129)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 130,
+   "sap": "14003650",
+   "desc": "Kesar Cream",
+   "uom": "100g",
+   "hsn_as_in_sheet": "33049910",
+   "mrp": 129,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 95.06,
+    "ptd_incl": 103.86,
+    "ptd_ex": 88.02,
+    "ptss_incl": 97.98,
+    "ptss_ex": 83.03
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G130-L130",
+    "ptr_incl": "=G130/(100%+I130)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 131,
+   "sap": "14003651",
+   "desc": "Moisturising Cream",
+   "uom": "100g",
+   "hsn_as_in_sheet": "33049930",
+   "mrp": 129,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 95.06,
+    "ptd_incl": 103.86,
+    "ptd_ex": 88.02,
+    "ptss_incl": 97.98,
+    "ptss_ex": 83.03
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G131-L131",
+    "ptr_incl": "=G131/(100%+I131)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 132,
+   "sap": "14003654",
+   "desc": "Crack Free Cream",
+   "uom": "25gm",
+   "hsn_as_in_sheet": "33049930",
+   "mrp": 75,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 55.27,
+    "ptd_incl": 60.39,
+    "ptd_ex": 51.18,
+    "ptss_incl": 56.97,
+    "ptss_ex": 48.28
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G132-L132",
+    "ptr_incl": "=G132/(100%+I132)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 133,
+   "sap": "14002840",
+   "desc": "Sunguard SPF50 PA+++",
+   "uom": "50gm",
+   "hsn_as_in_sheet": "33041000",
+   "mrp": 350,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1500,
+   "expected": {
+    "ptr_ex": 257.92,
+    "ptd_incl": 281.8,
+    "ptd_ex": 238.81,
+    "ptss_incl": 265.85,
+    "ptss_ex": 225.3
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G133-L133",
+    "ptr_incl": "=G133/(100%+I133)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 134,
+   "sap": "14004033",
+   "desc": "Anti Acne Face Wash",
+   "uom": "100ml",
+   "hsn_as_in_sheet": "33073090",
+   "mrp": 220,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 5000,
+   "expected": {
+    "ptr_ex": 162.12,
+    "ptd_incl": 177.13,
+    "ptd_ex": 150.11,
+    "ptss_incl": 167.1,
+    "ptss_ex": 141.61
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G134-L134",
+    "ptr_incl": "=G134/(100%+I134)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 135,
+   "sap": "14003641",
+   "desc": "Cucumber Lemon Face Wash",
+   "uom": "60ml",
+   "hsn_as_in_sheet": "33073090",
+   "mrp": 89,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 65.59,
+    "ptd_incl": 71.66,
+    "ptd_ex": 60.73,
+    "ptss_incl": 67.6,
+    "ptss_ex": 57.29
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G135-L135",
+    "ptr_incl": "=G135/(100%+I135)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 136,
+   "sap": "14004034",
+   "desc": "Kumari (Aloe vera) Face Wash",
+   "uom": "100ml",
+   "hsn_as_in_sheet": "33073090",
+   "mrp": 220,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 5000,
+   "expected": {
+    "ptr_ex": 162.12,
+    "ptd_incl": 177.13,
+    "ptd_ex": 150.11,
+    "ptss_incl": 167.1,
+    "ptss_ex": 141.61
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G136-L136",
+    "ptr_incl": "=G136/(100%+I136)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 137,
+   "sap": "14003642",
+   "desc": "Orange Face Wash",
+   "uom": "60ml",
+   "hsn_as_in_sheet": "33073090",
+   "mrp": 89,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 65.59,
+    "ptd_incl": 71.66,
+    "ptd_ex": 60.73,
+    "ptss_incl": 67.6,
+    "ptss_ex": 57.29
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G137-L137",
+    "ptr_incl": "=G137/(100%+I137)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 138,
+   "sap": "14004032",
+   "desc": "Rose Face Wash",
+   "uom": "100ml",
+   "hsn_as_in_sheet": "33073090",
+   "mrp": 220,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 5000,
+   "expected": {
+    "ptr_ex": 162.12,
+    "ptd_incl": 177.13,
+    "ptd_ex": 150.11,
+    "ptss_incl": 167.1,
+    "ptss_ex": 141.61
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G138-L138",
+    "ptr_incl": "=G138/(100%+I138)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 139,
+   "sap": "14003653",
+   "desc": "Neem Face Wash",
+   "uom": "60ml",
+   "hsn_as_in_sheet": "33073090",
+   "mrp": 89,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 65.59,
+    "ptd_incl": 71.66,
+    "ptd_ex": 60.73,
+    "ptss_incl": 67.6,
+    "ptss_ex": 57.29
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G139-L139",
+    "ptr_incl": "=G139/(100%+I139)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 140,
+   "sap": "14003645",
+   "desc": "Walnut Orange Face Scrub",
+   "uom": "60gm",
+   "hsn_as_in_sheet": "33049190",
+   "mrp": 89,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 65.59,
+    "ptd_incl": 71.66,
+    "ptd_ex": 60.73,
+    "ptss_incl": 67.6,
+    "ptss_ex": 57.29
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G140-L140",
+    "ptr_incl": "=G140/(100%+I140)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 141,
+   "sap": "14003666",
+   "desc": "Anti Dandruff Shampoo",
+   "uom": "200ml",
+   "hsn_as_in_sheet": "33049990",
+   "mrp": 140,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 115.94,
+    "ptd_incl": 112.72,
+    "ptd_ex": 107.35,
+    "ptss_incl": 106.34,
+    "ptss_ex": 101.28
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G141-L141",
+    "ptr_incl": "=G141/(100%+I141)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 142,
+   "sap": "14003670",
+   "desc": "Henna Shikakai Shampoo",
+   "uom": "200ml",
+   "hsn_as_in_sheet": "33049990",
+   "mrp": 115,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 95.24,
+    "ptd_incl": 92.59,
+    "ptd_ex": 88.18,
+    "ptss_incl": 87.35,
+    "ptss_ex": 83.19
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G142-L142",
+    "ptr_incl": "=G142/(100%+I142)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 143,
+   "sap": "14003668",
+   "desc": "Protein Shampoo",
+   "uom": "200ml",
+   "hsn_as_in_sheet": "33049990",
+   "mrp": 135,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 111.8,
+    "ptd_incl": 108.7,
+    "ptd_ex": 103.52,
+    "ptss_incl": 102.55,
+    "ptss_ex": 97.67
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G143-L143",
+    "ptr_incl": "=G143/(100%+I143)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 144,
+   "sap": "14003669",
+   "desc": "Protein Shampoo((Buy 1 Get 1 Free)",
+   "uom": "500ml",
+   "hsn_as_in_sheet": "33049990",
+   "mrp": 560,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 463.77,
+    "ptd_incl": 450.89,
+    "ptd_ex": 429.42,
+    "ptss_incl": 425.37,
+    "ptss_ex": 405.11
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G144-L144",
+    "ptr_incl": "=G144/(100%+I144)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 145,
+   "sap": "14003644",
+   "desc": "Neem Face Pack",
+   "uom": "60gm",
+   "hsn_as_in_sheet": "33049950",
+   "mrp": 85,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 62.64,
+    "ptd_incl": 68.44,
+    "ptd_ex": 58,
+    "ptss_incl": 64.57,
+    "ptss_ex": 54.72
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G145-L145",
+    "ptr_incl": "=G145/(100%+I145)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 146,
+   "sap": "14003643",
+   "desc": "Turmeric Face Pack",
+   "uom": "60gm",
+   "hsn_as_in_sheet": "33049950",
+   "mrp": 85,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 62.64,
+    "ptd_incl": 68.44,
+    "ptd_ex": 58,
+    "ptss_incl": 64.57,
+    "ptss_ex": 54.72
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G146-L146",
+    "ptr_incl": "=G146/(100%+I146)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 147,
+   "sap": "14003647",
+   "desc": "Hydrating Conditioner",
+   "uom": "60gm",
+   "hsn_as_in_sheet": "33059090",
+   "mrp": 65,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 47.9,
+    "ptd_incl": 52.33,
+    "ptd_ex": 44.35,
+    "ptss_incl": 49.37,
+    "ptss_ex": 41.84
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G147-L147",
+    "ptr_incl": "=G147/(100%+I147)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 148,
+   "sap": "14003667",
+   "desc": "Anti Dandruff Shampoo (Buy 1 Get 1 Free)",
+   "uom": "500ml",
+   "hsn_as_in_sheet": "33049990",
+   "mrp": 560,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 463.77,
+    "ptd_incl": 450.89,
+    "ptd_ex": 429.42,
+    "ptss_incl": 425.37,
+    "ptss_ex": 405.11
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G148-L148",
+    "ptr_incl": "=G148/(100%+I148)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 149,
+   "sap": "14003671",
+   "desc": "Henna Shikakai Shampoo (Buy 1 Get 1 Free)",
+   "uom": "500ml",
+   "hsn_as_in_sheet": "33049990",
+   "mrp": 560,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 463.77,
+    "ptd_incl": 450.89,
+    "ptd_ex": 429.42,
+    "ptss_incl": 425.37,
+    "ptss_ex": 405.11
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G149-L149",
+    "ptr_incl": "=G149/(100%+I149)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 150,
+   "sap": "14003665",
+   "desc": "Prakesha Gold Shampoo",
+   "uom": "200ml",
+   "hsn_as_in_sheet": "33049990",
+   "mrp": 125,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 103.52,
+    "ptd_incl": 100.64,
+    "ptd_ex": 95.85,
+    "ptss_incl": 94.94,
+    "ptss_ex": 90.42
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G150-L150",
+    "ptr_incl": "=G150/(100%+I150)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 151,
+   "sap": "14000098",
+   "desc": "Orange Body Wash",
+   "uom": "250ml",
+   "hsn_as_in_sheet": "33051090",
+   "mrp": 199,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 146.65,
+    "ptd_incl": 160.23,
+    "ptd_ex": 135.79,
+    "ptss_incl": 151.16,
+    "ptss_ex": 128.1
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G151-L151",
+    "ptr_incl": "=G151/(100%+I151)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 152,
+   "sap": "14003044",
+   "desc": "Chandan & Khus Body Wash",
+   "uom": "250ml",
+   "hsn_as_in_sheet": "33051090",
+   "mrp": 199,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 146.65,
+    "ptd_incl": 160.23,
+    "ptd_ex": 135.79,
+    "ptss_incl": 151.16,
+    "ptss_ex": 128.1
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G152-L152",
+    "ptr_incl": "=G152/(100%+I152)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 153,
+   "sap": "14003045",
+   "desc": "Neem and Tulsi Body Wash",
+   "uom": "250ml",
+   "hsn_as_in_sheet": "33051090",
+   "mrp": 199,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 146.65,
+    "ptd_incl": 160.23,
+    "ptd_ex": 135.79,
+    "ptss_incl": 151.16,
+    "ptss_ex": 128.1
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G153-L153",
+    "ptr_incl": "=G153/(100%+I153)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 154,
+   "sap": "14003628",
+   "desc": "Body Butter",
+   "uom": "150gm",
+   "hsn_as_in_sheet": "33049990",
+   "mrp": 260,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 191.6,
+    "ptd_incl": 209.34,
+    "ptd_ex": 177.41,
+    "ptss_incl": 197.49,
+    "ptss_ex": 167.36
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G154-L154",
+    "ptr_incl": "=G154/(100%+I154)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 155,
+   "sap": "14003646",
+   "desc": "Gulab Jal Pump",
+   "uom": "100ml",
+   "hsn_as_in_sheet": "33030020",
+   "mrp": 80,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1500,
+   "expected": {
+    "ptr_ex": 58.95,
+    "ptd_incl": 64.41,
+    "ptd_ex": 54.58,
+    "ptss_incl": 60.76,
+    "ptss_ex": 51.49
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G155-L155",
+    "ptr_incl": "=G155/(100%+I155)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 156,
+   "sap": "14002205",
+   "desc": "Gulab Jal Flip Top Cap",
+   "uom": "50ml",
+   "hsn_as_in_sheet": "33030020",
+   "mrp": 30,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1500,
+   "expected": {
+    "ptr_ex": 22.11,
+    "ptd_incl": 24.15,
+    "ptd_ex": 20.47,
+    "ptss_incl": 22.78,
+    "ptss_ex": 19.31
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G156-L156",
+    "ptr_incl": "=G156/(100%+I156)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 157,
+   "sap": "14002206",
+   "desc": "Gulab Jal Pump",
+   "uom": "50ml",
+   "hsn_as_in_sheet": "33030020",
+   "mrp": 45,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1500,
+   "expected": {
+    "ptr_ex": 33.16,
+    "ptd_incl": 36.23,
+    "ptd_ex": 30.7,
+    "ptss_incl": 34.18,
+    "ptss_ex": 28.97
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G157-L157",
+    "ptr_incl": "=G157/(100%+I157)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 158,
+   "sap": "14004023",
+   "desc": "Gulab Jal Pump",
+   "uom": "300ml",
+   "hsn_as_in_sheet": "33030020",
+   "mrp": 199,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1500,
+   "expected": {
+    "ptr_ex": 146.65,
+    "ptd_incl": 160.23,
+    "ptd_ex": 135.79,
+    "ptss_incl": 151.16,
+    "ptss_ex": 128.1
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G158-L158",
+    "ptr_incl": "=G158/(100%+I158)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 159,
+   "sap": "14002212",
+   "desc": "Chameli-Tropical Jasmine Mist with Pump",
+   "uom": "100ml",
+   "hsn_as_in_sheet": "33030040",
+   "mrp": 75,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1500,
+   "expected": {
+    "ptr_ex": 55.27,
+    "ptd_incl": 60.39,
+    "ptd_ex": 51.18,
+    "ptss_incl": 56.97,
+    "ptss_ex": 48.28
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G159-L159",
+    "ptr_incl": "=G159/(100%+I159)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 160,
+   "sap": "14002211",
+   "desc": "Chameli-Tropical Jasmine Mist with Fliptop Cap",
+   "uom": "100ml",
+   "hsn_as_in_sheet": "33030040",
+   "mrp": 60,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1500,
+   "expected": {
+    "ptr_ex": 44.22,
+    "ptd_incl": 48.31,
+    "ptd_ex": 40.94,
+    "ptss_incl": 45.58,
+    "ptss_ex": 38.63
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G160-L160",
+    "ptr_incl": "=G160/(100%+I160)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 161,
+   "sap": "14002210",
+   "desc": "Chameli-Tropical Jasmine Mist with Pump",
+   "uom": "50ml",
+   "hsn_as_in_sheet": "33030040",
+   "mrp": 45,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1500,
+   "expected": {
+    "ptr_ex": 33.16,
+    "ptd_incl": 36.23,
+    "ptd_ex": 30.7,
+    "ptss_incl": 34.18,
+    "ptss_ex": 28.97
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G161-L161",
+    "ptr_incl": "=G161/(100%+I161)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 162,
+   "sap": "14002209",
+   "desc": "Chameli-Tropical Jasmine Mist with Fliptop Cap",
+   "uom": "50ml",
+   "hsn_as_in_sheet": "33030040",
+   "mrp": 30,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1500,
+   "expected": {
+    "ptr_ex": 22.11,
+    "ptd_incl": 24.15,
+    "ptd_ex": 20.47,
+    "ptss_incl": 22.78,
+    "ptss_ex": 19.31
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G162-L162",
+    "ptr_incl": "=G162/(100%+I162)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 163,
+   "sap": "14002208",
+   "desc": "Chameli-Tropical Jasmine Mist with Fliptop Cap",
+   "uom": "30ml",
+   "hsn_as_in_sheet": "33030040",
+   "mrp": 15,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1500,
+   "expected": {
+    "ptr_ex": 11.05,
+    "ptd_incl": 12.08,
+    "ptd_ex": 10.24,
+    "ptss_incl": 11.4,
+    "ptss_ex": 9.66
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G163-L163",
+    "ptr_incl": "=G163/(100%+I163)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 164,
+   "sap": "14002217",
+   "desc": "Chandan- Southern Sandalwood Mist with Pump",
+   "uom": "100ml",
+   "hsn_as_in_sheet": "33030040",
+   "mrp": 75,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1500,
+   "expected": {
+    "ptr_ex": 55.27,
+    "ptd_incl": 60.39,
+    "ptd_ex": 51.18,
+    "ptss_incl": 56.97,
+    "ptss_ex": 48.28
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G164-L164",
+    "ptr_incl": "=G164/(100%+I164)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 165,
+   "sap": "14002216",
+   "desc": "Chandan- Southern Sandalwood Mist Fliptop Cap",
+   "uom": "100ml",
+   "hsn_as_in_sheet": "33030040",
+   "mrp": 60,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1500,
+   "expected": {
+    "ptr_ex": 44.22,
+    "ptd_incl": 48.31,
+    "ptd_ex": 40.94,
+    "ptss_incl": 45.58,
+    "ptss_ex": 38.63
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G165-L165",
+    "ptr_incl": "=G165/(100%+I165)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 166,
+   "sap": "14002215",
+   "desc": "Chandan- Southern Sandalwood Mist with Pump",
+   "uom": "50ml",
+   "hsn_as_in_sheet": "33030040",
+   "mrp": 45,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1500,
+   "expected": {
+    "ptr_ex": 33.16,
+    "ptd_incl": 36.23,
+    "ptd_ex": 30.7,
+    "ptss_incl": 34.18,
+    "ptss_ex": 28.97
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G166-L166",
+    "ptr_incl": "=G166/(100%+I166)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 167,
+   "sap": "14002214",
+   "desc": "Chandan- Southern Sandalwood Mist Fliptop Cap",
+   "uom": "50ml",
+   "hsn_as_in_sheet": "33030040",
+   "mrp": 30,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1500,
+   "expected": {
+    "ptr_ex": 22.11,
+    "ptd_incl": 24.15,
+    "ptd_ex": 20.47,
+    "ptss_incl": 22.78,
+    "ptss_ex": 19.31
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G167-L167",
+    "ptr_incl": "=G167/(100%+I167)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 168,
+   "sap": "14002213",
+   "desc": "Chandan- Southern Sandalwood Mist with Pump",
+   "uom": "30ml",
+   "hsn_as_in_sheet": "33030040",
+   "mrp": 15,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1500,
+   "expected": {
+    "ptr_ex": 11.05,
+    "ptd_incl": 12.08,
+    "ptd_ex": 10.24,
+    "ptss_incl": 11.4,
+    "ptss_ex": 9.66
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G168-L168",
+    "ptr_incl": "=G168/(100%+I168)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 170,
+   "sap": "14001277",
+   "desc": "Kleanup Hand Wash Refill Pouch",
+   "uom": "500ml",
+   "hsn_as_in_sheet": "34013019",
+   "mrp": 145,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 500,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1000,
+   "expected": {
+    "ptr_ex": 106.85,
+    "ptd_incl": 120.08,
+    "ptd_ex": 101.76,
+    "ptss_incl": 114.36,
+    "ptss_ex": 96.92
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G170-L170",
+    "ptr_incl": "=G170/(100%+I170)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 171,
+   "sap": "14001278",
+   "desc": "Kleanup Hand Wash Refill Pouch",
+   "uom": "750 ml",
+   "hsn_as_in_sheet": "34013019",
+   "mrp": 175,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 500,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1000,
+   "expected": {
+    "ptr_ex": 128.96,
+    "ptd_incl": 144.93,
+    "ptd_ex": 122.82,
+    "ptss_incl": 138.03,
+    "ptss_ex": 116.97
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G171-L171",
+    "ptr_incl": "=G171/(100%+I171)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 172,
+   "sap": "14001329",
+   "desc": "Kleanup Handwash Aloe Vera, Neem & Orange",
+   "uom": "300ml",
+   "hsn_as_in_sheet": "34013019",
+   "mrp": 135,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 500,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1000,
+   "expected": {
+    "ptr_ex": 99.48,
+    "ptd_incl": 111.8,
+    "ptd_ex": 94.75,
+    "ptss_incl": 106.48,
+    "ptss_ex": 90.24
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G172-L172",
+    "ptr_incl": "=G172/(100%+I172)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 173,
+   "sap": "14001330",
+   "desc": "Kleanup Handwash Neem & Lemon",
+   "uom": "300ml",
+   "hsn_as_in_sheet": "34013019",
+   "mrp": 135,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 500,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1000,
+   "expected": {
+    "ptr_ex": 99.48,
+    "ptd_incl": 111.8,
+    "ptd_ex": 94.75,
+    "ptss_incl": 106.48,
+    "ptss_ex": 90.24
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G173-L173",
+    "ptr_incl": "=G173/(100%+I173)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 174,
+   "sap": "14001331",
+   "desc": "Kleanup Handwash Neem & Tulasi",
+   "uom": "300ml",
+   "hsn_as_in_sheet": "34013019",
+   "mrp": 135,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 500,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1000,
+   "expected": {
+    "ptr_ex": 99.48,
+    "ptd_incl": 111.8,
+    "ptd_ex": 94.75,
+    "ptss_incl": 106.48,
+    "ptss_ex": 90.24
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G174-L174",
+    "ptr_incl": "=G174/(100%+I174)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 176,
+   "sap": "14003415",
+   "desc": "Sudanta Miswak Fresh Mouthwash",
+   "uom": "250ml",
+   "hsn_as_in_sheet": "33061020",
+   "mrp": 165,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 136.65,
+    "ptd_incl": 132.85,
+    "ptd_ex": 126.52,
+    "ptss_incl": 125.33,
+    "ptss_ex": 119.36
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G176-L176",
+    "ptr_incl": "=G176/(100%+I176)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 177,
+   "sap": "14003658",
+   "desc": "Sudanta Gel Toothpaste - Charcoal & Salt",
+   "uom": "100g",
+   "hsn_as_in_sheet": "33061020",
+   "mrp": 75,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 62.11,
+    "ptd_incl": 60.39,
+    "ptd_ex": 57.51,
+    "ptss_incl": 56.97,
+    "ptss_ex": 54.26
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G177-L177",
+    "ptr_incl": "=G177/(100%+I177)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 178,
+   "sap": "14003659",
+   "desc": "Sudanta Gel Toothpaste - Minty Saunf",
+   "uom": "80gm",
+   "hsn_as_in_sheet": "33061020",
+   "mrp": 65,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 53.83,
+    "ptd_incl": 52.33,
+    "ptd_ex": 49.84,
+    "ptss_incl": 49.37,
+    "ptss_ex": 47.02
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G178-L178",
+    "ptr_incl": "=G178/(100%+I178)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 179,
+   "sap": "14003660",
+   "desc": "Sudanta Gel Toothpaste - Minty Saunf",
+   "uom": "150gm",
+   "hsn_as_in_sheet": "33061020",
+   "mrp": 110,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 91.1,
+    "ptd_incl": 88.57,
+    "ptd_ex": 84.35,
+    "ptss_incl": 83.56,
+    "ptss_ex": 79.58
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G179-L179",
+    "ptr_incl": "=G179/(100%+I179)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 180,
+   "sap": "14003032",
+   "desc": "Sudanta Original Toothpaste",
+   "uom": "16gm",
+   "hsn_as_in_sheet": "33061020",
+   "mrp": 10,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 8.28,
+    "ptd_incl": 8.05,
+    "ptd_ex": 7.67,
+    "ptss_incl": 7.59,
+    "ptss_ex": 7.23
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G180-L180",
+    "ptr_incl": "=G180/(100%+I180)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 181,
+   "sap": "14003655",
+   "desc": "Sudanta Original Toothpaste",
+   "uom": "50gm",
+   "hsn_as_in_sheet": "33061020",
+   "mrp": 30,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 24.84,
+    "ptd_incl": 24.15,
+    "ptd_ex": 23,
+    "ptss_incl": 22.78,
+    "ptss_ex": 21.7
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G181-L181",
+    "ptr_incl": "=G181/(100%+I181)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 182,
+   "sap": "14003656",
+   "desc": "Sudanta Original Toothpaste",
+   "uom": "100g",
+   "hsn_as_in_sheet": "33061020",
+   "mrp": 65,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 53.83,
+    "ptd_incl": 52.33,
+    "ptd_ex": 49.84,
+    "ptss_incl": 49.37,
+    "ptss_ex": 47.02
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G182-L182",
+    "ptr_incl": "=G182/(100%+I182)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 183,
+   "sap": "14003657",
+   "desc": "Sudanta Original Toothpaste",
+   "uom": "200gm",
+   "hsn_as_in_sheet": "33061020",
+   "mrp": 110,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 91.1,
+    "ptd_incl": 88.57,
+    "ptd_ex": 84.35,
+    "ptss_incl": 83.56,
+    "ptss_ex": 79.58
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G183-L183",
+    "ptr_incl": "=G183/(100%+I183)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 184,
+   "sap": "14003661",
+   "desc": "Sudanta Red Toothpaste",
+   "uom": "100g",
+   "hsn_as_in_sheet": "33061020",
+   "mrp": 65,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 53.83,
+    "ptd_incl": 52.33,
+    "ptd_ex": 49.84,
+    "ptss_incl": 49.37,
+    "ptss_ex": 47.02
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G184-L184",
+    "ptr_incl": "=G184/(100%+I184)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 185,
+   "sap": "14003662",
+   "desc": "Sudanta Red Toothpaste",
+   "uom": "200gm",
+   "hsn_as_in_sheet": "33061020",
+   "mrp": 120,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 99.38,
+    "ptd_incl": 96.62,
+    "ptd_ex": 92.02,
+    "ptss_incl": 91.15,
+    "ptss_ex": 86.81
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G185-L185",
+    "ptr_incl": "=G185/(100%+I185)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 186,
+   "sap": "14003663",
+   "desc": "Sudanta Whitening Toothpaste",
+   "uom": "80gm",
+   "hsn_as_in_sheet": "33061020",
+   "mrp": 65,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 53.83,
+    "ptd_incl": 52.33,
+    "ptd_ex": 49.84,
+    "ptss_incl": 49.37,
+    "ptss_ex": 47.02
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G186-L186",
+    "ptr_incl": "=G186/(100%+I186)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 187,
+   "sap": "14003664",
+   "desc": "Sudanta Whitening Toothpaste",
+   "uom": "150gm",
+   "hsn_as_in_sheet": "33061020",
+   "mrp": 110,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 91.1,
+    "ptd_incl": 88.57,
+    "ptd_ex": 84.35,
+    "ptss_incl": 83.56,
+    "ptss_ex": 79.58
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G187-L187",
+    "ptr_incl": "=G187/(100%+I187)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 188,
+   "sap": "14004035",
+   "desc": "Sudanta Original TP Pack of 3(Consumer offer Rs.20)",
+   "uom": "100g*3 units\u00a0",
+   "hsn_as_in_sheet": "33061020",
+   "mrp": "195 175",
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 144.93,
+    "ptd_incl": 140.9,
+    "ptd_ex": 134.19,
+    "ptss_incl": 132.92,
+    "ptss_ex": 126.59
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=175-L188",
+    "ptr_incl": "=175/(100%+I188)*(100%)"
+   },
+   "status": "held",
+   "hold_reasons": [
+    "MRP cell is text (\"195 175\"); the formulas price on a typed offer value \u2014 needs the brand's confirmed MRP/offer price",
+    "formulas use a typed value (175) instead of the MRP cell"
+   ]
+  },
+  {
+   "row": 189,
+   "sap": "14001145",
+   "desc": "Sudanta Gel TP Pack of 3(Consumer offer Rs.30)",
+   "uom": "100g*3 units\u00a0",
+   "hsn_as_in_sheet": "33061020",
+   "mrp": "225 195",
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 161.49,
+    "ptd_incl": 157,
+    "ptd_ex": 149.52,
+    "ptss_incl": 148.11,
+    "ptss_ex": 141.06
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=195-L189",
+    "ptr_incl": "=195/(100%+I189)*(100%)"
+   },
+   "status": "held",
+   "hold_reasons": [
+    "MRP cell is text (\"225 195\"); the formulas price on a typed offer value \u2014 needs the brand's confirmed MRP/offer price",
+    "formulas use a typed value (195) instead of the MRP cell"
+   ]
+  },
+  {
+   "row": 191,
+   "sap": "15006037",
+   "desc": "Sudanta Bamboo Toothbrush",
+   "uom": "Pack of 12",
+   "hsn_as_in_sheet": "33061020",
+   "mrp": 432,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 357.76,
+    "ptd_incl": 347.83,
+    "ptd_ex": 331.27,
+    "ptss_incl": 328.14,
+    "ptss_ex": 312.51
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G191-L191",
+    "ptr_incl": "=G191/(100%+I191)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 192,
+   "sap": "15005898",
+   "desc": "Sudanta Smile Toothbrush",
+   "uom": "Pack of 12",
+   "hsn_as_in_sheet": "33061020",
+   "mrp": 240,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 198.76,
+    "ptd_incl": 193.24,
+    "ptd_ex": 184.04,
+    "ptss_incl": 182.3,
+    "ptss_ex": 173.62
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G192-L192",
+    "ptr_incl": "=G192/(100%+I192)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 194,
+   "sap": "15006399",
+   "desc": "Almond & Honey Soap",
+   "uom": "100g",
+   "hsn_as_in_sheet": "34011190",
+   "mrp": 50,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 41.41,
+    "ptd_incl": 40.26,
+    "ptd_ex": 38.34,
+    "ptss_incl": 37.98,
+    "ptss_ex": 36.17
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G194-L194",
+    "ptr_incl": "=G194/(100%+I194)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 195,
+   "sap": "15006402",
+   "desc": "Malai Cream Soap",
+   "uom": "100g",
+   "hsn_as_in_sheet": "34011190",
+   "mrp": 50,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 41.41,
+    "ptd_incl": 40.26,
+    "ptd_ex": 38.34,
+    "ptss_incl": 37.98,
+    "ptss_ex": 36.17
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G195-L195",
+    "ptr_incl": "=G195/(100%+I195)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 196,
+   "sap": "15006401",
+   "desc": "Sandal Soap",
+   "uom": "100g",
+   "hsn_as_in_sheet": "34011190",
+   "mrp": 50,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 41.41,
+    "ptd_incl": 40.26,
+    "ptd_ex": 38.34,
+    "ptss_incl": 37.98,
+    "ptss_ex": 36.17
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G196-L196",
+    "ptr_incl": "=G196/(100%+I196)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 197,
+   "sap": "15006400",
+   "desc": "Orange & Tulsi Soap",
+   "uom": "100g",
+   "hsn_as_in_sheet": "34011190",
+   "mrp": 50,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 41.41,
+    "ptd_incl": 40.26,
+    "ptd_ex": 38.34,
+    "ptss_incl": 37.98,
+    "ptss_ex": 36.17
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G197-L197",
+    "ptr_incl": "=G197/(100%+I197)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 198,
+   "sap": "15006403",
+   "desc": "Glycerin Soap",
+   "uom": "75gm",
+   "hsn_as_in_sheet": "34011190",
+   "mrp": 50,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 41.41,
+    "ptd_incl": 40.26,
+    "ptd_ex": 38.34,
+    "ptss_incl": 37.98,
+    "ptss_ex": 36.17
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G198-L198",
+    "ptr_incl": "=G198/(100%+I198)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 199,
+   "sap": "15006407",
+   "desc": "Haldi Chandan Soap 3+1 Free",
+   "uom": "100gm*4",
+   "hsn_as_in_sheet": "34011190",
+   "mrp": 140,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 115.94,
+    "ptd_incl": 112.72,
+    "ptd_ex": 107.35,
+    "ptss_incl": 106.34,
+    "ptss_ex": 101.28
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G199-L199",
+    "ptr_incl": "=G199/(100%+I199)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 200,
+   "sap": "15006409",
+   "desc": "Jasmine & Vitamin E Soap  3+1 Free",
+   "uom": "100gm*4",
+   "hsn_as_in_sheet": "34011190",
+   "mrp": 140,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 115.94,
+    "ptd_incl": 112.72,
+    "ptd_ex": 107.35,
+    "ptss_incl": 106.34,
+    "ptss_ex": 101.28
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G200-L200",
+    "ptr_incl": "=G200/(100%+I200)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 201,
+   "sap": "15006408",
+   "desc": "Antiseptic Soap  3+1 Free",
+   "uom": "100gm*4",
+   "hsn_as_in_sheet": "34011190",
+   "mrp": 140,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 115.94,
+    "ptd_incl": 112.72,
+    "ptd_ex": 107.35,
+    "ptss_incl": 106.34,
+    "ptss_ex": 101.28
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G201-L201",
+    "ptr_incl": "=G201/(100%+I201)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 202,
+   "sap": "15006404",
+   "desc": "Lime & Tea Tree Oil Soap  3+1 Free",
+   "uom": "75gm*4",
+   "hsn_as_in_sheet": "34011190",
+   "mrp": 110,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 91.1,
+    "ptd_incl": 88.57,
+    "ptd_ex": 84.35,
+    "ptss_incl": 83.56,
+    "ptss_ex": 79.58
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G202-L202",
+    "ptr_incl": "=G202/(100%+I202)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 203,
+   "sap": "15006406",
+   "desc": "Neem & Aloe Vera Soap  3+1 Free",
+   "uom": "75gm*4",
+   "hsn_as_in_sheet": "34011190",
+   "mrp": 110,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 500,
+   "expected": {
+    "ptr_ex": 91.1,
+    "ptd_incl": 88.57,
+    "ptd_ex": 84.35,
+    "ptss_incl": 83.56,
+    "ptss_ex": 79.58
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G203-L203",
+    "ptr_incl": "=G203/(100%+I203)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 204,
+   "sap": "15006236",
+   "desc": "Shea Butter & Tea Tree Oil Soap Pack of 4 (Consumer offer Rs.50)",
+   "uom": "100gm*4",
+   "hsn_as_in_sheet": "34011190",
+   "mrp": 225,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 186.34,
+    "ptd_incl": 181.16,
+    "ptd_ex": 172.53,
+    "ptss_incl": 170.91,
+    "ptss_ex": 162.77
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=199-L204",
+    "ptr_incl": "=225/(100%+I204)*(100%)"
+   },
+   "status": "held",
+   "hold_reasons": [
+    "sheet is internally inconsistent: margin amount uses 199, PTR uses 225"
+   ]
+  },
+  {
+   "row": 205,
+   "sap": "15006237",
+   "desc": "Walnut&Turmer Exfoliating Soap Pack of 4 (Consumer offer Rs.60)",
+   "uom": "100gm*4",
+   "hsn_as_in_sheet": "34011190",
+   "mrp": 225,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 186.34,
+    "ptd_incl": 181.16,
+    "ptd_ex": 172.53,
+    "ptss_incl": 170.91,
+    "ptss_ex": 162.77
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=199-L205",
+    "ptr_incl": "=225/(100%+I205)*(100%)"
+   },
+   "status": "held",
+   "hold_reasons": [
+    "sheet is internally inconsistent: margin amount uses 199, PTR uses 225"
+   ]
+  },
+  {
+   "row": 206,
+   "sap": "15006238",
+   "desc": "Aloe-Fresh Glycerine Soap Pack of 4 (Consumer offer Rs.90)",
+   "uom": "125gm*4",
+   "hsn_as_in_sheet": "34011190",
+   "mrp": 225,
+   "gst_bp": 500,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 186.34,
+    "ptd_incl": 181.16,
+    "ptd_ex": 172.53,
+    "ptss_incl": 170.91,
+    "ptss_ex": 162.77
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=199-L206",
+    "ptr_incl": "=225/(100%+I206)*(100%)"
+   },
+   "status": "held",
+   "hold_reasons": [
+    "sheet is internally inconsistent: margin amount uses 199, PTR uses 225"
+   ]
+  },
+  {
+   "row": 208,
+   "sap": "14003696",
+   "desc": "Body Oil",
+   "uom": "200ml",
+   "hsn_as_in_sheet": "30049011",
+   "mrp": 205,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 162.7,
+    "ptd_incl": 158.18,
+    "ptd_ex": 150.65,
+    "ptss_incl": 149.23,
+    "ptss_ex": 142.12
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G208-L208",
+    "ptr_incl": "=G208/(100%+I208)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 209,
+   "sap": "14003648",
+   "desc": "Bhringamalakadi Taila",
+   "uom": "100ml",
+   "hsn_as_in_sheet": "30049011",
+   "mrp": 140,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 111.11,
+    "ptd_incl": 108.02,
+    "ptd_ex": 102.88,
+    "ptss_incl": 101.91,
+    "ptss_ex": 97.06
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G209-L209",
+    "ptr_incl": "=G209/(100%+I209)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 210,
+   "sap": "14003694",
+   "desc": "Brahmi Bhringaraj Taila",
+   "uom": "100ml",
+   "hsn_as_in_sheet": "30049011",
+   "mrp": 115,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 91.27,
+    "ptd_incl": 88.73,
+    "ptd_ex": 84.5,
+    "ptss_incl": 83.71,
+    "ptss_ex": 79.72
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G210-L210",
+    "ptr_incl": "=G210/(100%+I210)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 211,
+   "sap": "14003695",
+   "desc": "Brahmi Bhringaraj Taila",
+   "uom": "200ml",
+   "hsn_as_in_sheet": "30049011",
+   "mrp": 200,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 158.73,
+    "ptd_incl": 154.32,
+    "ptd_ex": 146.97,
+    "ptss_incl": 145.58,
+    "ptss_ex": 138.65
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G211-L211",
+    "ptr_incl": "=G211/(100%+I211)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 212,
+   "sap": "14003693",
+   "desc": "Prakesha Gold Hair Oil",
+   "uom": "100ml",
+   "hsn_as_in_sheet": "30049011",
+   "mrp": 225,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 800,
+   "expected": {
+    "ptr_ex": 178.57,
+    "ptd_incl": 173.61,
+    "ptd_ex": 165.34,
+    "ptss_incl": 163.78,
+    "ptss_ex": 155.98
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G212-L212",
+    "ptr_incl": "=G212/(100%+I212)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 214,
+   "sap": "15005635",
+   "desc": "Ujjiyara Floor Cleaner Lavender Fresh  1+1",
+   "uom": "500ml",
+   "hsn_as_in_sheet": "34029092",
+   "mrp": 160,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 600,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1375,
+   "expected": {
+    "ptr_ex": 117.91,
+    "ptd_incl": 131.26,
+    "ptd_ex": 111.24,
+    "ptss_incl": 125.01,
+    "ptss_ex": 105.94
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G214-L214",
+    "ptr_incl": "=G214/(100%+I214)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 215,
+   "sap": "15005636",
+   "desc": "Ujjiyara Floor Cleaner Citric Lemon  1+1",
+   "uom": "500ml",
+   "hsn_as_in_sheet": "34029092",
+   "mrp": 160,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 600,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1375,
+   "expected": {
+    "ptr_ex": 117.91,
+    "ptd_incl": 131.26,
+    "ptd_ex": 111.24,
+    "ptss_incl": 125.01,
+    "ptss_ex": 105.94
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G215-L215",
+    "ptr_incl": "=G215/(100%+I215)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 216,
+   "sap": "15005688",
+   "desc": "Ujjiyara Floor Cleaner Neem  1+1",
+   "uom": "500ml",
+   "hsn_as_in_sheet": "34029092",
+   "mrp": 160,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 600,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1375,
+   "expected": {
+    "ptr_ex": 117.91,
+    "ptd_incl": 131.26,
+    "ptd_ex": 111.24,
+    "ptss_incl": 125.01,
+    "ptss_ex": 105.94
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G216-L216",
+    "ptr_incl": "=G216/(100%+I216)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 217,
+   "sap": "15005637",
+   "desc": "Ujjiyara Toilet Cleaner Winter Green Fragrance  1+1",
+   "uom": "500ml",
+   "hsn_as_in_sheet": "34029092",
+   "mrp": 150,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 600,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1375,
+   "expected": {
+    "ptr_ex": 110.54,
+    "ptd_incl": 123.05,
+    "ptd_ex": 104.28,
+    "ptss_incl": 117.19,
+    "ptss_ex": 99.31
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G217-L217",
+    "ptr_incl": "=G217/(100%+I217)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 218,
+   "sap": "15005638",
+   "desc": "Ujjiyara Liquid Dishwash Lime Green  1+1",
+   "uom": "500ml",
+   "hsn_as_in_sheet": "34029090",
+   "mrp": 170,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 600,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1375,
+   "expected": {
+    "ptr_ex": 125.28,
+    "ptd_incl": 139.46,
+    "ptd_ex": 118.19,
+    "ptss_incl": 132.82,
+    "ptss_ex": 112.56
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G218-L218",
+    "ptr_incl": "=G218/(100%+I218)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 219,
+   "sap": "15005639",
+   "desc": "Ujjiyara Liquid Dishwash Lemon  1+1",
+   "uom": "500ml",
+   "hsn_as_in_sheet": "34029090",
+   "mrp": 170,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 1500,
+   "distributor_margin_bp": 600,
+   "ss_margin_bp": 500,
+   "scheme_bp": 1375,
+   "expected": {
+    "ptr_ex": 125.28,
+    "ptd_incl": 139.46,
+    "ptd_ex": 118.19,
+    "ptss_incl": 132.82,
+    "ptss_ex": 112.56
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G219-L219",
+    "ptr_incl": "=G219/(100%+I219)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 221,
+   "sap": "15006181",
+   "desc": "Premium Sandal Incense Sticks",
+   "uom": "20g",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 22,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 17.46,
+    "ptd_incl": 16.98,
+    "ptd_ex": 16.17,
+    "ptss_incl": 16.02,
+    "ptss_ex": 15.26
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G221-L221",
+    "ptr_incl": "=G221/(100%+I221)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 222,
+   "sap": "15006183",
+   "desc": "Premium Rose Incense Sticks",
+   "uom": "20g",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 22,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 17.46,
+    "ptd_incl": 16.98,
+    "ptd_ex": 16.17,
+    "ptss_incl": 16.02,
+    "ptss_ex": 15.26
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G222-L222",
+    "ptr_incl": "=G222/(100%+I222)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 223,
+   "sap": "15006185",
+   "desc": "Premium Champa Incense Sticks",
+   "uom": "20g",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 22,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 17.46,
+    "ptd_incl": 16.98,
+    "ptd_ex": 16.17,
+    "ptss_incl": 16.02,
+    "ptss_ex": 15.26
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G223-L223",
+    "ptr_incl": "=G223/(100%+I223)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 224,
+   "sap": "15006184",
+   "desc": "Premium Mogra Incense Sticks",
+   "uom": "20g",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 22,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 17.46,
+    "ptd_incl": 16.98,
+    "ptd_ex": 16.17,
+    "ptss_incl": 16.02,
+    "ptss_ex": 15.26
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G224-L224",
+    "ptr_incl": "=G224/(100%+I224)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 225,
+   "sap": "15006186",
+   "desc": "Premium Kewda Incense Sticks",
+   "uom": "20g",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 22,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 17.46,
+    "ptd_incl": 16.98,
+    "ptd_ex": 16.17,
+    "ptss_incl": 16.02,
+    "ptss_ex": 15.26
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G225-L225",
+    "ptr_incl": "=G225/(100%+I225)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 226,
+   "sap": "15006182",
+   "desc": "Premium Lavendar Incense Sticks",
+   "uom": "20g",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 22,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 17.46,
+    "ptd_incl": 16.98,
+    "ptd_ex": 16.17,
+    "ptss_incl": 16.02,
+    "ptss_ex": 15.26
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G226-L226",
+    "ptr_incl": "=G226/(100%+I226)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 227,
+   "sap": "15006180",
+   "desc": "Lavender Incense Cones",
+   "uom": "25gm",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 22,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 17.46,
+    "ptd_incl": 16.98,
+    "ptd_ex": 16.17,
+    "ptss_incl": 16.02,
+    "ptss_ex": 15.26
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G227-L227",
+    "ptr_incl": "=G227/(100%+I227)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 228,
+   "sap": "15006177",
+   "desc": "Rose Incense Cones",
+   "uom": "25gm",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 22,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 17.46,
+    "ptd_incl": 16.98,
+    "ptd_ex": 16.17,
+    "ptss_incl": 16.02,
+    "ptss_ex": 15.26
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G228-L228",
+    "ptr_incl": "=G228/(100%+I228)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 229,
+   "sap": "15006179",
+   "desc": "Mogra Incense Cones",
+   "uom": "25gm",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 22,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 17.46,
+    "ptd_incl": 16.98,
+    "ptd_ex": 16.17,
+    "ptss_incl": 16.02,
+    "ptss_ex": 15.26
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G229-L229",
+    "ptr_incl": "=G229/(100%+I229)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 230,
+   "sap": "15006178",
+   "desc": "Sandal Incense Cones",
+   "uom": "25gm",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 22,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 17.46,
+    "ptd_incl": 16.98,
+    "ptd_ex": 16.17,
+    "ptss_incl": 16.02,
+    "ptss_ex": 15.26
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G230-L230",
+    "ptr_incl": "=G230/(100%+I230)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 231,
+   "sap": "15006163",
+   "desc": "Rose Dhoop Sticks",
+   "uom": "50gm",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 44,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 34.92,
+    "ptd_incl": 33.95,
+    "ptd_ex": 32.33,
+    "ptss_incl": 32.03,
+    "ptss_ex": 30.5
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G231-L231",
+    "ptr_incl": "=G231/(100%+I231)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 232,
+   "sap": "15006166",
+   "desc": "Lavendar Dhoop Sticks",
+   "uom": "50gm",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 44,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 34.92,
+    "ptd_incl": 33.95,
+    "ptd_ex": 32.33,
+    "ptss_incl": 32.03,
+    "ptss_ex": 30.5
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G232-L232",
+    "ptr_incl": "=G232/(100%+I232)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 233,
+   "sap": "15006164",
+   "desc": "Mogra Dhoop Sticks",
+   "uom": "50gm",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 44,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 34.92,
+    "ptd_incl": 33.95,
+    "ptd_ex": 32.33,
+    "ptss_incl": 32.03,
+    "ptss_ex": 30.5
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G233-L233",
+    "ptr_incl": "=G233/(100%+I233)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 234,
+   "sap": "15006165",
+   "desc": "Sandal Dhoop Sticks",
+   "uom": "50gm",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 44,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 34.92,
+    "ptd_incl": 33.95,
+    "ptd_ex": 32.33,
+    "ptss_incl": 32.03,
+    "ptss_ex": 30.5
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G234-L234",
+    "ptr_incl": "=G234/(100%+I234)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 235,
+   "sap": "15006171",
+   "desc": "Premium Sandal Incense Sticks",
+   "uom": "100g",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 65,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 51.59,
+    "ptd_incl": 50.15,
+    "ptd_ex": 47.76,
+    "ptss_incl": 47.31,
+    "ptss_ex": 45.06
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G235-L235",
+    "ptr_incl": "=G235/(100%+I235)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 236,
+   "sap": "15006167",
+   "desc": "Premium Rose Incense Sticks",
+   "uom": "100g",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 65,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 51.59,
+    "ptd_incl": 50.15,
+    "ptd_ex": 47.76,
+    "ptss_incl": 47.31,
+    "ptss_ex": 45.06
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G236-L236",
+    "ptr_incl": "=G236/(100%+I236)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 237,
+   "sap": "15006170",
+   "desc": "Premium Champa Incense Sticks",
+   "uom": "100g",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 65,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 51.59,
+    "ptd_incl": 50.15,
+    "ptd_ex": 47.76,
+    "ptss_incl": 47.31,
+    "ptss_ex": 45.06
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G237-L237",
+    "ptr_incl": "=G237/(100%+I237)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 238,
+   "sap": "15006169",
+   "desc": "Premium Mogra Incense Sticks",
+   "uom": "100g",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 65,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 51.59,
+    "ptd_incl": 50.15,
+    "ptd_ex": 47.76,
+    "ptss_incl": 47.31,
+    "ptss_ex": 45.06
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G238-L238",
+    "ptr_incl": "=G238/(100%+I238)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 239,
+   "sap": "15006168",
+   "desc": "Premium Kewda Incense Sticks",
+   "uom": "100g",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 65,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 51.59,
+    "ptd_incl": 50.15,
+    "ptd_ex": 47.76,
+    "ptss_incl": 47.31,
+    "ptss_ex": 45.06
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G239-L239",
+    "ptr_incl": "=G239/(100%+I239)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 240,
+   "sap": "15006172",
+   "desc": "Premium Lavendar Incense Sticks",
+   "uom": "100g",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 65,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 51.59,
+    "ptd_incl": 50.15,
+    "ptd_ex": 47.76,
+    "ptss_incl": 47.31,
+    "ptss_ex": 45.06
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G240-L240",
+    "ptr_incl": "=G240/(100%+I240)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 241,
+   "sap": "15006200",
+   "desc": "Premium Kasturi Dhoop Cone",
+   "uom": "100g",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 99,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 78.57,
+    "ptd_incl": 76.39,
+    "ptd_ex": 72.75,
+    "ptss_incl": 72.07,
+    "ptss_ex": 68.64
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G241-L241",
+    "ptr_incl": "=G241/(100%+I241)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 242,
+   "sap": "15006187",
+   "desc": "Premium Oudh Dhoop Cone",
+   "uom": "100g",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 89,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 70.63,
+    "ptd_incl": 68.67,
+    "ptd_ex": 65.4,
+    "ptss_incl": 64.78,
+    "ptss_ex": 61.7
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G242-L242",
+    "ptr_incl": "=G242/(100%+I242)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 243,
+   "sap": "15006201",
+   "desc": "Premium Maple Incense Stick",
+   "uom": "225g",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 189,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 150,
+    "ptd_incl": 145.83,
+    "ptd_ex": 138.89,
+    "ptss_incl": 137.58,
+    "ptss_ex": 131.03
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G243-L243",
+    "ptr_incl": "=G243/(100%+I243)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 244,
+   "sap": "15006202",
+   "desc": "Premium Mysore Sandal Incense Stick",
+   "uom": "225g",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 189,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 150,
+    "ptd_incl": 145.83,
+    "ptd_ex": 138.89,
+    "ptss_incl": 137.58,
+    "ptss_ex": 131.03
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G244-L244",
+    "ptr_incl": "=G244/(100%+I244)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 245,
+   "sap": "15006203",
+   "desc": "Premium Kesar Chandan Dhoop Stick",
+   "uom": "50gm",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 89,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 70.63,
+    "ptd_incl": 68.67,
+    "ptd_ex": 65.4,
+    "ptss_incl": 64.78,
+    "ptss_ex": 61.7
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G245-L245",
+    "ptr_incl": "=G245/(100%+I245)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 246,
+   "sap": "15006204",
+   "desc": "Premium Oudh Dhoop Stick",
+   "uom": "50gm",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 89,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 70.63,
+    "ptd_incl": 68.67,
+    "ptd_ex": 65.4,
+    "ptss_incl": 64.78,
+    "ptss_ex": 61.7
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G246-L246",
+    "ptr_incl": "=G246/(100%+I246)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 247,
+   "sap": "15005792",
+   "desc": "Divine Premium Masala Incense",
+   "uom": "15 Sticks",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 169,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 134.13,
+    "ptd_incl": 130.4,
+    "ptd_ex": 124.19,
+    "ptss_incl": 123.02,
+    "ptss_ex": 117.16
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G247-L247",
+    "ptr_incl": "=G247/(100%+I247)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 248,
+   "sap": "15005793",
+   "desc": "Shakti Premium Masala Incense",
+   "uom": "15 Sticks",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 169,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 134.13,
+    "ptd_incl": 130.4,
+    "ptd_ex": 124.19,
+    "ptss_incl": 123.02,
+    "ptss_ex": 117.16
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G248-L248",
+    "ptr_incl": "=G248/(100%+I248)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 249,
+   "sap": "15006205",
+   "desc": "Kamdhenu Sambrani Cup",
+   "uom": "12 Cups",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 120,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 95.24,
+    "ptd_incl": 92.59,
+    "ptd_ex": 88.18,
+    "ptss_incl": 87.35,
+    "ptss_ex": 83.19
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G249-L249",
+    "ptr_incl": "=G249/(100%+I249)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 250,
+   "sap": "15005795",
+   "desc": "Havan Sambrani Cup",
+   "uom": "12 Cups",
+   "hsn_as_in_sheet": "33074100",
+   "mrp": 110,
+   "gst_bp": 500,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 87.3,
+    "ptd_incl": 84.88,
+    "ptd_ex": 80.84,
+    "ptss_incl": 80.08,
+    "ptss_ex": 76.27
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G250-L250",
+    "ptr_incl": "=G250/(100%+I250)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 251,
+   "sap": "15006220",
+   "desc": "Roll On Perfume Himalayan",
+   "uom": "10ml",
+   "hsn_as_in_sheet": "33010000",
+   "mrp": 110,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 77.68,
+    "ptd_incl": 84.88,
+    "ptd_ex": 71.93,
+    "ptss_incl": 80.08,
+    "ptss_ex": 67.86
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G251-L251",
+    "ptr_incl": "=G251/(100%+I251)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 252,
+   "sap": "15006221",
+   "desc": "Roll On Perfume Kesar Chandan",
+   "uom": "10ml",
+   "hsn_as_in_sheet": "33010000",
+   "mrp": 110,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 77.68,
+    "ptd_incl": 84.88,
+    "ptd_ex": 71.93,
+    "ptss_incl": 80.08,
+    "ptss_ex": 67.86
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G252-L252",
+    "ptr_incl": "=G252/(100%+I252)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 253,
+   "sap": "15006223",
+   "desc": "Roll On Perfume Shiva",
+   "uom": "10ml",
+   "hsn_as_in_sheet": "33010000",
+   "mrp": 110,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 77.68,
+    "ptd_incl": 84.88,
+    "ptd_ex": 71.93,
+    "ptss_incl": 80.08,
+    "ptss_ex": 67.86
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G253-L253",
+    "ptr_incl": "=G253/(100%+I253)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 254,
+   "sap": "15006224",
+   "desc": "Roll On Perfume Shakti",
+   "uom": "10ml",
+   "hsn_as_in_sheet": "33010000",
+   "mrp": 110,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 77.68,
+    "ptd_incl": 84.88,
+    "ptd_ex": 71.93,
+    "ptss_incl": 80.08,
+    "ptss_ex": 67.86
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G254-L254",
+    "ptr_incl": "=G254/(100%+I254)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 255,
+   "sap": "15006222",
+   "desc": "Roll On Perfume Kesar Kasturi",
+   "uom": "10ml",
+   "hsn_as_in_sheet": "33010000",
+   "mrp": 110,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 77.68,
+    "ptd_incl": 84.88,
+    "ptd_ex": 71.93,
+    "ptss_incl": 80.08,
+    "ptss_ex": 67.86
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G255-L255",
+    "ptr_incl": "=G255/(100%+I255)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 256,
+   "sap": "15006418",
+   "desc": "Aroma Rose",
+   "uom": "10ml",
+   "hsn_as_in_sheet": "33010000",
+   "mrp": 135,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 95.34,
+    "ptd_incl": 104.17,
+    "ptd_ex": 88.28,
+    "ptss_incl": 98.27,
+    "ptss_ex": 83.28
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G256-L256",
+    "ptr_incl": "=G256/(100%+I256)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 257,
+   "sap": "15006419",
+   "desc": "Aroma Sandal",
+   "uom": "10ml",
+   "hsn_as_in_sheet": "33010000",
+   "mrp": 135,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 95.34,
+    "ptd_incl": 104.17,
+    "ptd_ex": 88.28,
+    "ptss_incl": 98.27,
+    "ptss_ex": 83.28
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G257-L257",
+    "ptr_incl": "=G257/(100%+I257)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 258,
+   "sap": "15006420",
+   "desc": "Aroma Divine",
+   "uom": "10ml",
+   "hsn_as_in_sheet": "33010000",
+   "mrp": 135,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 95.34,
+    "ptd_incl": 104.17,
+    "ptd_ex": 88.28,
+    "ptss_incl": 98.27,
+    "ptss_ex": 83.28
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G258-L258",
+    "ptr_incl": "=G258/(100%+I258)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 259,
+   "sap": "15006421",
+   "desc": "Aroma Jasmine",
+   "uom": "10ml",
+   "hsn_as_in_sheet": "33010000",
+   "mrp": 135,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 95.34,
+    "ptd_incl": 104.17,
+    "ptd_ex": 88.28,
+    "ptss_incl": 98.27,
+    "ptss_ex": 83.28
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G259-L259",
+    "ptr_incl": "=G259/(100%+I259)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 260,
+   "sap": "15006422",
+   "desc": "Aroma Blossom",
+   "uom": "10ml",
+   "hsn_as_in_sheet": "33010000",
+   "mrp": 135,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 95.34,
+    "ptd_incl": 104.17,
+    "ptd_ex": 88.28,
+    "ptss_incl": 98.27,
+    "ptss_ex": 83.28
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G260-L260",
+    "ptr_incl": "=G260/(100%+I260)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 261,
+   "sap": "15006423",
+   "desc": "Aroma Delight",
+   "uom": "10ml",
+   "hsn_as_in_sheet": "33010000",
+   "mrp": 135,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 2000,
+   "expected": {
+    "ptr_ex": 95.34,
+    "ptd_incl": 104.17,
+    "ptd_ex": 88.28,
+    "ptss_incl": 98.27,
+    "ptss_ex": 83.28
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G261-L261",
+    "ptr_incl": "=G261/(100%+I261)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 262,
+   "sap": "15006411",
+   "desc": "Fragrance Sachet Divine",
+   "uom": "-",
+   "hsn_as_in_sheet": "33070000",
+   "mrp": 99,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 3000,
+   "expected": {
+    "ptr_ex": 69.92,
+    "ptd_incl": 76.39,
+    "ptd_ex": 64.74,
+    "ptss_incl": 72.07,
+    "ptss_ex": 61.08
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G262-L262",
+    "ptr_incl": "=G262/(100%+I262)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 263,
+   "sap": "15006412",
+   "desc": "Fragrance Sachet Green Apple",
+   "uom": "-",
+   "hsn_as_in_sheet": "33070000",
+   "mrp": 99,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 3000,
+   "expected": {
+    "ptr_ex": 69.92,
+    "ptd_incl": 76.39,
+    "ptd_ex": 64.74,
+    "ptss_incl": 72.07,
+    "ptss_ex": 61.08
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G263-L263",
+    "ptr_incl": "=G263/(100%+I263)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 264,
+   "sap": "15006413",
+   "desc": "Fragrance Sachet Jasmine",
+   "uom": "-",
+   "hsn_as_in_sheet": "33070000",
+   "mrp": 99,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 3000,
+   "expected": {
+    "ptr_ex": 69.92,
+    "ptd_incl": 76.39,
+    "ptd_ex": 64.74,
+    "ptss_incl": 72.07,
+    "ptss_ex": 61.08
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G264-L264",
+    "ptr_incl": "=G264/(100%+I264)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 265,
+   "sap": "15006410",
+   "desc": "Fragrance Sachet Lavender",
+   "uom": "-",
+   "hsn_as_in_sheet": "33070000",
+   "mrp": 99,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 3000,
+   "expected": {
+    "ptr_ex": 69.92,
+    "ptd_incl": 76.39,
+    "ptd_ex": 64.74,
+    "ptss_incl": 72.07,
+    "ptss_ex": 61.08
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G265-L265",
+    "ptr_incl": "=G265/(100%+I265)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 266,
+   "sap": "15006414",
+   "desc": "Fragrance Sachet Vanilla",
+   "uom": "-",
+   "hsn_as_in_sheet": "33070000",
+   "mrp": 99,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 3000,
+   "expected": {
+    "ptr_ex": 69.92,
+    "ptd_incl": 76.39,
+    "ptd_ex": 64.74,
+    "ptss_incl": 72.07,
+    "ptss_ex": 61.08
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G266-L266",
+    "ptr_incl": "=G266/(100%+I266)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 267,
+   "sap": "15006415",
+   "desc": "Fragrance Sachet Jasmine (pack of 5)",
+   "uom": "-",
+   "hsn_as_in_sheet": "33070000",
+   "mrp": 199,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 3000,
+   "expected": {
+    "ptr_ex": 140.54,
+    "ptd_incl": 153.55,
+    "ptd_ex": 130.13,
+    "ptss_incl": 144.86,
+    "ptss_ex": 122.76
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G267-L267",
+    "ptr_incl": "=G267/(100%+I267)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 268,
+   "sap": "15006416",
+   "desc": "Fragrance Sachet Rose (pack of 5)",
+   "uom": "-",
+   "hsn_as_in_sheet": "33070000",
+   "mrp": 199,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 3000,
+   "expected": {
+    "ptr_ex": 140.54,
+    "ptd_incl": 153.55,
+    "ptd_ex": 130.13,
+    "ptss_incl": 144.86,
+    "ptss_ex": 122.76
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G268-L268",
+    "ptr_incl": "=G268/(100%+I268)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 269,
+   "sap": "15006417",
+   "desc": "Fragrance Sachet Sandal (pack of 5)",
+   "uom": "-",
+   "hsn_as_in_sheet": "33070000",
+   "mrp": 199,
+   "gst_bp": 1800,
+   "retailer_margin_bp": 2000,
+   "distributor_margin_bp": 800,
+   "ss_margin_bp": 600,
+   "scheme_bp": 3000,
+   "expected": {
+    "ptr_ex": 140.54,
+    "ptd_incl": 153.55,
+    "ptd_ex": 130.13,
+    "ptss_incl": 144.86,
+    "ptss_ex": 122.76
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G269-L269",
+    "ptr_incl": "=G269/(100%+I269)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 271,
+   "sap": "14003945",
+   "desc": "Kasahari Cough Syrup",
+   "uom": "100ml",
+   "hsn_as_in_sheet": "30049011",
+   "mrp": 120,
+   "gst_bp": 500,
+   "retailer_margin_bp": 3000,
+   "distributor_margin_bp": 1100,
+   "ss_margin_bp": 600,
+   "scheme_bp": 1094,
+   "expected": {
+    "ptr_ex": 87.91,
+    "ptd_incl": 83.16,
+    "ptd_ex": 79.2,
+    "ptss_incl": 78.45,
+    "ptss_ex": 74.71
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G271-L271",
+    "ptr_incl": "=G271/(100%+I271)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  },
+  {
+   "row": 273,
+   "sap": "14003963",
+   "desc": "Roll Easy Herb Rub (Effective for cold, aches and pains) ",
+   "uom": "10ml ",
+   "hsn_as_in_sheet": "30049011",
+   "mrp": 180,
+   "gst_bp": 500,
+   "retailer_margin_bp": 3000,
+   "distributor_margin_bp": 1100,
+   "ss_margin_bp": 600,
+   "scheme_bp": 0,
+   "expected": {
+    "ptr_ex": 131.87,
+    "ptd_incl": 124.74,
+    "ptd_ex": 118.8,
+    "ptss_incl": 117.68,
+    "ptss_ex": 112.08
+   },
+   "sheet_formulas": {
+    "retailer_margin_amount": "=G273-L273",
+    "ptr_incl": "=G273/(100%+I273)*(100%)"
+   },
+   "status": "ok",
+   "hold_reasons": []
+  }
+ ],
+ "policy": "Rows with status \"held\" are never published and never priced automatically. A person must enter the brand-confirmed values; nothing is inferred from the sheet text."
+}

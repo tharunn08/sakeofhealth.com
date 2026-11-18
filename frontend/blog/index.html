@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Wellness Blog — Sake of Health</title>
+<link rel="icon" type="image/png" href="../assets/images/carousel/favicon.png"/>
+<link rel="apple-touch-icon" href="../assets/images/carousel/favicon.png"/>
+<meta name="description" content="Science-backed wellness insights, nutrition guides, and supplement advice tailored for India."/>
+<link href="https://api.fontshare.com/v2/css?f[]=recoleta@400,700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../assets/css/main.css?v=5"/>
+<style>
+body { padding-top: 72px; }
+.blog-hero { background: var(--cream-dark); padding: 4rem 5vw 2.5rem; text-align: center; border-bottom: 1px solid var(--cream-border); }
+.blog-hero h1 { font-family: var(--ff-display); font-size: clamp(2.2rem,4.5vw,3.5rem); color: var(--green-deep); margin-bottom: 0.75rem; }
+.blog-hero p { font-size: 1.05rem; color: var(--text-muted); font-weight: 300; max-width: 520px; margin: 0 auto 1.5rem; }
+.blog-section { max-width: 1100px; margin: 0 auto; padding: 3rem 5vw 2rem; }
+.blog-section-title { font-family: var(--ff-display); font-size: 1.5rem; margin-bottom: 0.3rem; }
+.blog-section-sub { font-size: 0.85rem; color: var(--text-muted); font-weight: 300; margin-bottom: 2rem; }
+.blog-grid-full { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 1.8rem; }
+.blog-card-coming { opacity: 0.6; cursor: default; pointer-events: none; }
+.blog-card-coming .blog-card-body::after { content: 'Coming Soon'; display: inline-block; margin-top: 0.6rem; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); background: var(--cream-dark); padding: 0.2rem 0.7rem; border-radius: 50px; }
+.submit-cta { background: linear-gradient(135deg, var(--green-deep), var(--green-mid)); border-radius: 20px; padding: 2.5rem 2rem; text-align: center; margin: 3rem 0; }
+.submit-cta h3 { font-family: var(--ff-display); font-size: 1.5rem; color: #fff; margin-bottom: 0.5rem; }
+.submit-cta p { color: rgba(255,255,255,0.75); font-size: 0.9rem; font-weight: 300; max-width: 420px; margin: 0 auto 1.5rem; }
+.community-section { max-width: 1100px; margin: 0 auto; padding: 0 5vw 5rem; }
+.posts-loading { text-align: center; padding: 3rem; color: var(--text-muted); font-size: 0.9rem; }
+.posts-empty { background: var(--cream-dark); border-radius: 16px; padding: 2.5rem; text-align: center; }
+.posts-empty h3 { font-family: var(--ff-display); margin-bottom: 0.4rem; }
+.posts-empty p { font-size: 0.85rem; color: var(--text-muted); font-weight: 300; }
+
+/* ============ FLOATING SOCIAL DOCK — vertically centred, always visible ============ */
+.soh-social-dock{
+  position: fixed !important;
+  right: 1.2rem !important;
+  top: 50% !important;
+  bottom: auto !important;
+  left: auto !important;
+  transform: translateY(-50%) !important;
+  z-index: 2147483000 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  pointer-events: none;
+}
+.soh-social-dock a{ pointer-events: auto; }
+.soh-social-btn{
+  width: 46px; height: 46px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; color: #fff; text-decoration: none; position: relative;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.22);
+  animation: sohFloat 3.4s ease-in-out infinite;
+  transition: transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s ease, filter .3s ease;
+  will-change: transform;
+}
+.soh-social-btn:nth-child(1){ animation-delay: 0s; }
+.soh-social-btn:nth-child(2){ animation-delay: .45s; }
+.soh-social-btn:nth-child(3){ animation-delay: .9s; }
+@keyframes sohFloat{
+  0%,100%{ transform: translateY(0) rotate(0deg); }
+  50%    { transform: translateY(-8px) rotate(-3deg); }
+}
+.soh-social-btn:hover{
+  animation-play-state: paused;
+  transform: scale(1.2) rotate(8deg);
+  box-shadow: 0 10px 26px rgba(0,0,0,0.32);
+  filter: brightness(1.08);
+}
+.soh-social-btn::after{
+  content: ""; position: absolute; inset: -4px; border-radius: 50%;
+  border: 2px solid currentColor; opacity: 0; pointer-events: none;
+}
+.soh-social-btn:hover::after{ animation: sohHalo 1.1s ease-out infinite; }
+@keyframes sohHalo{
+  0%  { opacity: .55; transform: scale(1); }
+  100%{ opacity: 0;   transform: scale(1.5); }
+}
+@media (max-width: 600px){
+  .soh-social-btn{ width: 40px; height: 40px; }
+  .soh-social-dock{ right: .8rem !important; gap: .45rem; }
+}
+@media (prefers-reduced-motion: reduce){
+  .soh-social-btn{ animation: none; }
+  .soh-social-btn:hover{ transform: scale(1.1); }
+  .soh-social-btn:hover::after{ animation: none; }
+}
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="/" class="logo"><img src="../assets/images/logo-mark.png" class="logo-mark" alt="" aria-hidden="true"/><div><span class="logo-name">Sake of Health</span><span class="logo-tagline">Premium Gummies</span></div></a>
+    <nav class="nav-cats"><a href="../categories/multivitamins.html" class="nav-cat">Multivitamins</a><a href="../categories/iron.html" class="nav-cat">Iron</a><a href="../categories/athletic.html" class="nav-cat">Athletic</a></nav>
+    <div class="nav-actions"><a href="../checkout/" style="position:relative;display:inline-flex;"><button class="nav-cart" aria-label="Cart">🛒<span class="cart-count" style="display:none">0</span></button></a><a href="../#products" class="btn btn-primary btn-sm">Shop Now</a></div>
+  </div>
+</nav>
+
+<div class="blog-hero">
+  <p class="section-tag" style="margin-bottom:0.75rem;">Wellness Reads</p>
+  <h1>The Sake of Health Blog</h1>
+  <p>Science-backed insights, honest nutrition advice, and no-fluff wellness guides — crafted for the modern Indian.</p>
+  <a href="submit.html" class="btn btn-primary">✍️ Write for Us →</a>
+</div>
+
+<!-- ── Editorial Articles (by Sake of Health team) ── -->
+<div class="blog-section">
+  <p class="blog-section-title">By Our Team</p>
+  <p class="blog-section-sub">Research-backed articles from the Sake of Health editorial desk — coming soon.</p>
+  <div class="blog-grid-full">
+
+    <a class="blog-card reveal blog-card-coming">
+      <div class="blog-card-thumb" style="background:linear-gradient(135deg,rgba(120,163,59,0.15),var(--cream));">💊</div>
+      <div class="blog-card-body">
+        <div class="blog-tag">Nutrition Science</div>
+        <h3 class="blog-title">Why Gummies Beat Capsules for Nutrient Absorption</h3>
+        <p class="blog-excerpt">The science behind why chewable supplements may actually deliver more nutrients to your cells than hard capsules.</p>
+        <div class="blog-meta"><span>5 min read</span></div>
+      </div>
+    </a>
+
+    <a class="blog-card reveal d1 blog-card-coming">
+      <div class="blog-card-thumb" style="background:linear-gradient(135deg,rgba(193,59,16,0.1),var(--cream));">🩸</div>
+      <div class="blog-card-body">
+        <div class="blog-tag" style="background:rgba(193,59,16,0.1);color:var(--red)">Women's Health</div>
+        <h3 class="blog-title">Iron Deficiency in Indian Women: The Silent Epidemic</h3>
+        <p class="blog-excerpt">Over 50% of Indian women are iron deficient. Here's what that means, why it happens, and what to do.</p>
+        <div class="blog-meta"><span>7 min read</span></div>
+      </div>
+    </a>
+
+    <a class="blog-card reveal d2 blog-card-coming">
+      <div class="blog-card-thumb" style="background:linear-gradient(135deg,rgba(236,129,100,0.1),var(--cream));">🦠</div>
+      <div class="blog-card-body">
+        <div class="blog-tag" style="background:rgba(236,129,100,0.1);color:var(--peach)">Gut Health</div>
+        <h3 class="blog-title">The Complete Guide to Probiotics for Indian Diets</h3>
+        <p class="blog-excerpt">Our spice-rich, high-fibre diets create a unique gut environment. Here's what probiotics actually do.</p>
+        <div class="blog-meta"><span>6 min read</span></div>
+      </div>
+    </a>
+
+    <a class="blog-card reveal blog-card-coming">
+      <div class="blog-card-thumb" style="background:linear-gradient(135deg,rgba(200,138,0,0.1),var(--cream));">🌿</div>
+      <div class="blog-card-body">
+        <div class="blog-tag" style="background:rgba(200,138,0,0.1);color:var(--gold)">Ayurveda & Science</div>
+        <h3 class="blog-title">Why Haldi (Turmeric) Doesn't Work on Its Own</h3>
+        <p class="blog-excerpt">Without piperine, your body absorbs almost none of the curcumin from turmeric. Here's the science.</p>
+        <div class="blog-meta"><span>4 min read</span></div>
+      </div>
+    </a>
+
+    <a class="blog-card reveal d1 blog-card-coming">
+      <div class="blog-card-thumb" style="background:linear-gradient(135deg,rgba(120,163,59,0.1),var(--cream));">☀️</div>
+      <div class="blog-card-body">
+        <div class="blog-tag">Deficiency Watch</div>
+        <h3 class="blog-title">Why 85% of Urban Indians Are Vitamin D Deficient</h3>
+        <p class="blog-excerpt">India has 300+ sunny days a year, yet most Indians are severely Vitamin D deficient. Here's why.</p>
+        <div class="blog-meta"><span>5 min read</span></div>
+      </div>
+    </a>
+
+    <a class="blog-card reveal d2 blog-card-coming">
+      <div class="blog-card-thumb" style="background:linear-gradient(135deg,rgba(41,103,33,0.08),var(--cream));">🌊</div>
+      <div class="blog-card-body">
+        <div class="blog-tag">Vegetarian Nutrition</div>
+        <h3 class="blog-title">Omega-3 for Vegetarians: Algal Oil vs Fish Oil</h3>
+        <p class="blog-excerpt">Why algal oil isn't just "good enough" for vegetarians — it's actually the superior omega-3 source.</p>
+        <div class="blog-meta"><span>5 min read</span></div>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- Write for us CTA -->
+  <div class="submit-cta">
+    <h3>Know something we should write about?</h3>
+    <p>We welcome guest contributors — nutritionists, doctors, fitness coaches, and wellness enthusiasts. All submissions are reviewed before publishing.</p>
+    <a href="submit.html" class="btn btn-white">✍️ Submit an Article →</a>
+  </div>
+</div>
+
+<!-- ── Community Articles (dynamically loaded) ── -->
+<div class="community-section">
+  <p class="blog-section-title" style="font-family:var(--ff-display);font-size:1.5rem;margin-bottom:0.3rem;">Community Voices</p>
+  <p class="blog-section-sub" style="font-size:0.85rem;color:var(--text-muted);font-weight:300;margin-bottom:2rem;">Guest articles reviewed and approved by our editorial team.</p>
+  <div id="community-posts"><div class="posts-loading">Loading articles…</div></div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-bottom container" style="border-top:none;padding-top:2rem;">
+    <span>© 2025 Sake of Health · <a href="/">Home</a> · <a href="mailto:info@sakeofhealth.in">Contact</a></span>
+    <span>Minimal shipping charges apply.</span>
+  </div>
+  <div class="ixitek-note">Sake of Health is a brand of <strong>Ixitek Healthcare and Wellness Pvt. Ltd.</strong> — Registered in India · FSSAI Lic. No.: 11225998000107</div>
+  <div style="text-align:center;padding:0 5vw 1.5rem;"><a href="/track.html" style="color:#78a33b;font-size:.82rem;text-decoration:none;">Track Your Order →</a></div>
+</footer>
+
+<!-- Floating social dock (centred vertically) -->
+<div class="soh-social-dock" id="soh-social-dock">
+  <a class="soh-social-btn" href="https://www.instagram.com/sake.of.health/" target="_blank" rel="noopener" aria-label="Instagram" style="background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fdf497 5%,#fd5949 45%,#d6249f 60%,#285AEB 90%);color:#fff;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+  </a>
+  <a class="soh-social-btn" href="https://www.facebook.com/people/Sake-Of-Health/61589312395370/?ref=pl_edit_xav_ig_profile_page#" target="_blank" rel="noopener" aria-label="Facebook" style="background:#1877f2;color:#fff;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+  </a>
+  <a class="soh-social-btn" href="https://wa.me/917483927125" target="_blank" rel="noopener" aria-label="WhatsApp" style="background:#25d366;color:#fff;">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+  </a>
+</div>
+
+<script src="../assets/js/track.js?v=3"></script>
+<script src="../assets/js/app.js?v=3"></script>
+<script>
+async function loadCommunityPosts() {
+  const container = document.getElementById('community-posts');
+  try {
+    const res = await fetch('/api/blog/posts');
+    const posts = await res.json();
+    if (!posts.length) {
+      container.innerHTML = `
+        <div class="posts-empty">
+          <div style="font-size:2rem;margin-bottom:0.75rem;">✍️</div>
+          <h3>Be the first contributor</h3>
+          <p>No community articles yet. Share your wellness expertise — we'd love to feature your voice.</p>
+          <a href="submit.html" class="btn btn-primary btn-sm" style="display:inline-block;margin-top:1.2rem;">Submit an Article →</a>
+        </div>`;
+      return;
+    }
+    container.innerHTML = `<div class="blog-grid-full">${posts.map(p => `
+      <a href="${esc(p.slug)}.html" class="blog-card">
+        <div class="blog-card-thumb" style="background:linear-gradient(135deg,rgba(41,103,33,0.08),var(--cream));display:flex;align-items:center;justify-content:center;font-size:2rem;">📝</div>
+        <div class="blog-card-body">
+          <div class="blog-tag">${esc(p.category)}</div>
+          <h3 class="blog-title">${esc(p.title)}</h3>
+          <p class="blog-excerpt">${esc(p.excerpt)}</p>
+          <div class="blog-meta"><span>${esc(p.readTime)}</span><span style="font-size:0.72rem;color:var(--text-muted);">By ${esc(p.authorName)}</span><span class="blog-read-more">Read More →</span></div>
+        </div>
+      </a>`).join('')}</div>`;
+  } catch {
+    container.innerHTML = '<div class="posts-loading">Could not load community posts.</div>';
+  }
+}
+
+function esc(s) { return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (window.sohCart && typeof sohCart.updateBadge === 'function') sohCart.updateBadge();
+  if (typeof sohReveal === 'function') sohReveal();
+  if (typeof sohNav === 'function') sohNav();
+  loadCommunityPosts();
+});
+
+/* Keep the dock fixed regardless of transformed ancestors */
+(function(){
+  function liftDock(){
+    var dock = document.getElementById('soh-social-dock');
+    if (dock && dock.parentElement !== document.documentElement) {
+      document.documentElement.appendChild(dock);
+    }
+  }
+  liftDock();
+  document.addEventListener('DOMContentLoaded', liftDock);
+  window.addEventListener('load', liftDock);
+})();
+</script>
+</body>
+</html>

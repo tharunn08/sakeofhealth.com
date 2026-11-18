@@ -1,0 +1,13 @@
+not ok 1 - all 18 ERP screens are in the one registry with exactly the permission the ERP code requires
+not ok 2 - sidebar from ERP permissions: exactly the screens those permissions open
+not ok 3 - sign-in: staff + ERP with the same password → one admin workspace carrying both sessions
+not ok 4 - sign-in: ERP-only staff land in the same admin panel
+not ok 5 - sign-in: an ERP account with two-factor on asks for the code; the code is passed through
+not ok 6 - sign-in: staff password right but ERP code needed → admin opens now, ERP can be added with the code
+not ok 7 - sign-in: a password accepted elsewhere is not counted as a failed ERP attempt; a wrong-everywhere one is
+not ok 8 - sign-in: business database down → ERP skipped, shop sign-in still works; all down → 503
+not ok 9 - sign-in: a locked ERP account says so only when nothing else accepted the password
+not ok 10 - server: ERP screens are served inside the shell (ERP on) and not at all (ERP off)
+not ok 11 - server: sidebar with an ERP session while the database is down → shop pages plus a clear "unavailable" flag
+not ok 12 - server: /login with ERP on and the database down still signs staff in (ERP skipped)
+not ok 13 - ERP sign-in accepts "do not count this failure" only from the platform sign-in (signature check)

@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>Checkout — Sake of Health</title>
+<link rel="icon" type="image/png" href="../assets/images/carousel/favicon.png"/>
+<link rel="apple-touch-icon" href="../assets/images/carousel/favicon.png"/>
+<meta name="robots" content="noindex"/>
+<link href="https://api.fontshare.com/v2/css?f[]=recoleta@400,700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../assets/css/main.css?v=10"/>
+<script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:#f8f4ee;font-family:var(--ff-body);color:var(--text);min-height:100vh;}
+
+/* Checkout nav */
+.co-nav{background:#fff;border-bottom:1px solid rgba(120,163,59,0.12);padding:0.9rem 5vw;display:flex;align-items:center;justify-content:space-between;}
+.co-nav .logo-name{font-family:var(--ff-display);font-size:1.15rem;color:var(--green-deep);}
+.co-secure{font-size:0.78rem;color:var(--text-muted);display:flex;align-items:center;gap:0.4rem;}
+
+/* Progress */
+.co-progress{display:flex;align-items:center;justify-content:center;gap:0;padding:1.5rem 5vw;background:#fff;border-bottom:1px solid rgba(0,0,0,0.06);}
+.co-step{display:flex;align-items:center;gap:0.5rem;font-size:0.82rem;font-weight:500;color:var(--text-muted);position:relative;}
+.co-step.active{color:var(--green-deep);}
+.co-step.done{color:var(--green-mid);}
+.step-dot{width:28px;height:28px;border-radius:50%;border:2px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;background:#fff;transition:all 0.3s;}
+.co-step.active .step-dot{background:var(--green-deep);border-color:var(--green-deep);color:#fff;}
+.co-step.done .step-dot{background:var(--green-mid);border-color:var(--green-mid);color:#fff;}
+.step-line{width:40px;height:2px;background:rgba(120,163,59,0.2);margin:0 4px;flex-shrink:0;}
+.step-line.done{background:var(--green-mid);}
+
+/* Layout */
+.co-layout{display:grid;grid-template-columns:1fr 380px;gap:2rem;max-width:1060px;margin:0 auto;padding:2rem 5vw 4rem;}
+.co-main{min-width:0;}
+.co-aside{min-width:0;}
+
+/* Cards */
+.co-card{background:#fff;border-radius:16px;padding:1.8rem;margin-bottom:1.5rem;box-shadow:0 2px 12px rgba(0,0,0,0.05);}
+.co-card-title{font-family:var(--ff-display);font-size:1.2rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:0.5rem;}
+.co-card-title span{font-size:1.1rem;}
+
+/* Steps visibility */
+.co-section{display:none;}
+.co-section.visible{display:block;}
+
+/* Form */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+.form-row.full{grid-template-columns:1fr;}
+.form-group{display:flex;flex-direction:column;gap:0.4rem;}
+.form-label{font-size:0.82rem;font-weight:600;color:var(--text-muted);}
+.form-input,.form-select{padding:0.75rem 1rem;border:1.5px solid rgba(0,0,0,0.12);border-radius:10px;font-family:var(--ff-body);font-size:0.95rem;color:var(--text);background:#fff;transition:border-color 0.2s,box-shadow 0.2s;outline:none;width:100%;}
+.form-input:focus,.form-select:focus{border-color:var(--green-deep);box-shadow:0 0 0 3px rgba(41,103,33,0.1);}
+.form-input.error{border-color:var(--red);}
+.form-error{font-size:0.76rem;color:var(--red);margin-top:0.2rem;}
+
+/* Checkbox */
+.form-check{display:flex;align-items:flex-start;gap:0.6rem;margin-top:0.5rem;}
+.form-check input{width:16px;height:16px;margin-top:2px;accent-color:var(--green-deep);}
+.form-check label{font-size:0.85rem;color:var(--text-muted);}
+
+/* Delivery options */
+.delivery-opts{display:flex;flex-direction:column;gap:0.8rem;}
+.delivery-opt{display:flex;align-items:center;gap:1rem;padding:1rem 1.2rem;border:1.5px solid rgba(0,0,0,0.1);border-radius:12px;cursor:pointer;transition:border-color 0.2s,background 0.2s;}
+.delivery-opt.selected,.delivery-opt:has(input:checked){border-color:var(--green-deep);background:rgba(41,103,33,0.04);}
+.delivery-opt input{accent-color:var(--green-deep);}
+.delivery-opt-info{flex:1;}
+.delivery-opt-name{font-weight:600;font-size:0.9rem;}
+.delivery-opt-desc{font-size:0.78rem;color:var(--text-muted);}
+.delivery-opt-price{font-weight:600;font-size:0.9rem;color:var(--green-deep);}
+
+/* Order summary */
+.order-item{display:flex;align-items:center;gap:1rem;padding:0.8rem 0;border-bottom:1px solid rgba(0,0,0,0.06);}
+.order-item:last-of-type{border-bottom:none;}
+.order-item-img{width:56px;height:56px;border-radius:10px;background:var(--cream-dark);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;}
+.order-item-img img{width:100%;height:100%;object-fit:contain;padding:4px;}
+.order-item-info{flex:1;min-width:0;}
+.order-item-name{font-weight:600;font-size:0.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.order-item-sub{font-size:0.78rem;color:var(--text-muted);}
+.order-item-qty{display:flex;align-items:center;gap:0.5rem;}
+.qty-btn{width:26px;height:26px;border-radius:50%;border:1.5px solid rgba(0,0,0,0.12);background:#fff;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color 0.2s;}
+.qty-btn:hover{border-color:var(--green-deep);color:var(--green-deep);}
+.order-item-price{font-weight:600;font-size:0.92rem;text-align:right;flex-shrink:0;}
+.empty-cart{text-align:center;padding:3rem 0;color:var(--text-muted);}
+.empty-cart a{color:var(--green-deep);font-weight:600;}
+
+/* Price breakdown */
+.price-line{display:flex;justify-content:space-between;font-size:0.9rem;margin-bottom:0.6rem;color:var(--text-muted);}
+.price-line.total{font-weight:700;color:var(--text);font-size:1.05rem;padding-top:0.8rem;border-top:2px solid rgba(0,0,0,0.08);margin-top:0.4rem;}
+.price-line.saving{color:var(--green-mid);}
+.coupon-row{display:flex;gap:0.6rem;margin:1rem 0;}
+.coupon-row input{flex:1;padding:0.65rem 0.9rem;border:1.5px solid rgba(0,0,0,0.12);border-radius:10px;font-family:var(--ff-body);font-size:0.88rem;outline:none;}
+.coupon-row input:focus{border-color:var(--green-deep);}
+.coupon-row button{padding:0.65rem 1.1rem;background:var(--cream-dark);border:none;border-radius:10px;font-weight:600;font-size:0.82rem;cursor:pointer;transition:background 0.2s;}
+.coupon-row button:hover{background:rgba(120,163,59,0.15);}
+
+/* Trust badges in sidebar */
+.trust-badges{display:flex;flex-direction:column;gap:0.5rem;margin-top:1rem;}
+.trust-badge{font-size:0.8rem;color:var(--text-muted);display:flex;align-items:center;gap:0.5rem;}
+
+/* Navigation buttons */
+.co-footer{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;flex-wrap:wrap;gap:1rem;}
+.btn-next{background:var(--green-deep);color:#fff;border:none;padding:1rem 2.5rem;border-radius:50px;font-family:var(--ff-body);font-weight:600;font-size:1rem;cursor:pointer;transition:background 0.2s,transform 0.2s,box-shadow 0.2s;box-shadow:0 4px 20px rgba(41,103,33,0.25);}
+.btn-next:hover{background:var(--green-mid);transform:translateY(-2px);box-shadow:0 8px 28px rgba(41,103,33,0.3);}
+.btn-next:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+.btn-back{background:none;border:none;color:var(--text-muted);font-size:0.88rem;cursor:pointer;display:flex;align-items:center;gap:0.3rem;padding:0;font-family:var(--ff-body);}
+.btn-back:hover{color:var(--text);}
+
+/* Pay button */
+.btn-pay{background:var(--green-deep);color:#fff;border:none;width:100%;padding:1.1rem;border-radius:12px;font-family:var(--ff-display);font-weight:700;font-size:1.05rem;cursor:pointer;transition:background 0.2s,box-shadow 0.2s;box-shadow:0 4px 24px rgba(41,103,33,0.25);display:flex;align-items:center;justify-content:center;gap:0.6rem;}
+.btn-pay:hover{background:var(--green-mid);box-shadow:0 8px 30px rgba(41,103,33,0.3);}
+.btn-pay:disabled{opacity:0.6;cursor:not-allowed;}
+.pay-note{font-size:0.75rem;color:var(--text-muted);text-align:center;margin-top:0.7rem;}
+
+/* Loading overlay */
+.co-loading{display:none;position:fixed;inset:0;background:rgba(255,255,255,0.85);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:1rem;}
+.co-loading.show{display:flex;}
+.spinner{width:44px;height:44px;border:4px solid rgba(41,103,33,0.15);border-top-color:var(--green-deep);border-radius:50%;animation:spin 0.75s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ============ FLOATING SOCIAL DOCK ============ */
+.soh-social-dock{
+  position:fixed !important;
+  right:1.2rem !important;
+  bottom:1.8rem !important;
+  z-index:2147483000 !important;
+
+  display:flex;
+  flex-direction:column;
+  gap:0.6rem;
+
+  animation: floatDock 3s ease-in-out infinite;
+}
+
+@keyframes floatDock{
+  0%,100%{
+    transform:translateY(0);
+  }
+  50%{
+    transform:translateY(-6px);
+  }
+}
+
+/* Smooth transition */
+.soh-social-dock a{
+  transition: transform .3s ease, box-shadow .3s ease, filter .3s ease;
+}
+
+/* Pop effect on hover */
+.soh-social-dock a:hover{
+  transform: scale(1.15);
+  box-shadow: 0 12px 25px rgba(0,0,0,.25);
+  filter: brightness(1.1);
+}
+
+/* ═══════════ MOBILE RESPONSIVE ═══════════ */
+@media (max-width: 900px) {
+  .co-layout {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    padding: 1.2rem 4vw 3rem;
+  }
+  /* Order summary moves above the form on mobile so totals are seen first */
+  .co-aside { order: -1; }
+  .co-card { padding: 1.3rem; margin-bottom: 1rem; }
+}
+
+@media (max-width: 640px) {
+  .co-progress { padding: 0.9rem 3vw; gap: 0; overflow-x: auto; }
+  .co-step span { font-size: 0.72rem; }
+  .step-dot { width: 26px; height: 26px; font-size: 0.8rem; }
+  .step-line { width: 20px; }
+
+  .co-card { padding: 1.1rem; border-radius: 14px; }
+  .co-card-title { font-size: 1.05rem; margin-bottom: 1rem; }
+
+  /* Stack all two-column form rows */
+  .form-row { grid-template-columns: 1fr; gap: 0.9rem; }
+
+  .co-layout { padding: 1rem 3vw 2.5rem; }
+
+  /* Coupon row stays usable */
+  .coupon-row { flex-wrap: wrap; }
+  .coupon-row input { min-width: 0; flex: 1 1 60%; }
+
+  /* Order items don't overflow */
+  .order-item { gap: 0.6rem; }
+  .order-item-img { width: 46px; height: 46px; flex-shrink: 0; }
+  .order-item-name { font-size: 0.85rem; }
+
+  /* Buttons full width and tappable */
+  .btn-pay, .btn-next, .btn-back { width: 100%; justify-content: center; }
+  .co-btn-row { flex-direction: column-reverse; gap: 0.6rem; }
+
+  h1, .co-title { font-size: 1.3rem; }
+}
+
+/* Keep the floating social dock from covering the pay button on small screens */
+@media (max-width: 640px) {
+  .soh-social-dock, .social-float {
+    bottom: 12px !important;
+    right: 10px !important;
+    transform: scale(0.82) !important;
+    transform-origin: bottom right !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<div class="co-nav">
+  <a href="/" class="logo" style="text-decoration:none;">
+    <img src="../assets/images/logo-mark.png" class="logo-mark" alt="" aria-hidden="true" style="width:32px;height:32px;"/>
+    <span class="logo-name">Sake of Health</span>
+  </a>
+  <span class="co-secure">🔒 Secure checkout · 256-bit SSL</span>
+</div>
+
+<!-- Progress indicator -->
+<div class="co-progress">
+  <div class="co-step active" id="prog-1"><div class="step-dot">1</div><span>Cart</span></div>
+  <div class="step-line" id="line-1"></div>
+  <div class="co-step" id="prog-2"><div class="step-dot">2</div><span>Details</span></div>
+  <div class="step-line" id="line-2"></div>
+  <div class="co-step" id="prog-3"><div class="step-dot">3</div><span>Address</span></div>
+  <div class="step-line" id="line-3"></div>
+  <div class="co-step" id="prog-4"><div class="step-dot">4</div><span>Payment</span></div>
+</div>
+
+<!-- Loading overlay -->
+<div class="co-loading" id="co-loading">
+  <div class="spinner"></div>
+  <div style="font-size:0.9rem;color:var(--text-muted)">Processing your order…</div>
+</div>
+
+<div class="co-layout">
+  <div class="co-main">
+
+    <!-- ── Step 1: Cart ── -->
+    <div class="co-section visible" id="step-1">
+      <div class="co-card">
+        <div class="co-card-title"><span>🛒</span> Your Cart</div>
+        <div id="cart-items-wrap">
+          <div class="empty-cart">Your cart is empty. <a href="/">Continue shopping →</a></div>
+        </div>
+      </div>
+      <div class="co-footer">
+        <a href="/" class="btn-back">← Continue Shopping</a>
+        <button class="btn-next" id="btn-to-2" onclick="goStep(2)">Proceed to Details →</button>
+      </div>
+    </div>
+
+    <!-- ── Step 2: Customer Details ── -->
+    <div class="co-section" id="step-2">
+      <div class="co-card">
+        <div class="co-card-title"><span>👤</span> Your Details</div>
+        <form id="form-details" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="f-fname">First Name *</label>
+              <input class="form-input" id="f-fname" type="text" placeholder="Priya" required autocomplete="given-name"/>
+              <span class="form-error" id="err-fname"></span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="f-lname">Last Name *</label>
+              <input class="form-input" id="f-lname" type="text" placeholder="Sharma" required autocomplete="family-name"/>
+              <span class="form-error" id="err-lname"></span>
+            </div>
+          </div>
+          <div class="form-row full">
+            <div class="form-group">
+              <label class="form-label" for="f-email">Email Address *</label>
+              <input class="form-input" id="f-email" type="email" placeholder="priya@example.com" required autocomplete="email"/>
+              <span class="form-error" id="err-email"></span>
+            </div>
+          </div>
+          <div class="form-row full">
+            <div class="form-group">
+              <label class="form-label" for="f-phone">Mobile Number *</label>
+              <input class="form-input" id="f-phone" type="tel" placeholder="9876543210" required autocomplete="tel" maxlength="10"/>
+              <span class="form-error" id="err-phone"></span>
+            </div>
+          </div>
+          <div class="form-check" style="display:none;">
+            <input type="checkbox" id="f-newsletter" checked/>
+            <label for="f-newsletter">Subscribe to wellness tips and exclusive offers</label>
+          </div>
+        </form>
+      </div>
+      <div class="co-footer">
+        <button class="btn-back" onclick="goStep(1)">← Back</button>
+        <button class="btn-next" onclick="validateDetails()">Delivery Address →</button>
+      </div>
+    </div>
+
+    <!-- ── Step 3: Address ── -->
+    <div class="co-section" id="step-3">
+      <div class="co-card">
+        <div class="co-card-title"><span>📍</span> Delivery Address</div>
+        <div style="background:#f7faf4;border:1px solid #e4e8e0;border-radius:12px;padding:1.1rem;margin-bottom:1.5rem;">
+            <div style="font-size:0.82rem;font-weight:600;color:#3d4f42;margin-bottom:0.3rem;">Step 1 — Share your location (optional)</div>
+            <div style="font-size:0.76rem;color:#6b7d70;margin-bottom:0.85rem;line-height:1.5;">Tap “Share my location” and we’ll fill in your area, city and pincode automatically. <strong>Then complete the exact address below</strong> — door number, floor and landmark — so our delivery partner reaches your doorstep. You can also skip this and type everything manually.</div>
+            <div id="locationHost"></div>
+          </div>
+          <form id="form-address" novalidate>
+          <div style="font-size:0.82rem;font-weight:600;color:#3d4f42;margin-bottom:0.75rem;">Step 2 — Your exact delivery address</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="f-door">Door / Flat / House No. *</label>
+              <input class="form-input" id="f-door" type="text" placeholder="e.g. 12B, 3rd Floor" required/>
+              <span class="form-error" id="err-door"></span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="f-landmark">Landmark</label>
+              <input class="form-input" id="f-landmark" type="text" placeholder="Near Forum Mall"/>
+            </div>
+          </div>
+          <div class="form-row full">
+            <div class="form-group">
+              <label class="form-label" for="f-addr1">Building / Street / Area *</label>
+              <input class="form-input" id="f-addr1" type="text" placeholder="Building name, street, area" required autocomplete="address-line1"/>
+              <span class="form-error" id="err-addr1"></span>
+            </div>
+          </div>
+          <div class="form-row full">
+            <div class="form-group">
+              <label class="form-label" for="f-addr2">Address Line 2</label>
+              <input class="form-input" id="f-addr2" type="text" placeholder="Additional directions (optional)" autocomplete="address-line2"/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="f-city">City *</label>
+              <input class="form-input" id="f-city" type="text" placeholder="Mumbai" required autocomplete="address-level2"/>
+              <span class="form-error" id="err-city"></span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="f-pincode">Pincode *</label>
+              <input class="form-input" id="f-pincode" type="text" placeholder="400001" required maxlength="6" pattern="[0-9]{6}"/>
+              <span class="form-error" id="err-pincode"></span>
+            </div>
+          </div>
+          <div class="form-row full">
+            <div class="form-group">
+              <label class="form-label" for="f-state">State *</label>
+              <select class="form-select" id="f-state" required autocomplete="address-level1">
+                <option value="">Select state</option>
+                <option>Andhra Pradesh</option><option>Assam</option><option>Bihar</option>
+                <option>Delhi</option><option>Goa</option><option>Gujarat</option>
+                <option>Haryana</option><option>Himachal Pradesh</option><option>Jharkhand</option>
+                <option>Karnataka</option><option>Kerala</option><option>Madhya Pradesh</option>
+                <option>Maharashtra</option><option>Manipur</option><option>Meghalaya</option>
+                <option>Odisha</option><option>Punjab</option><option>Rajasthan</option>
+                <option>Tamil Nadu</option><option>Telangana</option><option>Uttar Pradesh</option>
+                <option>Uttarakhand</option><option>West Bengal</option>
+              </select>
+              <span class="form-error" id="err-state"></span>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="co-card">
+        <div class="co-card-title"><span>🚚</span> Delivery Method</div>
+        <div class="delivery-opts">
+          <label class="delivery-opt" id="opt-standard">
+            <input type="radio" name="delivery" value="standard" checked onchange="updateDelivery()"/>
+            <div class="delivery-opt-info">
+              <div class="delivery-opt-name">Standard Delivery</div>
+              <div class="delivery-opt-desc">5–7 business days</div>
+            </div>
+            <div class="delivery-opt-price" id="std-price">₹49</div>
+          </label>
+          <!-- Express delivery hidden (Phase 0.5.4): the server has no express option or fee, so it could not be charged correctly. Open decision D14. -->
+          <label class="delivery-opt" id="opt-express" style="display:none">
+            <input type="radio" name="delivery" value="express" onchange="updateDelivery()"/>
+            <div class="delivery-opt-info">
+              <div class="delivery-opt-name">Express Delivery</div>
+              <div class="delivery-opt-desc">2–3 business days</div>
+            </div>
+            <div class="delivery-opt-price">₹99</div>
+          </label>
+        </div>
+      </div>
+
+      <div class="co-footer">
+        <button class="btn-back" onclick="goStep(2)">← Back</button>
+        <button class="btn-next" onclick="validateAddress()">Review & Pay →</button>
+      </div>
+    </div>
+
+    <!-- ── Step 4: Payment ── -->
+    <div class="co-section" id="step-4">
+      <div class="co-card">
+        <div class="co-card-title"><span>✅</span> Order Review</div>
+        <div id="review-details" style="font-size:0.9rem;line-height:1.8;color:var(--text-muted);"></div>
+      </div>
+      <div class="co-card">
+        <div class="co-card-title"><span>💳</span> Payment</div>
+        <p style="font-size:0.88rem;color:var(--text-muted);margin-bottom:1.5rem;font-weight:300;">You'll be redirected to our secure payment gateway (Razorpay) to complete your purchase.</p>
+        <div style="display:flex;gap:0.7rem;flex-wrap:wrap;margin-bottom:1.5rem;">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/200px-Visa_Inc._logo.svg.png" alt="Visa" style="height:22px;object-fit:contain;opacity:0.6;"/>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Mastercard-logo.svg/200px-Mastercard-logo.svg.png" alt="Mastercard" style="height:22px;object-fit:contain;opacity:0.6;"/>
+          <span style="font-size:0.78rem;color:var(--text-muted);padding:0.2rem 0.8rem;background:rgba(0,0,0,0.05);border-radius:4px;font-weight:600;">UPI</span>
+          <span style="font-size:0.78rem;color:var(--text-muted);padding:0.2rem 0.8rem;background:rgba(0,0,0,0.05);border-radius:4px;font-weight:600;">Net Banking</span>
+        </div>
+        <div style="margin:1.5rem 0;padding:0.9rem 1rem;border:1.5px solid var(--green-mid);border-radius:12px;background:#f7faf4;display:flex;align-items:center;gap:0.75rem;">
+          <span style="font-size:1.3rem;">🔒</span>
+          <div><div style="font-weight:600;font-size:0.9rem;">Secure Online Payment</div>
+          <div style="font-size:0.76rem;color:var(--text-muted);">UPI, cards, netbanking &amp; wallets — pay safely before delivery</div></div>
+        </div>
+        <button class="btn-pay" id="btn-pay" onclick="initiatePayment()">
+          🔒 Pay Securely — ₹<span id="pay-total">0</span>
+        </button>
+        <p class="pay-note">Powered by Razorpay · 256-bit SSL encrypted · No card data stored on our servers</p>
+      </div>
+      <div class="co-footer">
+        <button class="btn-back" onclick="goStep(3)">← Back</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Sidebar: order summary ── -->
+  <div class="co-aside">
+    <div class="co-card" style="position:sticky;top:1.5rem;">
+      <div class="co-card-title"><span>📦</span> Order Summary</div>
+      <div id="sidebar-items"></div>
+
+      <div class="offers-strip" id="offersStrip"></div>
+      <div class="coupon-row">
+        <input type="text" id="coupon-input" placeholder="Coupon code" style="text-transform:uppercase;"/>
+        <button onclick="applyCoupon()">Apply</button>
+      </div>
+      <div id="coupon-msg" style="font-size:0.78rem;margin-bottom:0.5rem;"></div>
+
+      <div id="price-breakdown">
+        <div class="price-line"><span>Subtotal</span><span id="sb-subtotal">₹0</span></div>
+        <div class="price-line" id="sb-discount-row" style="display:none;"><span>Discount</span><span id="sb-discount" style="color:var(--green-mid)"></span></div>
+        <div class="price-line"><span>Delivery</span><span id="sb-delivery">₹49</span></div>
+        <div class="price-line total"><span>Total</span><span id="sb-total">₹0</span></div>
+      </div>
+
+      <div class="trust-badges">
+        <div class="trust-badge"><span>✅</span> <a href="../refund-policy.html" style="color:inherit;">Refund Policy</a></div>
+        <div class="trust-badge"><span>🚚</span> Minimal shipping charges apply</div>
+        <div class="trust-badge"><span>🔒</span> 100% secure payments</div>
+        <div class="trust-badge"><span>📦</span> Discreet packaging</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/config.js"></script>
+<script src="../assets/js/location-picker.js?v=1"></script>
+<script src="../assets/js/track.js?v=3"></script>
+<script src="../assets/js/app.js?v=3"></script>
+<script>
+/* ── State ── */
+const state = {
+  step: 1,
+  delivery: 'standard',
+  deliveryFee: 49,
+  discount: 0,
+  couponCode: '',
+  customer: {},
+  address: {},
+  location: null,
+  payMethod: 'online',
+  freeShipping: false,
+  quote: null,        // server price for the current cart (POST /api/shop/quote)
+  quoteError: '',
+};
+
+/* ── Load & render cart ── */
+function renderCart() {
+  const cart = sohCart.get();
+  const wrap = document.getElementById('cart-items-wrap');
+  const sideWrap = document.getElementById('sidebar-items');
+
+  if (!cart.length) {
+    wrap.innerHTML = '<div class="empty-cart">Your cart is empty. <a href="/">Continue shopping →</a></div>';
+    document.getElementById('btn-to-2').disabled = true;
+    sideWrap.innerHTML = '';
+    updateTotals();
+    return;
+  }
+
+  document.getElementById('btn-to-2').disabled = false;
+
+  const itemsHtml = cart.map((item, i) => `
+    <div class="order-item" id="cart-item-${i}">
+      <div class="order-item-img">
+        <img src="${item.image || '../assets/images/multivitamin.png'}" alt="${item.name}" loading="lazy"/>
+      </div>
+      <div class="order-item-info">
+        <div class="order-item-name">${item.name}</div>
+        <div class="order-item-sub">₹${item.price} each · 30-day supply</div>
+      </div>
+      <div class="order-item-qty">
+        <button class="qty-btn" onclick="changeQty('${item.id}',-1)">−</button>
+        <span style="font-size:0.9rem;font-weight:600;min-width:20px;text-align:center;">${item.qty}</span>
+        <button class="qty-btn" onclick="changeQty('${item.id}',1)">+</button>
+      </div>
+      <div class="order-item-price">₹${item.price * item.qty}</div>
+    </div>
+  `).join('');
+
+  wrap.innerHTML = itemsHtml;
+  refreshQuote();
+
+  // Sidebar (compact)
+  sideWrap.innerHTML = cart.map(item => `
+    <div class="order-item">
+      <div class="order-item-img"><img src="${item.image || '../assets/images/multivitamin.png'}" alt="${item.name}" loading="lazy"/></div>
+      <div class="order-item-info">
+        <div class="order-item-name" style="font-size:0.85rem;">${item.name}</div>
+        <div class="order-item-sub">Qty: ${item.qty}</div>
+      </div>
+      <div class="order-item-price">₹${item.price * item.qty}</div>
+    </div>
+  `).join('');
+
+  updateTotals();
+}
+
+function changeQty(id, delta) {
+  const cart = sohCart.get();
+  const item = cart.find(i => i.id === id);
+  if (!item) return;
+  const newQty = (item.qty || 1) + delta;
+  if (newQty < 1) { if (confirm('Remove this item from cart?')) sohCart.remove(id); }
+  else sohCart.updateQty(id, newQty);
+  renderCart();
+}
+
+function updateTotals() {
+  const q = state.quote;
+  const empty = !sohCart.get().length;   // nothing to deliver → no delivery fee shown
+  const subtotal = q ? q.subtotal : sohCart.total();
+  const shipping = q ? q.shipping : (empty || state.freeShipping ? 0 : state.deliveryFee);
+  const discount = q ? q.discount : state.discount;
+  const total = q ? q.total : Math.max(0, subtotal - discount + shipping);
+  document.getElementById('sb-subtotal').textContent = `₹${subtotal}`;
+  document.getElementById('sb-delivery').textContent = empty ? '—' : (shipping > 0 ? `₹${shipping}` : 'Free');
+  document.getElementById('sb-total').textContent = `₹${total}`;
+  document.getElementById('pay-total').textContent = total;
+  if (discount > 0) {
+    document.getElementById('sb-discount-row').style.display = 'flex';
+    document.getElementById('sb-discount').textContent = `-₹${discount}`;
+  } else {
+    document.getElementById('sb-discount-row').style.display = 'none';
+  }
+}
+
+/* ── Server price (Phase 0.5.3) — the page shows what will actually be charged ── */
+let quoteSeq = 0;
+async function refreshQuote() {
+  const cart = sohCart.get();
+  const seq = ++quoteSeq;
+  if (!cart.length) { state.quote = null; state.quoteError = ''; updateTotals(); return null; }
+  try {
+    const res = await fetch('/api/shop/quote', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: cart.map(i => ({ id: i.id, qty: i.qty, price: i.price })), couponCode: state.couponCode || null }),
+    });
+    const data = await res.json();
+    if (seq !== quoteSeq) return state.quote;
+    if (!res.ok) { state.quote = null; state.quoteError = data.error || 'Some items in your cart cannot be ordered.'; }
+    else {
+      state.quote = data; state.quoteError = '';
+      // Keep the cart in step with today's catalogue price.
+      (data.lines || []).forEach(l => { if (l.priceChanged) { const it = cart.find(i => i.id === l.id); if (it) it.price = l.price; } });
+      if (data.lines && data.lines.some(l => l.priceChanged)) { sohCart.save(cart); renderCart(); return state.quote; }
+    }
+  } catch (e) { if (seq === quoteSeq) { state.quote = null; state.quoteError = ''; } }
+  showQuoteError();
+  updateTotals();
+  return state.quote;
+}
+function showQuoteError() {
+  let el = document.getElementById('quote-error');
+  if (!el) {
+    el = document.createElement('div'); el.id = 'quote-error'; el.setAttribute('role', 'alert');
+    el.style.cssText = 'font-size:0.82rem;color:var(--red);margin:0.5rem 0;';
+    const host = document.getElementById('cart-items-wrap'); if (host) host.after(el);
+  }
+  el.textContent = state.quoteError || '';
+  const b = document.getElementById('btn-to-2'); if (b && state.quoteError) b.disabled = true;
+}
+
+function updateDelivery() {
+  const val = document.querySelector('input[name="delivery"]:checked').value;
+  state.delivery = val;
+  state.deliveryFee = val === 'express' ? 99 : 49;
+  document.getElementById('std-price').textContent = '₹49';
+  updateTotals();
+}
+
+async function applyCoupon() {
+  const input = document.getElementById('coupon-input');
+  const code = input.value.trim().toUpperCase();
+  const msg = document.getElementById('coupon-msg');
+  if (!code) { msg.textContent = 'Enter a coupon code.'; msg.style.color = 'var(--red)'; return; }
+
+  msg.textContent = 'Checking…'; msg.style.color = 'var(--text-muted)';
+  try {
+    const res = await fetch('/api/shop/coupons/validate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code, subtotal: sohCart.total(), items: sohCart.get() })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Invalid coupon code');
+
+    state.discount = data.discount || 0;
+    state.couponCode = data.coupon.code;
+    state.freeShipping = !!data.freeShipping;
+    msg.textContent = '\u2713 ' + (data.coupon.description || 'Coupon applied');
+    msg.style.color = 'var(--green-mid)';
+    input.value = data.coupon.code;
+  } catch (e) {
+    state.discount = 0; state.couponCode = ''; state.freeShipping = false;
+    msg.textContent = e.message;
+    msg.style.color = 'var(--red)';
+  }
+  await refreshQuote();
+}
+
+async function loadOffers() {
+  try {
+    const res = await fetch('/api/shop/coupons');
+    const d = await res.json();
+    const strip = document.getElementById('offersStrip');
+    if (!d.coupons || !d.coupons.length) { strip.style.display = 'none'; return; }
+    strip.innerHTML = d.coupons.map(c => {
+      const label = c.type === 'percent' ? c.value + '% OFF'
+        : c.type === 'flat' ? '\u20b9' + c.value + ' OFF' : 'FREE DELIVERY';
+      return '<button type="button" class="offer-chip" data-code="' + c.code + '">' +
+        '<div><span class="oc-code">' + c.code + '</span>' +
+        '<span class="oc-desc">' + (c.description || label) + '</span></div></button>';
+    }).join('');
+    strip.querySelectorAll('[data-code]').forEach(b => {
+      b.addEventListener('click', () => {
+        document.getElementById('coupon-input').value = b.dataset.code;
+        applyCoupon();
+      });
+    });
+  } catch (e) { document.getElementById('offersStrip').style.display = 'none'; }
+}
+
+function updatePayMethod() {
+  // Online payment only — kept as a no-op so any leftover calls are safe.
+  state.payMethod = 'online';
+}
+
+function computeTotal() {
+  if (state.quote) return state.quote.total;
+  const subtotal = sohCart.total();
+  const shipping = state.freeShipping ? 0 : state.deliveryFee;
+  return Math.max(0, subtotal - state.discount + shipping);
+}
+
+/* ── Step navigation ── */
+function goStep(n) {
+  document.getElementById(`step-${state.step}`).classList.remove('visible');
+  state.step = n;
+  document.getElementById(`step-${n}`).classList.add('visible');
+  // Update progress
+  for (let i = 1; i <= 4; i++) {
+    const el = document.getElementById(`prog-${i}`);
+    el.classList.remove('active','done');
+    if (i < n) el.classList.add('done');
+    else if (i === n) el.classList.add('active');
+    if (i < 4) {
+      const line = document.getElementById(`line-${i}`);
+      line.classList.toggle('done', i < n);
+    }
+  }
+  window.scrollTo(0, 0);
+}
+
+/* ── Step 2 validation ── */
+function validateDetails() {
+  let ok = true;
+  const clear = id => { document.getElementById(id).textContent=''; document.getElementById(id.replace('err-','f-')).classList.remove('error'); };
+  const err = (fieldId, errId, msg) => { document.getElementById(errId).textContent=msg; document.getElementById(fieldId).classList.add('error'); ok=false; };
+
+  ['fname','lname','email','phone'].forEach(f => clear(`err-${f}`));
+
+  const fn = document.getElementById('f-fname').value.trim();
+  const ln = document.getElementById('f-lname').value.trim();
+  const em = document.getElementById('f-email').value.trim();
+  const ph = document.getElementById('f-phone').value.trim();
+
+  if (!fn) err('f-fname','err-fname','First name is required');
+  if (!ln) err('f-lname','err-lname','Last name is required');
+  if (!em || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) err('f-email','err-email','Enter a valid email address');
+  if (!ph || !/^[6-9]\d{9}$/.test(ph)) err('f-phone','err-phone','Enter a valid 10-digit Indian mobile number');
+
+  if (ok) {
+    state.customer = { firstName: fn, lastName: ln, email: em, phone: ph };
+    window.sohSetUser && sohSetUser({ email: em, phone: ph, firstName: fn, lastName: ln });
+    goStep(3);
+  }
+}
+
+/* ── Step 3 validation ── */
+function validateAddress() {
+  let ok = true;
+  ['door','addr1','city','pincode','state'].forEach(f => {
+    var errEl = document.getElementById(`err-${f}`);
+    if (errEl) errEl.textContent='';
+    document.getElementById(`f-${f}`).classList.remove('error');
+  });
+
+  const door = document.getElementById('f-door').value.trim();
+  const a1 = document.getElementById('f-addr1').value.trim();
+  const city = document.getElementById('f-city').value.trim();
+  const pin = document.getElementById('f-pincode').value.trim();
+  const st = document.getElementById('f-state').value;
+
+  if (!door) { document.getElementById('err-door').textContent='Door / flat number is required'; document.getElementById('f-door').classList.add('error'); ok=false; }
+  if (!a1) { document.getElementById('err-addr1').textContent='Building / street / area is required'; document.getElementById('f-addr1').classList.add('error'); ok=false; }
+  if (!city) { document.getElementById('err-city').textContent='City is required'; document.getElementById('f-city').classList.add('error'); ok=false; }
+  if (!pin || !/^\d{6}$/.test(pin)) { document.getElementById('err-pincode').textContent='Enter a valid 6-digit pincode'; document.getElementById('f-pincode').classList.add('error'); ok=false; }
+  if (!st) { document.getElementById('err-state').textContent='Select your state'; document.getElementById('f-state').classList.add('error'); ok=false; }
+
+  if (ok) {
+    const landmark = document.getElementById('f-landmark').value.trim();
+    state.address = {
+      doorNo: door,
+      line1: a1,
+      line2: document.getElementById('f-addr2').value.trim(),
+      landmark: landmark,
+      city, pincode: pin, state: st,
+    };
+    buildReview();
+    goStep(4);
+  }
+}
+
+function buildReview() {
+  const c = state.customer;
+  const a = state.address;
+  const total = computeTotal();
+  const addrLine = [a.doorNo, a.line1, a.line2, a.landmark].filter(Boolean).join(', ');
+  document.getElementById('review-details').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+      <div><strong style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);">Contact</strong><br/>${c.firstName} ${c.lastName}<br/>${c.email}</div>
+      <div><strong style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);">Deliver to</strong><br/>${addrLine}<br/>${a.city}, ${a.state} ${a.pincode}</div>
+    </div>
+  `;
+  document.getElementById('pay-total').textContent = total;
+  refreshQuote();
+}
+
+/* ── Order placement ── */
+function buildOrderPayload(payment) {
+  const c = state.customer;
+  return {
+    items: sohCart.get().map(i => ({ id: i.id, name: i.name, price: i.price, qty: i.qty, image: i.image })),
+    customer: {
+      name: (c.firstName + ' ' + c.lastName).trim(),
+      email: c.email,
+      phone: c.phone,
+    },
+    address: state.address,
+    location: state.location,
+    couponCode: state.couponCode || null,
+    payment: payment,
+    currency: 'INR',
+  };
+}
+
+function buildCheckoutPayload() {
+  const p = buildOrderPayload(null);
+  delete p.payment;
+  p.items = p.items.map(i => ({ id: i.id, qty: i.qty }));
+  return p;
+}
+
+async function submitOrder(payment) {
+  const res = await fetch('/api/shop/orders', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(buildOrderPayload(payment)),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'We could not place your order. Please try again.');
+  return data;
+}
+
+function finishOrder(result) {
+  sohTrack && sohTrack('purchase', {
+    orderId: result.orderId, total: result.total, currency: 'INR', items: sohCart.get(),
+  });
+  const phone = state.customer.phone;
+  sohCart.clear();
+  window.location.href = 'success.html?order=' + encodeURIComponent(result.orderId) +
+    '&total=' + result.total + '&phone=' + encodeURIComponent(phone);
+}
+
+async function initiatePayment() {
+  const btn = document.getElementById('btn-pay');
+  btn.disabled = true;
+  document.getElementById('co-loading').classList.add('show');
+  const total = computeTotal();
+
+  try {
+    /* ── Online payment (only method) ── */
+    const idempotencyKey = 'order_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    const res = await fetch('/api/checkout/order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Idempotency-Key': idempotencyKey },
+      body: JSON.stringify(buildCheckoutPayload()),
+    });
+    const gwOrder = await res.json();
+    if (!res.ok) throw new Error(gwOrder.error || 'Could not start payment');
+    document.getElementById('co-loading').classList.remove('show');
+    // The server priced the cart. If that differs from what was on screen, show it first.
+    if (gwOrder.quote && Math.round(gwOrder.quote.total * 100) !== Math.round(total * 100)) {
+      state.quote = gwOrder.quote; updateTotals();
+      btn.disabled = false;
+      alert('Prices were updated. Your total is now ₹' + gwOrder.quote.total + '. Please check and press Pay again.');
+      return;
+    }
+
+    /* Test mode — no real charge */
+    if (gwOrder.gateway === 'mock') {
+      const result = await submitOrder({
+        method: 'online', status: 'paid', gateway: 'mock',
+        paymentId: 'mock_pay_' + Date.now(), gatewayOrderId: gwOrder.id,
+      });
+      finishOrder(result);
+      return;
+    }
+
+    /* Live Razorpay */
+    const rzp = new Razorpay({
+      key: gwOrder.key,
+      amount: gwOrder.amountPaise,
+      currency: gwOrder.currency || 'INR',
+      name: 'Sake of Health',
+      description: sohCart.get().map(i => i.name).join(', ').slice(0, 100),
+      order_id: gwOrder.id,
+      prefill: {
+        name: (state.customer.firstName + ' ' + state.customer.lastName).trim(),
+        email: state.customer.email,
+        contact: state.customer.phone,
+      },
+      theme: { color: '#296721' },
+      handler: async function (response) {
+        document.getElementById('co-loading').classList.add('show');
+        try {
+          const result = await submitOrder({
+            method: 'online', status: 'paid', gateway: 'razorpay',
+            paymentId: response.razorpay_payment_id,
+            gatewayOrderId: response.razorpay_order_id,
+            signature: response.razorpay_signature,
+          });
+          finishOrder(result);
+        } catch (e) {
+          document.getElementById('co-loading').classList.remove('show');
+          btn.disabled = false;
+          alert('Your payment went through but we had trouble saving the order. ' +
+            'Please contact support with payment ID: ' + response.razorpay_payment_id);
+        }
+      },
+      modal: { ondismiss: function () { btn.disabled = false; } },
+    });
+    // Mobile fix: Razorpay's checkout sheet anchors to the page's current
+    // scroll offset. If the page is scrolled down when it opens (common on
+    // mobile after filling the form), the sheet renders cut off at the top
+    // and the QR/UPI options end up above the visible area. Scrolling to
+    // the top first and giving the browser a tick to settle before opening
+    // fixes this reliably on mobile Chrome/Safari; it's a no-op on desktop.
+    window.scrollTo(0, 0);
+    document.body.style.overflow = '';
+    setTimeout(function () { rzp.open(); }, 60);
+  } catch (e) {
+    document.getElementById('co-loading').classList.remove('show');
+    btn.disabled = false;
+    alert(e.message || 'Something went wrong. Please try again.');
+    console.error(e);
+  }
+}
+
+/* ── Init ── */
+document.addEventListener('DOMContentLoaded', () => {
+  renderCart();
+  updateDelivery();
+  loadOffers();
+
+  /* Location picker — fills area/city/pincode; the customer completes door number etc. */
+  if (window.LocationPicker) {
+    new LocationPicker({
+      mount: document.getElementById('locationHost'),
+      onSelect: function (loc) {
+        state.location = {
+          lat: loc.lat, lng: loc.lng,
+          accuracy: loc.accuracy, source: loc.source,
+          formatted: loc.formatted || '',
+        };
+        const setIf = (id, val) => {
+          const el = document.getElementById(id);
+          if (el && val && !el.value.trim()) el.value = val;
+        };
+        setIf('f-addr1', loc.line1);
+        setIf('f-addr2', loc.line2);
+        setIf('f-city', loc.city);
+        setIf('f-pincode', loc.pincode);
+        if (loc.state) {
+          const sel = document.getElementById('f-state');
+          if (sel && !sel.value) {
+            const match = Array.from(sel.options).find(o =>
+              o.value.toLowerCase() === String(loc.state).toLowerCase() ||
+              o.text.toLowerCase() === String(loc.state).toLowerCase());
+            if (match) sel.value = match.value;
+          }
+        }
+      }
+    });
+  }
+
+  sohTrack && sohTrack('checkout_started', { total: sohCart.total() });
+});
+
+/* ── Social dock robustness: re-parent to <html> so no transformed
+   ancestor can ever turn this fixed dock into an absolutely-positioned one. ── */
+(function(){
+  function liftDock(){
+    const dock = document.getElementById('soh-social-dock');
+    if (dock && dock.parentElement !== document.documentElement) {
+      document.documentElement.appendChild(dock);
+    }
+  }
+  liftDock();
+  document.addEventListener('DOMContentLoaded', liftDock);
+  window.addEventListener('load', liftDock);
+})();
+</script>
+
+<div class="soh-social-dock" id="soh-social-dock">
+  <a href="https://www.instagram.com/sake.of.health/" target="_blank" rel="noopener" aria-label="Instagram" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fdf497 5%,#fd5949 45%,#d6249f 60%,#285AEB 90%);color:#fff;text-decoration:none;box-shadow:0 2px 12px rgba(0,0,0,0.2);">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+  </a>
+  <a href="https://www.facebook.com/people/Sake-Of-Health/61589312395370/?ref=pl_edit_xav_ig_profile_page#" target="_blank" rel="noopener" aria-label="Facebook" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:#1877f2;color:#fff;text-decoration:none;box-shadow:0 2px 12px rgba(0,0,0,0.2);">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+  </a>
+  <a href="https://wa.me/917483927125" target="_blank" rel="noopener" aria-label="WhatsApp" style="width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:#25d366;color:#fff;text-decoration:none;box-shadow:0 2px 12px rgba(0,0,0,0.2);">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+  </a>
+</div>
+</body>
+</html>

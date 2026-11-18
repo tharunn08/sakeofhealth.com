@@ -1,0 +1,84 @@
+Sake of Health — local trial with the 15 initial role accounts (Windows PowerShell)
+
+WHAT THIS CREATES — on this computer only, nothing else is touched:
+  - database  sakeofhealth_local                 (new, empty; the trial's business data)
+  - account   soh_local@127.0.0.1                ALL PRIVILEGES on sakeofhealth_local.* only
+  - folder    %USERPROFILE%\sakeofhealth-local-data   (new, empty; the trial's shop data)
+  - folder    %USERPROFILE%\sakeofhealth-private      (the credentials report; readable only by you)
+NOT used: your shop data folder, your existing databases, your .env file. The seed script
+refuses to run if DB_NAME does not end in _local, if the account is root, if the data
+folder is your live one or holds orders/customers, if NODE_ENV is production, or if
+migrations 013/014 are in the folder.
+
+The accounts use e-mail-style login IDs ending in @sakeofhealth.local. They are names only:
+no inbox exists, so nothing can be e-mailed to them (password reset by e-mail does not apply).
+
+STEP 1 — Use the fresh copy from RUN-ON-WINDOWS.txt Steps 1–3
+  cd "$HOME\soh-d5-test\sakeofhealth-main"
+  Get-ChildItem src\db\migrations -Filter "01[34]_*"
+    -> must print nothing
+  Test-Path .env
+    -> must print False (do NOT copy your real .env into this folder)
+  $mysql = "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe"
+
+STEP 2 — Create the trial database and its own account (as root, once)
+  & $mysql -u root -p
+    Type your root password, then paste at "mysql>" (choose your own password):
+
+  CREATE DATABASE sakeofhealth_local CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+  CREATE USER 'soh_local'@'127.0.0.1' IDENTIFIED BY 'choose-a-local-password';
+  GRANT ALL PRIVILEGES ON sakeofhealth_local.* TO 'soh_local'@'127.0.0.1';
+  exit
+
+STEP 3 — Settings for this PowerShell window only (nothing is saved to disk)
+  $env:NODE_ENV = "development"
+  $env:DB_HOST = "127.0.0.1"; $env:DB_PORT = "3306"
+  $env:DB_USER = "soh_local"; $env:DB_NAME = "sakeofhealth_local"
+  $p = Read-Host "soh_local password" -AsSecureString
+  $env:DB_PASSWORD = [Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR($p))
+  $env:DATA_DIR = "$HOME\sakeofhealth-local-data"
+  $env:B2B_ENABLED = "true"; $env:ERP_ENABLED = "true"
+  $env:PAYMENT_MOCK = "true"; $env:RAZORPAY_KEY_ID = ""; $env:SMTP_HOST = ""
+  $gen = { node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))" }
+  $env:ADMIN_JWT_SECRET = & $gen; $env:CUSTOMER_JWT_SECRET = & $gen
+  $env:B2B_JWT_SECRET = & $gen; $env:ERP_JWT_SECRET = & $gen
+    (four different random 64-character secrets, for this window only)
+
+STEP 4 — Create the tables in the NEW trial database and the 15 accounts
+  node scripts\seed-accounts.js --migrate
+    -> lists each account as "created", then prints the credentials table and
+       "Saved (readable only by you): C:\Users\<you>\sakeofhealth-private\local-credentials-sakeofhealth_local-<time>.txt"
+  Running it again later is safe: existing accounts are reported "exists — unchanged";
+  no password is replaced. (Use --migrate only the first time; it is harmless to repeat.)
+
+STEP 5 — Start the app (same window)
+  npm start
+    -> open http://localhost:3000/login
+
+STEP 6 — First sign-in for each account
+  Sign in with the login ID and temporary password from the report. The page then asks for a
+  new password (12+ characters, letters and a number). Until that is done every screen and
+  API of that account answers "Please choose a new password before continuing".
+  Where each account lands:
+    Super Admin, Admin, Manager, Finance, Inventory Manager, Procurement Manager,
+    Support Staff, Sales Manager, Quality Control Staff, Warehouse Staff -> /admin
+    Salesman          -> choice of /admin (ERP screens) or the field sales app
+    Manufacturer, Supplier -> supplier portal
+    Distributor, Retailer  -> business portal
+
+HOW TO CHANGE A PASSWORD LATER
+  - Anyone (team, business or supplier account): http://localhost:3000/login -> enter e-mail and
+    current password -> "Team or business account: change my password". This changes it for
+    every part of that account at once (shop admin, ERP, portal).
+  - Super Admin / Admin can add more people: Admin panel -> Administration -> Staff (shop/trade
+    staff) and Administration -> Business Staff & Roles (ERP roles; a second approver is needed for role grants).
+
+STEP 7 — When you are finished with the trial
+  Ctrl+C in the app window, then close the window (the settings from Step 3 disappear with it).
+  To remove the trial completely:
+    & $mysql -u root -p -e "DROP DATABASE sakeofhealth_local; DROP USER 'soh_local'@'127.0.0.1';"
+    Remove-Item -Recurse "$HOME\sakeofhealth-local-data"
+  Delete the credentials report once everyone has chosen their own password:
+    Remove-Item "$HOME\sakeofhealth-private\local-credentials-sakeofhealth_local-*.txt"
+
+If any step prints an error, stop and send me the message (never the passwords).

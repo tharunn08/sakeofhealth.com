@@ -1,0 +1,66 @@
+SAKE OF HEALTH — UNIFIED PLATFORM (complete build)
+
+This folder is the whole project, ready to run on Windows: online shop, central admin, B2B
+retailer/distributor portals, vendor portal, ERP (inventory ledger, approvals, notifications),
+online shop stock, events & counter sales, field app with offline queue, locations, central
+customers. The packages it needs are already included (node_modules), so no download is needed.
+Needs: Node.js 18 or newer (https://nodejs.org) and, for the business platform, MySQL 8.
+
+────────────────────────────────────────────────────────────────────────────
+VALIDATION STATUS — READ FIRST
+────────────────────────────────────────────────────────────────────────────
+  PASSED in the build environment: B2C guard (108 shop files unchanged), build check, syntax
+  check of every file, 275 database-free tests (0 failures), 20 shop regression tests, browser
+  checks of the new screens, the field app's offline queue and the shop checkout.
+  NOT RUN: the 14 MySQL 8 test suites (no MySQL server was available there). Until they pass on
+  your computer, the database behaviour is written but not proven. Real email / WhatsApp sending
+  has not been tried with your accounts.
+  Full report: docs\unified\DELIVERY-REPORT.md
+
+────────────────────────────────────────────────────────────────────────────
+1. RUN EVERY CHECK (about 2 minutes, no database)
+────────────────────────────────────────────────────────────────────────────
+  Double-click RUN-ALL-TESTS.cmd
+  → results in test-results\<time>\SUMMARY.txt
+
+────────────────────────────────────────────────────────────────────────────
+2. RUN THE MYSQL 8 TESTS (10–20 minutes) — this is what finishes validation
+────────────────────────────────────────────────────────────────────────────
+  a) Create the throw-away test database once — docs\unified\SETUP-AND-TEST-ON-WINDOWS.txt,
+     step A4 (database sakeofhealth_test, account soh_test; it must hold nothing else).
+  b) In PowerShell, in this folder:
+       $env:TEST_DB_HOST = "127.0.0.1"
+       $env:TEST_DB_USER = "soh_test"
+       $env:TEST_DB_NAME = "sakeofhealth_test"
+       .\RUN-ALL-TESTS.cmd --mysql
+     (type the soh_test password when asked; it is hidden and never saved)
+  c) Zip the test-results folder and send it back. Do not edit tests to make them pass.
+  The test runner refuses production, any database not ending in _test, root, and any account
+  with rights outside the test database.
+
+────────────────────────────────────────────────────────────────────────────
+3. TRY IT LOCALLY WITH REAL SCREENS
+────────────────────────────────────────────────────────────────────────────
+  docs\phase-1\LOCAL-TRIAL-ON-WINDOWS.txt — a local database (sakeofhealth_local), settings
+  for that window only, then  npm start  and open http://localhost:3000/login
+  New screens: Sales & Orders → Events & Counter Sales, Field & Event Locations;
+  Inventory → Online Shop Stock; Customers → All Customers; Administration → Offline Sync.
+  Field app: http://localhost:3000/sales-app/
+
+────────────────────────────────────────────────────────────────────────────
+4. SETTINGS AND PRODUCTION
+────────────────────────────────────────────────────────────────────────────
+  .env.example lists every setting by name (no values). Never put live payment keys on a test
+  computer — use Razorpay test keys (rzp_test_...).
+  Online shop stock stays OFF until two people approve it in Administration → Business Decisions.
+  Migrations 013/014 are deliberately not included (decision D5 is still open).
+  Production: do not deploy or migrate without the backup and runbook in
+  docs\erp\MIGRATION-RUNBOOK.md and docs\BACKUP-RESTORE.md, and your explicit approval.
+
+Documents
+  docs\unified\ARCHITECTURE.md            how everything fits together (one ledger, one admin)
+  docs\unified\API-OPERATIONS.md          new endpoints
+  docs\unified\SETUP-AND-TEST-ON-WINDOWS.txt  setup, database, migrations, tests
+  docs\unified\DELIVERY-REPORT.md         requirement-by-requirement audit, what is blocked and why
+  docs\unified\evidence\                  logs and screenshots of every check that ran
+  docs\phase-1\DEVELOPMENT-LOG.md         every change, in order

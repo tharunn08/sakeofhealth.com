@@ -1,0 +1,54 @@
+$ node --test tests/ops-tools.test.js  (clean clone of ca2426e, no 013/014, 2026-11-13T10:57:11Z)
+TAP version 13
+# Subtest: d5-inspect runs only single SELECT statements
+ok 1 - d5-inspect runs only single SELECT statements
+  ---
+  duration_ms: 0.918133
+  type: 'test'
+  ...
+# Subtest: d5-inspect: every database call goes through the SELECT check, after a READ ONLY session is set
+ok 2 - d5-inspect: every database call goes through the SELECT check, after a READ ONLY session is set
+  ---
+  duration_ms: 0.290116
+  type: 'test'
+  ...
+# Subtest: d5-inspect: checksums of the exact bytes and of both line-ending variants
+ok 3 - d5-inspect: checksums of the exact bytes and of both line-ending variants
+  ---
+  duration_ms: 0.860012
+  type: 'test'
+  ...
+# Subtest: d5-inspect: finds 013/014 in a recorded history and classifies each checksum
+ok 4 - d5-inspect: finds 013/014 in a recorded history and classifies each checksum
+  ---
+  duration_ms: 3.277099
+  type: 'test'
+  ...
+# Subtest: MySQL test runner: refuses with 013/014 present, a non-disposable database name, or production
+ok 5 - MySQL test runner: refuses with 013/014 present, a non-disposable database name, or production
+  ---
+  duration_ms: 0.289657
+  type: 'test'
+  ...
+# Subtest: MySQL test runner, run in a checkout that has 013/014: stops before connecting
+ok 6 - MySQL test runner, run in a checkout that has 013/014: stops before connecting # SKIP clean checkout
+  ---
+  duration_ms: 0.056095
+  type: 'test'
+  ...
+# Subtest: d5-inspect without a server named: explains and exits
+ok 7 - d5-inspect without a server named: explains and exits
+  ---
+  duration_ms: 23.389461
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 1
+# todo 0
+# duration_ms 78.093963
+exit=0
