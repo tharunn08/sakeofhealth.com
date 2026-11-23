@@ -261,6 +261,25 @@ async function deliverOrder(tx, order, items, delivered, actor) {
   if (order.buyer_type === 'distributor') await creditDistributor(tx, order, received, actor);
 }
 
+/**
+ * Nothing could be delivered (refused, wrong address, attempts exhausted): everything that was in
+ * transit comes back to the seller's warehouse. condition 'good' → available (batch quantities
+ * restored); 'damaged' → damaged. Keyed per allocation, so a repeat moves nothing twice.
+ */
+async function returnUndelivered(tx, order, actor, condition, reason) {
+  if (!order.stock_reserved || !order.warehouse_id) return;
+  const to = condition === 'damaged' ? 'damaged' : 'available';
+  const allocations = await tx.query('SELECT a.*, i.product_id FROM b2b_order_item_allocations a JOIN b2b_order_items i ON i.id = a.order_item_id WHERE a.order_id = ? ORDER BY a.id', [order.id]);
+  for (const a of allocations) {
+    const ok = await move(tx, { warehouse_id: order.warehouse_id, product_id: a.product_id, batch_id: a.batch_id, type: 'return', qty: a.qty,
+      from: 'in_transit', to: to, ref_type: 'order', ref_id: order.id, reason: (reason || 'returned undelivered').slice(0, 200), actor: actor,
+      idem_key: 'order:' + order.id + ':undelivered:' + a.id });
+    if (!ok) throw new Error('Stock ledger out of sync returning order ' + order.id);
+    // batch quantities follow the ledger row: only when this call really posted it (not a repeat)
+    if (ok === true && to === 'available' && a.batch_id) await tx.query("UPDATE b2b_batches SET qty_on_hand = qty_on_hand + ?, status = 'active' WHERE id = ?", [a.qty, a.batch_id]);
+  }
+}
+
 async function creditDistributor(tx, order, received, actor) {
   const whs = await distributorWarehouses(order.buyer_account_id, tx);
   if (!whs.length) return;
@@ -434,6 +453,6 @@ async function availability(productIds, warehouseIds, q) {
 
 module.exports = {
   BUCKETS, StockError, move, receive, companyWarehouses, distributorWarehouses, listWarehouses, saveWarehouse,
-  reserveForOrder, releaseForOrder, allocateForOrder, dispatchOrder, deliverOrder, receiveReturn,
+  reserveForOrder, releaseForOrder, allocateForOrder, dispatchOrder, deliverOrder, returnUndelivered, receiveReturn,
   manualEntry, listStock, listMovements, listBatches, expirySummary, availability,
 };

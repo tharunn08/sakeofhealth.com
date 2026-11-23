@@ -30,6 +30,8 @@ async function startServer(extraEnv) {
     PORT: String(port),
     NODE_ENV: 'test',
     DATA_DIR: dataDir,
+    CATALOGUE_DIR: path.join(dataDir, '.catalogue-test'),
+    BACKUP_DIR: path.join(dataDir, '.backups-test'),
     B2B_PRIVATE_DIR: privateDir,
     PAYMENT_MOCK: 'true',
     AUTO_SEED: 'true',
@@ -93,4 +95,21 @@ async function startServer(extraEnv) {
 
 const bearer = token => ({ Authorization: 'Bearer ' + token });
 
-module.exports = { startServer, bearer, ROOT };
+/**
+ * A complete, valid production configuration for tests (src/config/env.js refuses to start production
+ * without one). Test values only: fake Razorpay TEST keys, throw-away folders, long test secrets.
+ */
+const PROD_ADMIN_PASSWORD = 'Test@12345-production';
+function prodEnv(extra) {
+  return Object.assign({
+    NODE_ENV: 'production',
+    SITE_URL: 'https://shop.example.test',
+    ADMIN_PASSWORD: PROD_ADMIN_PASSWORD,
+    RAZORPAY_KEY_ID: 'rzp_test_FakeKeyForTests1',
+    RAZORPAY_KEY_SECRET: 'fake-razorpay-test-secret',
+    JOBS_MODE: 'cron',
+    PAYMENT_MOCK: 'false',
+  }, extra || {});
+}
+
+module.exports = { startServer, bearer, ROOT, prodEnv, PROD_ADMIN_PASSWORD };

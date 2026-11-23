@@ -12,6 +12,7 @@
 const crypto = require('crypto');
 const db = require('../../../db/connection.js');
 const settings = require('../lib/settings.js');
+const jobsConfig = require('../../../platform/jobs-config.js');
 
 const BACKOFF_MINUTES = [1, 5, 30, 120];
 let timer = null;
@@ -45,8 +46,27 @@ async function enqueue(q, msg) {
   if (msg.messageId) { cols.push('message_id', 'send_id', 'message_recipient_id'); vals.push(msg.messageId, msg.sendId || null, msg.messageRecipientId || null); }
   const r = await run('INSERT INTO b2b_notification_queue (' + cols.join(', ') + ') VALUES (' + cols.map(function () { return '?'; }).join(', ') + ')', vals);
   await history(run, r.insertId, 'queued', { source: msg.source || 'system', actor: msg.actor });
+  // JOBS_MODE=cron has no sender timer: hand the message over as soon as it is committed (an order code
+  // must not wait for the next cron run). The cron run remains the safety net if this attempt fails.
+  if (jobsConfig.mode() === 'cron') {
+    if (q && typeof q.afterCommit === 'function') q.afterCommit(kickSoon);
+    else if (!q) kickSoon();
+  }
   return r.insertId;
 }
+
+let kickPending = false, kickOff = false;
+/** Send what is due, once, shortly (debounced). Errors are logged; the row stays queued for the next run. */
+function kickSoon() {
+  if (kickOff || kickPending || !db.isConfigured()) return;
+  kickPending = true;
+  setImmediate(function () {
+    kickPending = false;
+    processDue(50).catch(function (e) { if (e.code !== 'ER_NO_SUCH_TABLE') console.error('[B2B NOTIFY] immediate send:', e.code || e.message); });
+  });
+}
+/** The cron runner sends in its own step and then closes the pool: no immediate sends in that process. */
+function disableImmediateSend() { kickOff = true; }
 
 /**
  * Append-only status history (table from migration 016). Every status change of a queued
@@ -388,4 +408,4 @@ function startWorker() {
 
 function stopWorker() { if (timer) { clearInterval(timer); timer = null; } }
 
-module.exports = { enqueue, notifyAccount, notifyAdmins, processDue, startWorker, stopWorker, emailHtml, deliver, settle, requeue, history, historyOf, RETRYABLE, allowance, providerRates, PROVIDER_RATES, recordWorkflow, queueCode, workflowSupport };
+module.exports = { enqueue, kickSoon, disableImmediateSend, notifyAccount, notifyAdmins, processDue, startWorker, stopWorker, emailHtml, deliver, settle, requeue, history, historyOf, RETRYABLE, allowance, providerRates, PROVIDER_RATES, recordWorkflow, queueCode, workflowSupport };

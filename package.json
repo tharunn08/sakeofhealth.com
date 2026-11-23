@@ -6,19 +6,25 @@
   "scripts": {
     "start": "node index.js",
     "build": "node scripts/build.js",
-    "dev": "PAYMENT_MOCK=true node --watch src/server.js",
+    "dev": "node --watch scripts/dev.js",
     "seed": "node src/seed.js",
-    "reset": "rm -f data/*.json && node src/seed.js",
+    "reset": "node scripts/reset-dev.js",
     "migrate": "node scripts/migrate.js up",
     "migrate:status": "node scripts/migrate.js status",
     "migrate:verify": "node scripts/migrate.js verify",
     "b2b:seed-dev": "node scripts/seed-b2b-dev.js",
     "backup": "node scripts/backup.js",
     "test": "node --test --test-concurrency=1 tests/*.test.js",
-    "test:b2c": "node --test tests/b2c-regression.test.js"
+    "test:b2c": "node --test tests/b2c-regression.test.js",
+    "verify:products": "node scripts/protected-products.js verify",
+    "restore:shop": "node scripts/restore-shop.js",
+    "setup": "node scripts/setup-env.js",
+    "secrets": "node scripts/generate-secrets.js",
+    "check:env": "node scripts/check-env.js",
+    "env:templates": "node scripts/env-templates.js"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.6.0"
   },
   "dependencies": {
     "compression": "^1.7.4",

@@ -100,14 +100,17 @@ function int(n, fallback, min, max) {
   return v;
 }
 
-function wrap(conn) {
-  return {
+function wrap(conn, after) {
+  const w = {
     raw: conn,
     async query(sql, params) { const [rows] = await conn.execute(sql, normalise(params)); return rows; },
     async queryOne(sql, params) { const [rows] = await conn.execute(sql, normalise(params)); return rows[0] || null; },
     /** Multi-row insert: bulk('INSERT INTO t (a,b) VALUES ?', [[1,2],[3,4]]) — escaped by mysql2. */
     async bulk(sql, rows) { if (!rows.length) return { affectedRows: 0 }; const [res] = await conn.query(sql, [rows]); return res; },
   };
+  /** Inside transaction(): run fn once the transaction has committed (never on rollback). */
+  if (after) w.afterCommit = function (fn) { after.push(fn); };
+  return w;
 }
 
 const RETRYABLE = { ER_LOCK_DEADLOCK: 1, ER_LOCK_WAIT_TIMEOUT: 1 };
@@ -122,11 +125,13 @@ async function transaction(fn, opts) {
   let lastErr;
   for (let i = 0; i < attempts; i++) {
     const conn = await getPool().getConnection();
+    const after = [];   // per attempt: a retried attempt starts with no callbacks
     try {
       await conn.beginTransaction();
-      const result = await fn(wrap(conn));
+      const result = await fn(wrap(conn, after));
       await conn.commit();
       conn.release();
+      after.forEach(function (cb) { try { cb(); } catch (e) { console.error('[DB] after-commit callback failed:', e.message); } });
       return result;
     } catch (e) {
       try { await conn.rollback(); } catch (_) { /* connection already gone */ }

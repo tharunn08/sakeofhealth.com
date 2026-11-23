@@ -46,3 +46,6 @@ input[type=checkbox]{width:20px;height:20px;padding:0}
 textarea{width:100%}
 .nbody select,.nbody input,.nbody textarea{max-width:100%;box-sizing:border-box}
 .nbody .row>label,.nbody label{min-width:0}
+
+code.secret{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:15px;padding:2px 8px;border-radius:6px;background:var(--soft);user-select:all;word-break:break-all}
+label.chk{display:inline-flex;align-items:center;gap:6px}

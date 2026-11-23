@@ -79,56 +79,7 @@
     load();
   }
 
-  // ── Vendors ──
-  function vendors(main) {
-    main.appendChild(el('h1', { text: 'Vendors' }));
-    var out = el('div'); main.appendChild(out);
-    api('GET', B + '/vendors').then(function (r) {
-      main.appendChild(table(['Vendor', 'GSTIN', 'Status', 'Capabilities', 'Docs to review', ''], r.items.map(function (v) {
-        return [v.legal_name + (v.vendor_code ? ' (' + v.vendor_code + ')' : ''), v.gstin || '—', el('span', { class: 'tag', text: v.status }), v.capabilities || '', String(v.docs_pending),
-          btn('Open', function () { vendorDetail(out, v.id); })];
-      })));
-    }).catch(err(out));
-  }
-  function vendorDetail(out, id) {
-    api('GET', B + '/vendors/' + id).then(function (d) {
-      var box = el('div');
-      var stage = el('select', { 'aria-label': 'Stage' }, ['verification', 'document_review', 'procurement', 'finance_compliance', 'admin'].map(function (s) { return el('option', { value: s, text: s.replace('_', ' ') }); }));
-      var outcome = el('select', { 'aria-label': 'Outcome' }, ['passed', 'more_info_required', 'failed'].map(function (s) { return el('option', { value: s, text: s.replace(/_/g, ' ') }); }));
-      var note = input('Note');
-      box.appendChild(section(d.vendor.legal_name + ' — ' + d.vendor.status, [
-        table(['Document', 'Status', 'Uploaded', ''], d.documents.map(function (doc) {
-          var a = el('div', { class: 'row' }, [el('a', { href: '#', text: 'View', on: { click: function (e) {
-            e.preventDefault();
-            fetch(B + '/vendors/' + id + '/documents/' + doc.id + '/file', { headers: { Authorization: 'Bearer ' + E.state.token } }).then(function (r) { return r.blob(); }).then(function (b) { window.open(URL.createObjectURL(b), '_blank', 'noopener'); });
-          } } })]);
-          if (doc.review_status === 'pending' && E.has('vendors.verify')) {
-            a.appendChild(btn('Accept', function () { api('POST', B + '/vendors/' + id + '/documents/' + doc.id + '/review', { status: 'accepted' }).then(function () { vendorDetail(out, id); }).catch(err(box)); }));
-            a.appendChild(btn('Reject', function () { var n = window.prompt('Why?'); if (n) api('POST', B + '/vendors/' + id + '/documents/' + doc.id + '/review', { status: 'rejected', note: n }).then(function () { vendorDetail(out, id); }).catch(err(box)); }, 'danger'));
-          }
-          return [doc.doc_type, doc.review_status, fmt(doc.created_at), a];
-        })),
-        el('h2', { text: 'Verification' }),
-        table(['Stage', 'Outcome', 'Note', 'When'], d.verifications.map(function (x) { return [x.stage, x.outcome, x.note || '', fmt(x.created_at)]; })),
-        E.has('vendors.verify') ? el('div', { class: 'row' }, [stage, outcome, note.node, btn('Record', function () {
-          api('POST', B + '/vendors/' + id + '/verifications', { stage: stage.value, outcome: outcome.value, note: note.input.value }).then(function (r) {
-            box.prepend(msg('ok', r.approval ? 'All stages passed — sent for approval' : 'Recorded')); vendorDetail(out, id);
-          }).catch(err(box));
-        }, 'primary')]) : null,
-        el('h2', { text: 'Products offered' }),
-        table(['Name', 'SKU', 'HSN', 'Status', ''], d.products.map(function (p) {
-          var a = el('div', { class: 'row' });
-          if (['submitted', 'under_review'].indexOf(p.status) !== -1 && E.has('vendors.products.approve')) {
-            var pid = el('input', { 'aria-label': 'Map to product id', placeholder: 'Product id', inputmode: 'numeric' });
-            a.appendChild(pid);
-            a.appendChild(btn('Approve', function () { api('POST', B + '/vendor-products/' + p.id + '/decide', { decision: 'approved', productId: Number(pid.value) }).then(function () { vendorDetail(out, id); }).catch(err(box)); }));
-          }
-          return [p.name, p.vendor_sku || '', p.hsn_code || '', p.status, a];
-        }))
-      ]));
-      out.replaceChildren(box);
-    }).catch(err(out));
-  }
+  // Manufacturers & Suppliers (vendors): erp-web/admin/people.js
 
   // ── Purchasing ──
   function purchasing(main) {
@@ -390,22 +341,26 @@
   function salesDesk(main) {
     main.appendChild(el('h1', { text: 'Sales desk' }));
     var out = el('div'); main.appendChild(out);
+    var names = {}, tgt = el('div'), beats = el('div');
     api('GET', B + '/sales/performance').then(function (r) {
-      main.appendChild(section('Achievement — ' + r.month, [el('p', { class: 'note', text: r.basis }), table(['Salesman', 'Sales ₹ (target)', 'Orders', 'New retailers', 'Collections ₹', 'Visits'], r.items.map(function (x) {
+      r.items.forEach(function (x) { names[x.salesmanId] = x.name + (x.employeeCode ? ' · ' + x.employeeCode : ''); });
+      main.insertBefore(section('Achievement — ' + r.month, [el('p', { class: 'note', text: r.basis }), table(['Salesman', 'Sales ₹ (target)', 'Orders', 'New retailers', 'Collections ₹', 'Visits'], r.items.map(function (x) {
         var f = function (k) { return String(x.actual[k]) + (x.target[k] != null ? ' / ' + x.target[k] + ' (' + x.achievementPct[k] + '%)' : ''); };
-        return [x.name, f('sales_value'), f('orders'), f('new_retailers'), f('collections'), f('visits')];
-      }))]));
+        return [names[x.salesmanId], f('sales_value'), f('orders'), f('new_retailers'), f('collections'), f('visits')];
+      }))]), tgt);
+      if (E.has('sales.targets.edit')) {
+        var sm = el('select', { 'aria-label': 'Salesman' }, [el('option', { value: '', text: 'Choose a salesman…' })].concat(r.items.map(function (x) { return el('option', { value: String(x.salesmanId), text: names[x.salesmanId] }); })));
+        var mo = input('Month', { type: 'month', value: r.month }), val = input('Target', { inputmode: 'decimal' });
+        var met = el('select', { 'aria-label': 'Measure' }, [['sales_value', 'Sales value (₹)'], ['orders', 'Orders'], ['new_retailers', 'New retailers'], ['collections', 'Collections (₹)'], ['visits', 'Visits']].map(function (m) { return el('option', { value: m[0], text: m[1] }); }));
+        tgt.appendChild(section('Set a target', [el('div', { class: 'row' }, [el('label', {}, ['Salesman', sm]), mo.node, el('label', {}, ['Measure', met]), val.node, btn('Save', function () {
+          api('PUT', B + '/sales/targets', { salesmanId: Number(sm.value), month: mo.input.value, metric: met.value, value: Number(val.input.value) }).then(function () { E.show('salesdesk'); }).catch(err(out));
+        })])]));
+      }
+      return api('GET', B + '/sales/beats');
+    }).then(function (r) {
+      beats.appendChild(section('Beats', [table(['Beat', 'Salesman', 'Day', 'Stops', 'Active'], r.items.map(function (b) { return [b.name, names[b.salesman_id] || ('#' + b.salesman_id), ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][b.weekday], String(b.stops), b.is_active ? 'yes' : 'no']; }))]));
     }).catch(err(out));
-    if (E.has('sales.targets.edit')) {
-      var sm = input('Salesman id', { inputmode: 'numeric' }), mo = input('Month', { placeholder: 'YYYY-MM' }), val = input('Target');
-      var met = el('select', { 'aria-label': 'Metric' }, ['sales_value', 'orders', 'new_retailers', 'collections', 'visits'].map(function (m) { return el('option', { value: m, text: m.replace('_', ' ') }); }));
-      main.appendChild(section('Set a target', [el('div', { class: 'row' }, [sm.node, mo.node, met, val.node, btn('Save', function () {
-        api('PUT', B + '/sales/targets', { salesmanId: Number(sm.input.value), month: mo.input.value, metric: met.value, value: Number(val.input.value) }).then(function () { E.show('salesdesk'); }).catch(err(out));
-      })])]));
-    }
-    api('GET', B + '/sales/beats').then(function (r) {
-      main.appendChild(section('Beats', [table(['Beat', 'Salesman', 'Day', 'Stops', 'Active'], r.items.map(function (b) { return [b.name, String(b.salesman_id), ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][b.weekday], String(b.stops), b.is_active ? 'yes' : 'no']; }))]));
-    }).catch(err(out));
+    main.appendChild(tgt); main.appendChild(beats);
     if (E.has('sales.office_orders.create')) {
       var acc = input('Customer account id', { inputmode: 'numeric' }), lines = input('Items (productId:qty, …)'), why = input('Who asked, how');
       var pay = el('select', { 'aria-label': 'Payment' }, [['bank_transfer', 'Bank transfer'], ['upi', 'UPI'], ['credit', 'Credit']].map(function (o) { return el('option', { value: o[0], text: o[1] }); }));
@@ -781,7 +736,6 @@
   window.ERP_VIEWS.push(
     { id: 'pricing', label: 'Price lists', perm: 'catalog.pricing.view', render: pricing },
     { id: 'products', label: 'Products', perm: 'catalog.products.view', render: products },
-    { id: 'vendors', label: 'Vendors', perm: 'vendors.view', render: vendors },
     { id: 'purchasing', label: 'Purchasing', perm: 'procurement.pr.view', render: purchasing },
     { id: 'receiving', label: 'Goods receipt', perm: 'warehouse.grn.create', render: receiving },
     { id: 'bills', label: 'Supplier bills', perm: 'finance.payables.view', render: bills },

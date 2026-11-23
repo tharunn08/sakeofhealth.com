@@ -1,0 +1,9 @@
+/* Central admin panel — small layout fixes for every page the shell renders, without touching the
+   protected shop admin files (frontend/admin/*). Loaded after /admin/admin.css. */
+
+/* Label / value rows (Settings → Integrations, order details): on a phone a long label with a hint
+   must wrap instead of pushing the value off the screen (was 89 px of sideways scrolling). */
+@media (max-width: 640px) {
+  .detail-row dt { flex-shrink: 1; min-width: 0; }
+  .detail-row dd { flex-shrink: 0; max-width: 55%; }
+}

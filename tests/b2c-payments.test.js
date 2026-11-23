@@ -9,7 +9,7 @@ const assert = require('node:assert');
 const { createHmac } = require('crypto');
 const fs = require('fs');
 const path = require('path');
-const { startServer } = require('./helpers/server.js');
+const { startServer, prodEnv } = require('./helpers/server.js');
 const { startRazorpayStub } = require('./helpers/razorpay-stub.js');
 
 const KEY_ID = 'rzp_test_STUBKEY', KEY_SECRET = 'stub-key-secret-for-tests', WEBHOOK_SECRET = 'stub-webhook-secret-for-tests';
@@ -205,7 +205,9 @@ test('BUG-003: production never uses mock payments, even with PAYMENT_MOCK=true 
   // Production never seeds (BUG-008), so give it a copy of the test catalogue.
   const prodData = fs.mkdtempSync(path.join(require('os').tmpdir(), 'soh-test-prod-'));
   fs.copyFileSync(path.join(s.dataDir, 'products.json'), path.join(prodData, 'products.json'));
-  const prod = spread(await startServer({ NODE_ENV: 'production', PAYMENT_MOCK: 'true', RAZORPAY_KEY_ID: '', RAZORPAY_KEY_SECRET: '', DATA_DIR: prodData }));
+  // CONFIG_STRICT=false: start despite the missing keys (the start-up check would refuse — tested in
+  // tests/env-config.test.js) to prove the payment layer itself still fails closed (defence in depth).
+  const prod = spread(await startServer(prodEnv({ CONFIG_STRICT: 'false', PAYMENT_MOCK: 'true', RAZORPAY_KEY_ID: '', RAZORPAY_KEY_SECRET: '', DATA_DIR: prodData })));
   t.after(() => prod.stop());
   const p = (await prod.get('/api/shop/products')).data.products.find(x => !x.upcoming);
   const co = await prod.post('/api/checkout/order', { items: [{ id: p.id, qty: 1 }], customer, address }, { 'Idempotency-Key': 'k-prod' });

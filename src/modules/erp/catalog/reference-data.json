@@ -1,5 +1,5 @@
 {
- "version": "2026-11-06+p13+qc+adj+notif",
+ "version": "2026-11-06+p13+qc+adj+notif+mfg+delivery",
  "note": "Reference data for the ERP. Loaded only by scripts/erp-reference-data.js with explicit confirmation (decision D14). Never removes or changes existing rows.",
  "permissions": [
   {
@@ -601,6 +601,54 @@
    "module": "customers",
    "description": "Confirm or correct how customer records are linked",
    "is_sensitive": false
+  },
+  {
+   "code": "manufacturing.view",
+   "module": "manufacturing",
+   "description": "Manufacturers, facilities, bills of materials, manufacturing orders and batches",
+   "is_sensitive": false
+  },
+  {
+   "code": "manufacturing.manage",
+   "module": "manufacturing",
+   "description": "Create facilities, bills of materials and manufacturing orders; release, close or cancel orders",
+   "is_sensitive": false
+  },
+  {
+   "code": "manufacturing.bom.approve",
+   "module": "manufacturing",
+   "description": "Activate a bill of materials (decides what an in-house order consumes)",
+   "is_sensitive": true
+  },
+  {
+   "code": "manufacturing.issue",
+   "module": "manufacturing",
+   "description": "Issue materials to an in-house order and record its output",
+   "is_sensitive": false
+  },
+  {
+   "code": "manufacturing.qc.release",
+   "module": "manufacturing",
+   "description": "Release or reject manufactured batches after quality control",
+   "is_sensitive": false
+  },
+  {
+   "code": "deliveries.view",
+   "module": "deliveries",
+   "description": "All shipments of trade orders, challans and proof of delivery",
+   "is_sensitive": false
+  },
+  {
+   "code": "deliveries.manage",
+   "module": "deliveries",
+   "description": "Create shipments, assign vehicle, driver or courier, dispatch and return goods to the warehouse",
+   "is_sensitive": false
+  },
+  {
+   "code": "deliveries.update",
+   "module": "deliveries",
+   "description": "Update shipments assigned to you: out for delivery, location, failed attempt, delivered with proof",
+   "is_sensitive": false
   }
  ],
  "roles": [
@@ -707,7 +755,15 @@
     "customers.view",
     "customers.contacts.view",
     "customers.link.manage",
-    "shop_stock.refund.pay"
+    "shop_stock.refund.pay",
+    "manufacturing.view",
+    "manufacturing.manage",
+    "manufacturing.bom.approve",
+    "manufacturing.issue",
+    "manufacturing.qc.release",
+    "deliveries.view",
+    "deliveries.manage",
+    "deliveries.update"
    ]
   },
   {
@@ -773,7 +829,15 @@
     "customers.view",
     "customers.contacts.view",
     "customers.link.manage",
-    "shop_stock.refund.pay"
+    "shop_stock.refund.pay",
+    "manufacturing.view",
+    "manufacturing.manage",
+    "manufacturing.bom.approve",
+    "manufacturing.issue",
+    "manufacturing.qc.release",
+    "deliveries.view",
+    "deliveries.manage",
+    "deliveries.update"
    ]
   },
   {
@@ -808,7 +872,8 @@
     "events.reports.view",
     "offline.view",
     "offline.resolve",
-    "customers.view"
+    "customers.view",
+    "deliveries.view"
    ]
   },
   {
@@ -859,7 +924,10 @@
     "vendors.verify",
     "vendors.view",
     "notifications.view",
-    "notifications.send.vendors"
+    "notifications.send.vendors",
+    "manufacturing.view",
+    "manufacturing.manage",
+    "manufacturing.bom.approve"
    ]
   },
   {
@@ -875,7 +943,8 @@
     "procurement.rfq.create",
     "procurement.rfq.view",
     "vendors.create",
-    "vendors.view"
+    "vendors.view",
+    "manufacturing.view"
    ]
   },
   {
@@ -899,7 +968,12 @@
     "inventory.adjust.propose",
     "events.view",
     "shop_stock.view",
-    "offline.view"
+    "offline.view",
+    "manufacturing.view",
+    "manufacturing.issue",
+    "deliveries.view",
+    "deliveries.manage",
+    "deliveries.update"
    ]
   },
   {
@@ -917,7 +991,10 @@
     "warehouse.grn.create",
     "inventory.adjust.propose",
     "events.view",
-    "shop_stock.view"
+    "shop_stock.view",
+    "manufacturing.view",
+    "deliveries.view",
+    "deliveries.update"
    ]
   },
   {
@@ -980,7 +1057,8 @@
     "network.territories.edit",
     "reports.export",
     "returns.create",
-    "network.accounts.create"
+    "network.accounts.create",
+    "deliveries.view"
    ]
   },
   {
@@ -999,7 +1077,8 @@
     "customers.view",
     "customers.contacts.view",
     "customers.link.manage",
-    "shop_stock.view"
+    "shop_stock.view",
+    "deliveries.view"
    ]
   },
   {
@@ -1034,7 +1113,9 @@
     "events.reports.view",
     "shop_stock.view",
     "offline.view",
-    "customers.view"
+    "customers.view",
+    "manufacturing.view",
+    "deliveries.view"
    ]
   },
   {
@@ -1049,7 +1130,17 @@
     "returns.inspect",
     "recalls.view",
     "recalls.create",
-    "warehouse.grn.create"
+    "warehouse.grn.create",
+    "manufacturing.view",
+    "manufacturing.qc.release"
+   ]
+  },
+  {
+   "code": "delivery_staff",
+   "name": "Delivery Staff",
+   "permissions": [
+    "deliveries.update",
+    "core.self.view"
    ]
   }
  ]

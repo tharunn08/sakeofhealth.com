@@ -104,9 +104,10 @@
       '<th class="td-right">Price</th><th class="hide-xs td-right">Stock</th>' +
       '<th>Status</th><th style="width:100px"></th></tr></thead><tbody>' +
       state.products.map(function (p) {
-        var status = p.upcoming ? '<span class="badge badge-prepared">Upcoming</span>'
+        var status = (p.upcoming ? '<span class="badge badge-prepared">Upcoming</span>'
           : p.active === false ? '<span class="badge badge-neutral">Hidden</span>'
-          : '<span class="badge badge-delivered">Live</span>';
+          : '<span class="badge badge-delivered">Live</span>') +
+          (p.protected ? ' <span class="badge badge-accepted" title="One of the four protected products: it cannot be deleted or hidden">Protected</span>' : '');
         var stock = p.stock == null ? '<span class="td-muted">∞</span>'
           : p.stock === 0 ? '<span style="color:var(--red);font-weight:600">Out</span>'
           : p.stock < 20 ? '<span style="color:var(--amber);font-weight:600">' + p.stock + '</span>'
@@ -125,7 +126,7 @@
           '<td>' + status + '</td>' +
           '<td><div class="flex gap-8">' +
             '<button class="btn btn-ghost btn-icon" data-edit="' + A.esc(p.id) + '" title="Edit">' + A.icon('edit') + '</button>' +
-            '<button class="btn btn-ghost btn-icon" data-del="' + A.esc(p.id) + '" title="Delete">' + A.icon('trash') + '</button>' +
+            (p.protected ? '' : '<button class="btn btn-ghost btn-icon" data-del="' + A.esc(p.id) + '" title="Delete">' + A.icon('trash') + '</button>') +
           '</div></td></tr>';
       }).join('') + '</tbody></table></div>';
 
@@ -153,6 +154,17 @@
     document.getElementById('pCategory').value = (p && p.category) || 'multivitamins';
     document.getElementById('pUpcoming').checked = !!(p && p.upcoming);
     document.getElementById('pActive').checked = p ? p.active !== false : true;
+    // protected products: identity and on-sale status are locked (the server enforces it too)
+    var locked = !!(p && p.protected);
+    ['pName', 'pCategory', 'pActive', 'pUpcoming'].forEach(function (k) { document.getElementById(k).disabled = locked; });
+    document.getElementById('pSku').disabled = locked && !!(p && p.sku);
+    if (locked) {
+      document.getElementById('formAlert').innerHTML = '<div class="alert alert-info">' + A.icon('alert') + '<span>' +
+        'Protected product: its name, category and on-sale status cannot change, and it cannot be deleted. ' +
+        'You will be asked for a reason when you save; every change is logged.' +
+        (p.toConfirm && p.toConfirm.length ? ' Still to confirm: ' + A.esc(p.toConfirm.join(', ').replace('hsnCode', 'HSN code').replace('gstRate', 'GST rate').replace('sku', 'SKU')) + '.' : '') +
+        '</span></div>';
+    }
     toggleLaunch();
     A.openPanel(document.getElementById('productModal'));
     setTimeout(function () { document.getElementById('pName').focus(); }, 100);
@@ -185,6 +197,13 @@
       highlights: document.getElementById('pHighlights').value.split('\n')
         .map(function (s) { return s.trim(); }).filter(Boolean),
     };
+
+    var current = id ? state.products.find(function (x) { return x.id === id; }) : null;
+    if (current && current.protected) {
+      var why = window.prompt('Reason for changing "' + current.name + '" (kept in the change log):', '');
+      if (why === null) return;
+      payload.reason = why;
+    }
 
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span> Saving…';

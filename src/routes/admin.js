@@ -148,8 +148,20 @@ router.delete('/orders/:id', function (req, res) {
 
 /* ══════════════════ PRODUCTS ══════════════════ */
 
+// The four protected products (src/services/productProtection.js): the store refuses deletion,
+// deactivation and identity changes; other edits need a reason and are logged.
+const protection = require('../services/productProtection.js');
+function adminActor(req) { return 'admin:' + ((req.admin && (req.admin.email || req.admin.sub)) || 'unknown') + (req.admin && req.admin.role ? ' (' + req.admin.role + ')' : ''); }
+function protectedError(res, e) {
+  if (e instanceof protection.ProtectedProductError) { res.status(e.status).json({ error: e.message, code: e.code, fields: e.detail && e.detail.fields }); return true; }
+  return false;
+}
+
 router.get('/products', function (req, res) {
-  let list = db.products.all();
+  let list = db.products.all().map(function (p) {
+    const e = protection.entryFor(p);
+    return e ? Object.assign({}, p, { protected: true, toConfirm: e.toConfirm }) : p;
+  });
   if (req.query.category) list = list.filter(p => p.category === req.query.category);
   if (req.query.status === 'upcoming') list = list.filter(p => p.upcoming);
   if (req.query.status === 'live') list = list.filter(p => !p.upcoming && p.active !== false);
@@ -160,7 +172,8 @@ router.get('/products', function (req, res) {
 router.post('/products', function (req, res) {
   const b = req.body;
   if (!b.name || b.price == null) return res.status(400).json({ error: 'Name and price are required' });
-  const product = db.products.insert({
+  let product;
+  try { product = protection.run({ actor: adminActor(req), reason: b.reason, via: 'admin:create' }, function () { return db.products.insert({
     name: String(b.name).trim(),
     slug: (b.slug || b.name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
     sku: b.sku || '',
@@ -179,23 +192,37 @@ router.post('/products', function (req, res) {
     badge: b.badge || '',
     sortOrder: Number(b.sortOrder) || 0,
     highlights: Array.isArray(b.highlights) ? b.highlights : [],
-  });
+  }); }); } catch (e) { if (protectedError(res, e)) return; throw e; }
   res.status(201).json(product);
 });
 
 router.patch('/products/:id', function (req, res) {
   const patch = Object.assign({}, req.body);
-  delete patch.id; delete patch.createdAt;
+  const reason = patch.reason;
+  delete patch.id; delete patch.createdAt; delete patch.reason; delete patch.protected; delete patch.toConfirm;
   if (patch.price != null) patch.price = Number(patch.price);
   if (patch.mrp != null) patch.mrp = Number(patch.mrp);
   if (patch.stock != null) patch.stock = Number(patch.stock);
-  const updated = db.products.update(req.params.id, patch);
+  let updated;
+  try { updated = protection.run({ actor: adminActor(req), reason: reason, via: 'admin:edit' }, function () { return db.products.update(req.params.id, patch); }); }
+  catch (e) { if (protectedError(res, e)) return; throw e; }
   if (!updated) return res.status(404).json({ error: 'Product not found' });
   res.json(updated);
 });
 
+// Change log of a protected product (who, when, why, before → after).
+router.get('/products/:id/history', function (req, res) {
+  const p = db.products.findById(req.params.id);
+  const e = protection.entryFor(p);
+  if (!e) return res.status(404).json({ error: 'Only the protected products keep a change log' });
+  res.json({ productId: e.id, changes: protection.history(e.id, 200) });
+});
+
 router.delete('/products/:id', requireRole('manager'), function (req, res) {
-  const ok = db.products.remove(req.params.id);
+  // The four protected products are permanent: the store refuses (src/services/productProtection.js).
+  let ok;
+  try { ok = protection.run({ actor: adminActor(req), via: 'admin:delete' }, function () { return db.products.remove(req.params.id); }); }
+  catch (e) { if (protectedError(res, e)) return; throw e; }
   if (!ok) return res.status(404).json({ error: 'Product not found' });
   res.json({ ok: true });
 });

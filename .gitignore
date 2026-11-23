@@ -1,42 +1,48 @@
+
+# Dependencies
 node_modules/
+
+# Environment files and secrets
 .env
+.env.*
+!.env.example
+!.env.development.example
+!.env.production.example
+
+# Runtime data
 data/*.json
 !data/.gitkeep
 *.log
 .DS_Store
-backups/
 
-# ── Secrets and private data: never commit ──
-.env.*
-!.env.example
-*.pem
-*.key
-*.p12
-# Uploaded business documents / import files (B2B_PRIVATE_DIR) and data dumps
+# Backups and private business data
+backups/
 private/
 sakeofhealth-private/
 sakeofhealth-data/
 uploads/
 *.sql
 *.sql.gz
+*.pem
+*.key
+*.p12
+
+# Keep application database migrations
 !src/db/migrations/*.sql
+!src/db/migrations/sql/*.sql
+
 # Local tooling
 coverage/
 .idea/
 .vscode/
-
 tmp/
 
-# ERP migrations keep their reviewed SQL beside them (SHA-pinned) — must be committed
-!src/db/migrations/sql/*.sql
-
-# Initial-account credential reports (scripts/seed-accounts.js writes them outside the project; never commit one)
-local-credentials-*.txt
+# Generated test and validation reports
 test-results/
+test-results-*/
+validation-report-*
 
-# Local database audit and validation artifacts
-d5-grants.sql
-d5-inventory.tsv
-d5-report-local.md
-validation-report-*.json
-validation-report-*.md
+# Initial account credential reports
+local-credentials-*.txt
+
+docs/reconciliation/

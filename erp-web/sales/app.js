@@ -93,7 +93,7 @@
 
   function home() {
     var main = el('main', { id: 'main' }), out = el('div');
-    main.appendChild(el('div', { class: 'row' }, [el('h1', { text: who.salesman ? who.salesman.salesman.name : 'Event counter' }), btn('Sign out', logout)]));
+    main.appendChild(el('div', { class: 'row' }, [el('h1', { text: who.salesman ? who.salesman.salesman.name : (who.events.length ? 'Event counter' : 'Deliveries') }), btn('Sign out', logout)]));
     main.appendChild(queuePanel());
     Q.persistent().then(function (ok) { if (!ok) main.insertBefore(msg('warn', 'This browser cannot keep unsent work after the page closes: stay on this page until it is sent.'), main.children[1]); });
     main.appendChild(out);
@@ -105,13 +105,108 @@
           locationButton('event', ev.id, out)]));
       });
     }
+    if (who.deliveries && who.deliveries.length) deliveriesHome(main, out);
+    else if (who.deliveries) main.appendChild(el('p', { class: 'note', text: 'No deliveries assigned to you right now.' }));
     if (who.salesman) salesHome(main, who.salesman, out);
     root.replaceChildren(el('div', { class: 'shell' }, [main]));
   }
 
+  // ── deliveries assigned to me (delivery staff): out for delivery, failed attempt, delivered with proof ──
+  var SHIP_LABEL = { dispatched: 'ready to go', out_for_delivery: 'out for delivery', attempt_failed: 'attempt failed' };
+  function gps() {
+    return new Promise(function (resolve) {
+      if (!navigator.geolocation) return resolve({});
+      navigator.geolocation.getCurrentPosition(function (p) { resolve({ lat: p.coords.latitude, lng: p.coords.longitude }); }, function () { resolve({}); }, { timeout: 8000, maximumAge: 60000 });
+    });
+  }
+  function deliveriesHome(main, out) {
+    main.appendChild(el('h2', { text: 'My deliveries' }));
+    who.deliveries.forEach(function (s) {
+      var box = el('div'), a = s.address || {};
+      var step = function (action, path, extra, label) {
+        var opId = uuid();
+        gps().then(function (pos) {
+          var payload = Object.assign({ shipmentId: s.id, action: action, clientUuid: opId }, pos, extra || {});
+          sendOrQueue('delivery', '/api/erp/deliveries/' + s.id + path, payload, label + ' · ' + s.orderNo, opId, function () { box.replaceChildren(msg('ok', label + ' — saved.')); refresh(); }, box);
+        });
+      };
+      var kids = [el('strong', { text: s.orderNo + ' — ' + (s.buyer || '') }), el('div', { class: 'note', text: [a.line1, a.line2, a.city, a.pincode].filter(Boolean).join(', ') }),
+        el('div', { class: 'note', text: (SHIP_LABEL[s.status] || s.status) + (s.expectedAt ? ' · expected ' + new Date(s.expectedAt).toLocaleString() : '') + (s.attempts ? ' · ' + s.attempts + ' failed attempt(s)' : '') }), box];
+      var links = el('div', { class: 'row' });
+      if (a.phone) links.appendChild(el('a', { class: 'btn', href: 'tel:+91' + a.phone, text: 'Call ' + (a.contact || 'buyer') }));
+      if (a.lat != null) links.appendChild(el('a', { class: 'btn', target: '_blank', rel: 'noopener', href: 'https://www.openstreetmap.org/?mlat=' + a.lat + '&mlon=' + a.lng + '#map=17/' + a.lat + '/' + a.lng, text: 'Map' }));
+      kids.push(links);
+      var acts = el('div', { class: 'row' });
+      if (s.status === 'dispatched' || s.status === 'attempt_failed') acts.appendChild(btn('Out for delivery', function () { step('out_for_delivery', '/out-for-delivery', {}, 'Out for delivery'); }, 'primary'));
+      acts.appendChild(btn('Delivered', function () { pod(s, box); }, s.status === 'out_for_delivery' ? 'primary' : ''));
+      acts.appendChild(btn('Could not deliver', function () { var r = window.prompt('Why? (shop closed, refused, address not found…)'); if (r) step('attempt_failed', '/attempt-failed', { reason: r }, 'Failed attempt'); }));
+      acts.appendChild(btn('I am here', function () { step('location', '/location', { place: s.address && s.address.city || 'on the way' }, 'Location'); }));
+      kids.push(acts);
+      main.appendChild(el('div', { class: 'panel' }, kids));
+    });
+  }
+  function pod(s, box) {
+    var rb = el('input', { 'aria-label': 'Received by' }), ph = el('input', { 'aria-label': 'Receiver phone', inputmode: 'numeric' });
+    var file = el('input', { type: 'file', accept: 'image/*,.pdf', capture: 'environment', 'aria-label': 'Photo of goods or signed challan' });
+    box.replaceChildren(el('div', { class: 'panel' }, [el('label', {}, ['Received by', rb]), el('label', {}, ['Receiver phone', ph]), el('label', {}, ['Photo / signed challan (optional)', file]),
+      el('p', { class: 'note', text: 'Everything delivered? If something was refused or short, tell the office instead of confirming.' }),
+      btn('Confirm delivery', function () {
+        var opId = uuid();
+        gps().then(function (pos) {
+          var payload = Object.assign({ shipmentId: s.id, action: 'delivered', clientUuid: opId, receivedBy: rb.value, receiverPhone: ph.value }, pos);
+          if (file.files[0] && navigator.onLine !== false) {
+            var fd = new FormData(); Object.keys(payload).forEach(function (k) { if (payload[k] != null && k !== 'action' && k !== 'shipmentId') fd.append(k, String(payload[k])); }); fd.append('file', file.files[0]);
+            var h = {}; if (token) h.Authorization = 'Bearer ' + token;
+            return fetch('/api/erp/deliveries/' + s.id + '/delivered', { method: 'POST', headers: h, body: fd }).then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.error || 'Failed'); return j; }); })
+              .then(function () { box.replaceChildren(msg('ok', 'Delivered — proof saved.')); refresh(); }).catch(function (e) { box.prepend(msg('err', e.message)); });
+          }
+          if (file.files[0]) box.prepend(msg('warn', 'No connection: the delivery is saved without the photo; show it to the office later.'));
+          return sendOrQueue('delivery', '/api/erp/deliveries/' + s.id + '/delivered', payload, 'Delivered · ' + s.orderNo, opId, function () { box.replaceChildren(msg('ok', 'Delivered — saved.')); refresh(); }, box);
+        });
+      }, 'primary')]));
+  }
+  function refresh() { setTimeout(start, 800); }
+
+  /** My day: today's orders, visits and collections, the month against target, cash in hand and today's beat. */
+  function dashboard(main) {
+    var box = el('section', { class: 'panel dash', 'aria-label': 'My day' }, [el('h2', { text: 'My day' }), el('p', { class: 'note', text: 'Loading…' })]);
+    main.appendChild(box);
+    var rupees = function (n) { return '₹' + Number(n || 0).toLocaleString('en-IN', { maximumFractionDigits: 0 }); };
+    var tile = function (l, v, warn) { return el('div', { class: 'tile' + (warn ? ' warn' : '') }, [el('div', { class: 'l', text: l }), el('div', { class: 'v', text: v })]); };
+    api('GET', '/api/sales/dashboard').then(function (d) {
+      try { localStorage.setItem('soh.dash', JSON.stringify(d)); } catch (e) { /* convenience copy for offline */ }
+      draw(d, false);
+    }).catch(function (x) {
+      var cached = null; try { cached = JSON.parse(localStorage.getItem('soh.dash') || 'null'); } catch (e) { /* */ }
+      if (offline(x) && cached) draw(cached, true); else box.replaceChildren(el('h2', { text: 'My day' }), msg('err', x.message));
+    });
+    function draw(d, old) {
+      var t = d.target || {}, p = d.achievementPct || {}, m = d.monthToDate || {};
+      var kids = [el('h2', { text: 'My day' + (old ? ' (offline — last loaded)' : '') }), el('div', { class: 'tiles' }, [
+        tile('Orders today', d.today.orders + ' · ' + rupees(d.today.value)), tile('Shops visited today', String(d.today.visits)), tile('Collected today', rupees(d.today.collected)),
+        tile('Cash in hand', rupees(d.cashInHand) + (d.cashLimit ? ' / ' + rupees(d.cashLimit) : ''), d.overCashLimit),
+        tile('Month sales', rupees(m.sales_value) + (t.sales_value ? ' of ' + rupees(t.sales_value) + ' (' + p.sales_value + '%)' : '')),
+        tile('Month visits', String(m.visits) + (t.visits ? ' of ' + t.visits : '')),
+      ])];
+      if (d.overCashLimit) kids.push(msg('warn', 'You are holding more cash than your limit. Hand it over at the office today.'));
+      d.beatsToday.forEach(function (b) {
+        kids.push(el('h3', { text: 'Today\'s beat: ' + b.name + ' — ' + b.done + ' of ' + b.stops.length + ' shops visited' }));
+        kids.push(el('ol', { class: 'stops' }, b.stops.map(function (s) {
+          return el('li', { class: s.visitedAt ? 'done' : '' }, [s.shop + (s.city ? ', ' + s.city : '') + (s.visitedAt ? ' ✓' : ''), s.mobile ? el('a', { href: 'tel:' + s.mobile, text: ' call' }) : null]);
+        })));
+      });
+      if (!d.beatsToday.length) kids.push(el('p', { class: 'note', text: 'No beat planned for today.' }));
+      if (d.recentOrders.length) {
+        kids.push(el('h3', { text: 'Recent orders' }));
+        kids.push(el('ul', { class: 'stops' }, d.recentOrders.map(function (o) { return el('li', { text: o.orderNo + ' · ' + o.shop + ' · ' + rupees(o.value) + ' · ' + String(o.status).replace(/_/g, ' ') }); })));
+      }
+      box.replaceChildren.apply(box, kids);
+    }
+  }
+
   function salesHome(main, me, out) {
     if (!/enabled/.test(me.otpOrdering)) main.appendChild(msg('warn', 'Ordering: ' + me.otpOrdering));
-    main.appendChild(el('p', { class: 'note', text: 'Cash in hand: ₹' + me.cashInHand + ' (limit ₹' + me.salesman.cashLimit + ')' }));
+    dashboard(main);
     main.appendChild(locationButton('salesman', null, out));
     var q = el('input', { 'aria-label': 'Search retailers', placeholder: 'Shop, mobile or pincode' }), list = el('div');
     main.appendChild(el('h2', { text: 'Retailers' }));
@@ -229,13 +324,15 @@
   function start() {
     if (!token) { root.replaceChildren(login()); return; }
     Q.init(function () { return token; });
-    who = { salesman: null, events: [] };
+    who = { salesman: null, events: [], deliveries: null };
     Promise.all([
       api('GET', '/api/sales/me').catch(function (x) { if (x.code === 'not_salesman' || x.status === 403) return null; throw x; }),
       api('GET', '/api/erp/events').then(function (r) { return r.items.filter(function (e) { return e.status !== 'closed'; }); }).catch(function (x) { if (x.status === 403) return []; throw x; }),
+      // deliveries are optional here: any failure (no right, older server) leaves the rest of the app working
+      api('GET', '/api/erp/deliveries?status=open').then(function (r) { return Array.isArray(r && r.items) ? r.items.filter(function (s) { return s.status !== 'ready'; }) : null; }).catch(function () { return null; }),
     ]).then(function (x) {
-      who.salesman = x[0]; who.events = x[1];
-      if (!who.salesman && !who.events.length) { root.replaceChildren(login('This account is not set up as a salesman or for any event.')); return; }
+      who.salesman = x[0]; who.events = x[1]; who.deliveries = x[2];
+      if (!who.salesman && !who.events.length && !who.deliveries) { root.replaceChildren(login('This account is not set up as a salesman, for any event or for deliveries.')); return; }
       home();
     }).catch(function (x) {
       if (offline(x)) { root.replaceChildren(el('div', { class: 'shell' }, [el('main', { id: 'main' }, [msg('warn', 'Offline. Saved work is kept on this phone and sent when the connection returns.'), queuePanel(), btn('Try again', start)])])); return; }

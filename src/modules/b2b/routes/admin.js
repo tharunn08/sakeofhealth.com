@@ -108,15 +108,16 @@ router.patch('/accounts/:id', can('b2b.users.edit'), h(async function (req, res)
 router.post('/accounts/:id/reset-password', can('b2b.users.edit'), h(async function (req, res) {
   res.json(await accounts.adminResetPassword(id(req), (req.body || {}).password, actor(req)));
 }));
-/** KYC documents are streamed through this authorised route only — they have no public URL. */
+function documentHeaders(doc) {
+  return { 'Content-Type': doc.mime_type, 'Content-Disposition': 'inline; filename="document-' + doc.id + '.' + doc.stored_name.split('.').pop() + '"',
+    'Cache-Control': 'private, no-store', 'X-Content-Type-Options': 'nosniff' };
+}
+/** KYC documents are sent through this authorised route only — they have no public URL. */
 router.get('/documents/:id/file', can('b2b.users.view'), h(async function (req, res) {
   const f = await accounts.documentFile(id(req), null);
-  audit.logSoft(actor(req), 'document.viewed', 'document', f.doc.id, null, { account_id: Number(f.doc.account_id), doc_type: f.doc.doc_type });
-  res.setHeader('Content-Type', f.doc.mime_type);
-  res.setHeader('Content-Disposition', 'inline; filename="document-' + f.doc.id + '.' + f.doc.stored_name.split('.').pop() + '"');
-  res.setHeader('Cache-Control', 'private, no-store');
-  res.setHeader('X-Content-Type-Options', 'nosniff');
-  f.stream().pipe(res);
+  await f.send(res, documentHeaders(f.doc), function () {
+    audit.logSoft(actor(req), 'document.viewed', 'document', f.doc.id, null, { account_id: Number(f.doc.account_id), doc_type: f.doc.doc_type });
+  });
 }));
 
 /* ═════════════ Network: mapping & service areas ═════════════ */

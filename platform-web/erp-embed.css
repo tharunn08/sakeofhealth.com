@@ -54,3 +54,7 @@
 .erp-embed textarea{width:100%;}
 .erp-embed .nbody select,.erp-embed .nbody input,.erp-embed .nbody textarea{max-width:100%;box-sizing:border-box;}
 .erp-embed .nbody label{min-width:0;}
+
+/* one-time passwords and links shown once (Manufacturers & Suppliers) */
+.erp-embed code.secret{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:15px;padding:2px 8px;border-radius:6px;background:var(--line-2);user-select:all;word-break:break-all;}
+.erp-embed label.chk{display:inline-flex;align-items:center;gap:6px;font-weight:500;}

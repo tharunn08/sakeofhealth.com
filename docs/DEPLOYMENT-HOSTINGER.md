@@ -5,6 +5,20 @@ The site is one Node.js app. Hostinger pulls it from GitHub, runs
 
 Nothing here needs Docker, Redis, a queue server or compiled native modules.
 
+## Part 0: How Hostinger Business runs this app, and what the app does about it
+
+| Hostinger Business | What the app does |
+|---|---|
+| Node.js 18, 20, 22 or 24, chosen in hPanel. | Use **22**. `package.json` requires 20.6 or newer (`engines`), because the cron script needs `--env-file`. |
+| The app runs from `~/domains/<domain>/hbuilds/current/nodejs`. Each deploy builds a new copy, and **`hbuilds/` and `public_html/` are replaced** on every deploy. | No data lives in the app folder. In production the start-up check refuses a data path inside the app folder, `hbuilds` or `public_html`. Use folders directly under your home (Part 3). |
+| The app is started on demand and stopped when idle. A request is stopped after **120 s**. There is no always-running worker, no WebSocket, no custom port, no Docker and no Redis. | Background work runs from **Hostinger Cron Jobs** (`JOBS_MODE=cron`; see Part 6 and `docs/unified/BACKGROUND-JOBS.md`). Screens poll; nothing needs a socket. |
+| One MySQL server per plan. | One pooled connection set, server-side pagination, short transactions, and retries on deadlock. |
+| The plan has limits on processes (120) and entry processes (60). | One app process. Cron runs are finite and lock against each other, so they never pile up. |
+| No one-click "roll back to a commit". | Roll back by redeploying an older commit from GitHub (see "Rolling back"). Data is backed up separately. |
+
+**Before every deploy**, run the release gate on your computer or check that the GitHub "quality-gate" run is green.
+The gate is `node scripts/release-gate.js`; see `docs/unified/reports/TEST-REPORT.md`. Deploy only a green commit.
+
 > Menu names in hPanel change from time to time. If a label below does not
 > match what you see, look for the nearest equivalent.
 
@@ -64,6 +78,26 @@ If anything is wrong, redeploy the previous commit (see "Rolling back").
 
 Add these in hPanel → your Node.js app → **Environment variables**.
 Never put them in a file in the repository.
+
+The complete list, with what is required and when, is `docs/unified/ENVIRONMENT.md`. That file is generated
+from `src/config/env-schema.js`, and `.env.production.example` comes from the same schema.
+
+- **Generate secrets** with `node scripts/generate-secrets.js`. It prints new random values and never stores them.
+- **Check a configuration** before deploying: `node scripts/check-env.js --production --env-file=<file>`. It prints variable names only, never values.
+- **Start-up check.** In production the app checks the whole configuration when it starts. If something required is missing or unsafe, it stops with a list of variable names. Fix those variables in hPanel and redeploy.
+- **`ENCRYPTION_KEY`** protects stored secrets such as two-factor keys. It must be set when the business platform is on. Never change it once data is encrypted with it.
+
+### Persistent folders (create them once, under your home folder, not under `domains/`)
+
+| Variable | Example | Holds |
+|---|---|---|
+| `DATA_DIR` | `/home/u123456789/sakeofhealth-data` | the shop's orders, customers and products |
+| `CATALOGUE_DIR` | `/home/u123456789/sakeofhealth-catalogue` | product snapshots and the protected-product change log |
+| `BACKUP_DIR` | `/home/u123456789/sakeofhealth-backups` | the daily shop backups |
+| `B2B_PRIVATE_DIR` | `/home/u123456789/sakeofhealth-private` | business documents (KYC, supplier, manufacturing, delivery photos) and import files |
+
+Business documents can instead be kept in an S3-compatible bucket, such as Cloudflare R2, Backblaze B2 or AWS S3.
+Set `STORAGE_PROVIDER=s3` and the `STORAGE_*` variables; see Part 7.
 
 | Variable | Value |
 |---|---|
@@ -140,6 +174,60 @@ disappear; the customer site is untouched; the MySQL data stays where it is.
 
 ---
 
+## Part 6 — Background jobs (Hostinger Cron Jobs)
+
+Set `JOBS_MODE=cron` (the production default). In hPanel → Advanced → **Cron Jobs**, add one custom job,
+**every 5 minutes**, with the command on one line:
+
+```
+/opt/alt/alt-nodejs22/root/bin/node --env-file=/home/u123456789/domains/YOURDOMAIN/hbuilds/config/.env /home/u123456789/domains/YOURDOMAIN/hbuilds/current/nodejs/scripts/cron/run-jobs.js
+```
+
+The command has these limits:
+
+- at most 255 characters;
+- no `%` sign;
+- the schedule runs in UTC;
+- Hostinger stops a cron job after 30 minutes.
+
+The Node binary path above is the usual one for Node 22. Use the exact path hPanel shows for your app's Node version.
+
+Each run does the following, then exits:
+
+- snapshots and backs up the shop catalogue;
+- checks the four protected products;
+- queues and runs the due business jobs;
+- sends due messages;
+- records itself.
+
+Admin → ERP → Overview shows the last run, and warns when there has been no run for 30 minutes.
+Details: `docs/unified/BACKGROUND-JOBS.md`.
+
+## Part 7 — Business documents in a bucket (optional)
+
+On Hostinger the private folder (`B2B_PRIVATE_DIR`) is persistent and enough. A bucket is useful for an
+off-server copy, or when you move to several servers.
+
+1. Create a **private** bucket and an access key that can only read and write that bucket.
+2. Set these variables:
+   - `STORAGE_PROVIDER=s3`
+   - `STORAGE_ENDPOINT`, for example `https://<account>.r2.cloudflarestorage.com`
+   - `STORAGE_BUCKET`, `STORAGE_REGION` (`auto` for R2)
+   - `STORAGE_ACCESS_KEY`, `STORAGE_SECRET_KEY`
+3. Copy the existing documents: `node scripts/storage-copy.js` (dry run), then `node scripts/storage-copy.js --yes`.
+   Local files are never deleted. Until they are copied, documents are still read from the folder.
+4. Switch **versioning** on for the bucket. The nightly `npm run backup` copies the private folder, not the bucket.
+
+Requests are signed with AWS Signature V4, built into the app. It is checked against AWS's published example
+values, and no extra package is needed.
+
+## Moving to a VPS or Cloud plan later
+
+Nothing in the code is tied to Business hosting.
+
+- **Process and jobs.** Run the same app with a process manager (pm2 or systemd). Either keep the cron job, run it every minute from the system crontab, or set `JOBS_MODE=inprocess`.
+- **Data.** Point `DB_HOST` at the new MySQL server after a dump and restore (`docs/BACKUP-RESTORE.md`). Copy the four persistent folders, or use a bucket for documents.
+
 ## GitHub
 
 ```bash
@@ -166,9 +254,9 @@ the branch you connected.
 
 Code and data roll back separately.
 
-* **Code** — in GitHub, revert the commit (or in hPanel redeploy the previous
-  commit). The previous version ignores tables it does not know about, so
-  database changes do not need to be undone.
+* **Code** — in GitHub, revert the commit and push, so that Hostinger deploys the previous code again.
+  Hostinger has no per-commit rollback button. The previous version ignores tables it does not know about, so
+  database changes do not need to be undone. Data folders are outside `hbuilds/`, so a redeploy never touches them.
 * **Fastest safe switch** — set `B2B_ENABLED=false`.
 * **Data** — only if data itself was damaged: restore from a backup. See
   `docs/BACKUP-RESTORE.md`.
@@ -181,5 +269,6 @@ new migration that makes the correction, and test it on a copy first.
 | When | Do |
 |---|---|
 | Before every deploy that includes a new file in `src/db/migrations/` | `npm run backup`, then deploy, then run migrations |
-| Daily | `npm run backup` (hPanel → Advanced → Cron Jobs) and Hostinger's own database backups |
+| Every 5 minutes | the background cron job (Part 6). It also takes the daily shop-catalogue backup. |
+| Daily | `npm run backup` (hPanel → Advanced → Cron Jobs: `/opt/alt/alt-nodejs22/root/bin/node --env-file=…/hbuilds/config/.env …/hbuilds/current/nodejs/scripts/backup.js`) and Hostinger's own database backups |
 | After deploy | open `/api/health`, log in to the admin, open one order |

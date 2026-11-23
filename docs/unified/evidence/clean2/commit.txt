@@ -1,0 +1,1 @@
+commit: c5f7a7a Manufacturers, manufacturing and trade deliveries (migration 020)

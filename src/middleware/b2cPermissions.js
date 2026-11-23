@@ -41,6 +41,7 @@ const RULES = [
   ['POST', /^\/products$/, AM],
   ['PATCH', /^\/products\/[^/]+$/, AM],
   ['DELETE', /^\/products\/[^/]+$/, AM],
+  ['GET', /^\/products\/[^/]+\/history$/, AM],
   ['GET', /^\/coupons$/, AMS],
   ['POST', /^\/coupons$/, AM],
   ['PATCH', /^\/coupons\/[^/]+$/, AM],

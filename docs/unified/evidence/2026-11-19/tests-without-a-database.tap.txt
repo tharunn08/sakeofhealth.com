@@ -1,0 +1,2264 @@
+TAP version 13
+# Subtest: B2B disabled: no portal, no API, customer site unaffected
+ok 1 - B2B disabled: no portal, no API, customer site unaffected
+  ---
+  duration_ms: 295.684658
+  type: 'test'
+  ...
+# Subtest: B2B enabled but database down: customer site works, B2B answers 503 cleanly
+ok 2 - B2B enabled but database down: customer site works, B2B answers 503 cleanly
+  ---
+  duration_ms: 337.780697
+  type: 'test'
+  ...
+# Subtest: production without a signing secret: business logins are refused, customer site works
+ok 3 - production without a signing secret: business logins are refused, customer site works
+  ---
+  duration_ms: 287.692747
+  type: 'test'
+  ...
+# Subtest: first deploy: empty database → status shows pending → admin runs migrations → portal works
+ok 4 - first deploy: empty database → status shows pending → admin runs migrations → portal works # SKIP
+  ---
+  duration_ms: 0.197126
+  type: 'test'
+  ...
+# Subtest: money: exact paise arithmetic, never floats
+ok 5 - money: exact paise arithmetic, never floats
+  ---
+  duration_ms: 2.229604
+  type: 'test'
+  ...
+# Subtest: validators: GSTIN checksum, PAN, mobile, pincode
+ok 6 - validators: GSTIN checksum, PAN, mobile, pincode
+  ---
+  duration_ms: 1.387693
+  type: 'test'
+  ...
+# Subtest: pricing: default margins (12% distributor, 18% retailer) on base price
+ok 7 - pricing: default margins (12% distributor, 18% retailer) on base price
+  ---
+  duration_ms: 0.668003
+  type: 'test'
+  ...
+# Subtest: pricing: precedence — account+product > account > product > category > default
+ok 8 - pricing: precedence — account+product > account > product > category > default
+  ---
+  duration_ms: 0.541575
+  type: 'test'
+  ...
+# Subtest: pricing: audience isolation, inactive and out-of-window rules ignored
+ok 9 - pricing: audience isolation, inactive and out-of-window rules ignored
+  ---
+  duration_ms: 0.259313
+  type: 'test'
+  ...
+# Subtest: pricing: quantity slabs, volume discounts and promotions
+ok 10 - pricing: quantity slabs, volume discounts and promotions
+  ---
+  duration_ms: 0.458539
+  type: 'test'
+  ...
+# Subtest: pricing: off-MRP margin mode and below-cost flag
+ok 11 - pricing: off-MRP margin mode and below-cost flag
+  ---
+  duration_ms: 0.145192
+  type: 'test'
+  ...
+# Subtest: MOQ and case quantity: MOQ 10, case 20 → 20/40/60 valid, 15 invalid
+ok 12 - MOQ and case quantity: MOQ 10, case 20 → 20/40/60 valid, 15 invalid
+  ---
+  duration_ms: 0.319918
+  type: 'test'
+  ...
+# Subtest: GST: intra-state splits CGST/SGST equally, inter-state is IGST
+ok 13 - GST: intra-state splits CGST/SGST equally, inter-state is IGST
+  ---
+  duration_ms: 0.329996
+  type: 'test'
+  ...
+# Subtest: invoice numbering: Indian financial year and 16-character limit
+ok 14 - invoice numbering: Indian financial year and 16-character limit
+  ---
+  duration_ms: 0.399268
+  type: 'test'
+  ...
+# Subtest: state machine: only defined transitions, per actor
+ok 15 - state machine: only defined transitions, per actor
+  ---
+  duration_ms: 0.3689
+  type: 'test'
+  ...
+# Subtest: RBAC: roles get only their permissions
+ok 16 - RBAC: roles get only their permissions
+  ---
+  duration_ms: 0.224975
+  type: 'test'
+  ...
+# Subtest: uploads: file type comes from the bytes, not the name
+ok 17 - uploads: file type comes from the bytes, not the name
+  ---
+  duration_ms: 0.506494
+  type: 'test'
+  ...
+# Subtest: import: header detection and CSV parsing
+ok 18 - import: header detection and CSV parsing
+  ---
+  duration_ms: 0.514472
+  type: 'test'
+  ...
+# Subtest: exports: spreadsheet formula injection is neutralised
+ok 19 - exports: spreadsheet formula injection is neutralised
+  ---
+  duration_ms: 0.335239
+  type: 'test'
+  ...
+# Subtest: migrations: files are ordered, idempotent and contain nothing destructive
+ok 20 - migrations: files are ordered, idempotent and contain nothing destructive
+  ---
+  duration_ms: 1.366497
+  type: 'test'
+  ...
+# Subtest: BUG-008: a production server with an empty data folder seeds no demo data and no staff (only the four real products)
+ok 21 - BUG-008: a production server with an empty data folder seeds no demo data and no staff (only the four real products)
+  ---
+  duration_ms: 447.543921
+  type: 'test'
+  ...
+# Subtest: BUG-008: in development, auto-seed creates the catalogue but no staff with published passwords
+ok 22 - BUG-008: in development, auto-seed creates the catalogue but no staff with published passwords
+  ---
+  duration_ms: 283.65681
+  type: 'test'
+  ...
+# Subtest: BUG-008: in production, active demo staff left over from an old seed are reported at start-up (no passwords shown)
+ok 23 - BUG-008: in production, active demo staff left over from an old seed are reported at start-up (no passwords shown)
+  ---
+  duration_ms: 260.797722
+  type: 'test'
+  ...
+# Subtest: BUG-008: "npm run seed" refuses to run in production
+ok 24 - BUG-008: "npm run seed" refuses to run in production
+  ---
+  duration_ms: 34.263141
+  type: 'test'
+  ...
+# Subtest: BUG-008: the seed script creates demo staff only with --with-staff, outside production
+ok 25 - BUG-008: the seed script creates demo staff only with --with-staff, outside production
+  ---
+  duration_ms: 278.534783
+  type: 'test'
+  ...
+# Subtest: BUG-018: /health returns status only — no counts, environment or payment mode
+ok 26 - BUG-018: /health returns status only — no counts, environment or payment mode
+  ---
+  duration_ms: 3.873541
+  type: 'test'
+  ...
+# Subtest: BUG-016: an admin token in the URL is no longer accepted
+ok 27 - BUG-016: an admin token in the URL is no longer accepted
+  ---
+  duration_ms: 8.206478
+  type: 'test'
+  ...
+# Subtest: BUG-016: the admin pages download CSVs with the token in a header, never in the address
+ok 28 - BUG-016: the admin pages download CSVs with the token in a header, never in the address
+  ---
+  duration_ms: 0.324983
+  type: 'test'
+  ...
+# Subtest: BUG-007: blog moderation works with the normal admin session; delivery and customers are refused
+ok 29 - BUG-007: blog moderation works with the normal admin session; delivery and customers are refused
+  ---
+  duration_ms: 132.090576
+  type: 'test'
+  ...
+# Subtest: BUG-007: an approved article shows submitted HTML as text (no script runs); paragraphs kept
+ok 30 - BUG-007: an approved article shows submitted HTML as text (no script runs); paragraphs kept
+  ---
+  duration_ms: 20.524605
+  type: 'test'
+  ...
+# Subtest: BUG-007: blog data and articles live in DATA_DIR and survive a redeploy
+ok 31 - BUG-007: blog data and articles live in DATA_DIR and survive a redeploy
+  ---
+  duration_ms: 281.730952
+  type: 'test'
+  ...
+# Subtest: BUG-007: existing blog data in the old folder is copied (never moved) on first start
+ok 32 - BUG-007: existing blog data in the old folder is copied (never moved) on first start
+  ---
+  duration_ms: 38.450152
+  type: 'test'
+  ...
+# Subtest: BUG-007: the blog admin page uses the admin login session instead of a typed password
+ok 33 - BUG-007: the blog admin page uses the admin login session instead of a typed password
+  ---
+  duration_ms: 0.226111
+  type: 'test'
+  ...
+# Subtest: BUG-008: changing a staff password records when it was changed (clears the demo-account warning)
+ok 34 - BUG-008: changing a staff password records when it was changed (clears the demo-account warning)
+  ---
+  duration_ms: 124.897693
+  type: 'test'
+  ...
+# Subtest: BUG-012: marking an order delivered does not mark an unpaid order as paid
+ok 35 - BUG-012: marking an order delivered does not mark an unpaid order as paid
+  ---
+  duration_ms: 256.928416
+  type: 'test'
+  ...
+# Subtest: BUG-013: a new order number is never a duplicate, even after a gap in the day
+ok 36 - BUG-013: a new order number is never a duplicate, even after a gap in the day
+  ---
+  duration_ms: 17.797002
+  type: 'test'
+  ...
+# Subtest: BUG-013: order numbers keep increasing across many orders
+ok 37 - BUG-013: order numbers keep increasing across many orders
+  ---
+  duration_ms: 24.892562
+  type: 'test'
+  ...
+# Subtest: D10: "delete order" no longer removes the order
+ok 38 - D10: "delete order" no longer removes the order
+  ---
+  duration_ms: 7.453499
+  type: 'test'
+  ...
+# Subtest: D10: cancel requires a reason, keeps the order, records who/why/when
+ok 39 - D10: cancel requires a reason, keeps the order, records who/why/when
+  ---
+  duration_ms: 15.551592
+  type: 'test'
+  ...
+# Subtest: D10: a delivered order cannot be cancelled
+ok 40 - D10: a delivered order cannot be cancelled
+  ---
+  duration_ms: 3.513669
+  type: 'test'
+  ...
+# Subtest: D10: cancelling updates the customer totals; numbering stays unique after cancel
+ok 41 - D10: cancelling updates the customer totals; numbering stays unique after cancel
+  ---
+  duration_ms: 16.461663
+  type: 'test'
+  ...
+# Subtest: roles: support staff cannot cancel, either way
+ok 42 - roles: support staff cannot cancel, either way
+  ---
+  duration_ms: 13.795646
+  type: 'test'
+  ...
+# Subtest: D10: cancelling through the status menu also needs a reason and records it
+ok 43 - D10: cancelling through the status menu also needs a reason and records it
+  ---
+  duration_ms: 10.506212
+  type: 'test'
+  ...
+# Subtest: BUG-028: /api/shop/quote prices the cart from the catalogue, ignoring client prices
+ok 44 - BUG-028: /api/shop/quote prices the cart from the catalogue, ignoring client prices
+  ---
+  duration_ms: 320.288756
+  type: 'test'
+  ...
+# Subtest: BUG-004/006: quote refuses unknown, coming-soon and over-stock items
+ok 45 - BUG-004/006: quote refuses unknown, coming-soon and over-stock items
+  ---
+  duration_ms: 12.047297
+  type: 'test'
+  ...
+# Subtest: BUG-002: the gateway order is created for the SERVER total; a client "amount" is ignored
+ok 46 - BUG-002: the gateway order is created for the SERVER total; a client "amount" is ignored
+  ---
+  duration_ms: 40.593263
+  type: 'test'
+  ...
+# Subtest: BUG-002: starting a payment without cart items is refused (no amount-only gateway orders)
+ok 47 - BUG-002: starting a payment without cart items is refused (no amount-only gateway orders)
+  ---
+  duration_ms: 4.009003
+  type: 'test'
+  ...
+# Subtest: BUG-002: a verified payment creates the order from the server-priced checkout (client items ignored)
+ok 48 - BUG-002: a verified payment creates the order from the server-priced checkout (client items ignored)
+  ---
+  duration_ms: 26.256788
+  type: 'test'
+  ...
+# Subtest: BUG-002: the same payment id cannot be attached to a second order
+ok 49 - BUG-002: the same payment id cannot be attached to a second order
+  ---
+  duration_ms: 34.473836
+  type: 'test'
+  ...
+# Subtest: repeating the browser confirmation for the same payment returns the same order (no duplicate)
+ok 50 - repeating the browser confirmation for the same payment returns the same order (no duplicate)
+  ---
+  duration_ms: 6.894695
+  type: 'test'
+  ...
+# Subtest: BUG-002: under-paid, wrong-currency, failed, mismatched or unsigned payments are refused
+ok 51 - BUG-002: under-paid, wrong-currency, failed, mismatched or unsigned payments are refused
+  ---
+  duration_ms: 67.444011
+  type: 'test'
+  ...
+# \# SKU/coupon combinations checked: 16 (4 SKUs), coupon applied in 12
+# Subtest: quote = gateway amount = order total, for every orderable SKU, with and without each coupon
+ok 52 - quote = gateway amount = order total, for every orderable SKU, with and without each coupon
+  ---
+  duration_ms: 237.878441
+  type: 'test'
+  ...
+# Subtest: webhook: a bad signature is refused
+ok 53 - webhook: a bad signature is refused
+  ---
+  duration_ms: 3.128979
+  type: 'test'
+  ...
+# Subtest: webhook: a captured payment whose browser callback was lost creates the order exactly once
+ok 54 - webhook: a captured payment whose browser callback was lost creates the order exactly once
+  ---
+  duration_ms: 21.859035
+  type: 'test'
+  ...
+# Subtest: webhook: an amount that does not match the checkout creates no order
+ok 55 - webhook: an amount that does not match the checkout creates no order
+  ---
+  duration_ms: 8.397507
+  type: 'test'
+  ...
+# Subtest: BUG-003: production never uses mock payments, even with PAYMENT_MOCK=true and no keys
+ok 56 - BUG-003: production never uses mock payments, even with PAYMENT_MOCK=true and no keys
+  ---
+  duration_ms: 280.146946
+  type: 'test'
+  ...
+# Subtest: BUG-003: PAYMENT_MOCK left unset with keys present means live verification, not mock
+ok 57 - BUG-003: PAYMENT_MOCK left unset with keys present means live verification, not mock
+  ---
+  duration_ms: 287.078369
+  type: 'test'
+  ...
+# Subtest: BUG-004/006: in test (mock) mode, order lines are still validated
+ok 58 - BUG-004/006: in test (mock) mode, order lines are still validated
+  ---
+  duration_ms: 295.539639
+  type: 'test'
+  ...
+# Subtest: BUG-021: the Cashfree fallback (hard-coded sandbox URL) is removed
+ok 59 - BUG-021: the Cashfree fallback (hard-coded sandbox URL) is removed
+  ---
+  duration_ms: 0.377628
+  type: 'test'
+  ...
+# Subtest: B2B contract: payments.createOrder() and verifySignature() still work for the business module (fail-closed)
+ok 60 - B2B contract: payments.createOrder() and verifySignature() still work for the business module (fail-closed)
+  ---
+  duration_ms: 169.320186
+  type: 'test'
+  ...
+# [DB] Using data directory: /root/sakeofhealth-data  (default: your account home directory — safe from redeploys)
+# Subtest: BUG-005: every admin route is covered by the approved matrix
+ok 61 - BUG-005: every admin route is covered by the approved matrix
+  ---
+  duration_ms: 527.450616
+  type: 'test'
+  ...
+# Subtest: every route in routes/admin.js has a rule in the permission middleware
+ok 62 - every route in routes/admin.js has a rule in the permission middleware
+  ---
+  duration_ms: 5.181068
+  type: 'test'
+  ...
+# Subtest: BUG-005: role × route matrix is enforced on the server (4 roles × 40 routes)
+ok 63 - BUG-005: role × route matrix is enforced on the server (4 roles × 40 routes)
+  ---
+  duration_ms: 377.102334
+  type: 'test'
+  ...
+# Subtest: BUG-005: delivery agents see and update only their own assigned orders
+ok 64 - BUG-005: delivery agents see and update only their own assigned orders
+  ---
+  duration_ms: 64.124771
+  type: 'test'
+  ...
+# Subtest: BUG-005: support staff may add notes but not change payment or address
+ok 65 - BUG-005: support staff may add notes but not change payment or address
+  ---
+  duration_ms: 12.85472
+  type: 'test'
+  ...
+# Subtest: BUG-005: unknown or business-only roles get no shop-admin access
+ok 66 - BUG-005: unknown or business-only roles get no shop-admin access
+  ---
+  duration_ms: 86.197517
+  type: 'test'
+  ...
+# Subtest: health endpoint (legacy /health) still answers
+ok 67 - health endpoint (legacy /health) still answers
+  ---
+  duration_ms: 184.653559
+  type: 'test'
+  ...
+# Subtest: storefront pages are served
+ok 68 - storefront pages are served
+  ---
+  duration_ms: 73.372001
+  type: 'test'
+  ...
+# Subtest: config.js exposes the same storefront settings
+ok 69 - config.js exposes the same storefront settings
+  ---
+  duration_ms: 4.370734
+  type: 'test'
+  ...
+# Subtest: products list and detail
+ok 70 - products list and detail
+  ---
+  duration_ms: 6.184169
+  type: 'test'
+  ...
+# Subtest: customer signup, login, me
+ok 71 - customer signup, login, me
+  ---
+  duration_ms: 144.428116
+  type: 'test'
+  ...
+# Subtest: coupons: public list and validation
+ok 72 - coupons: public list and validation
+  ---
+  duration_ms: 8.22113
+  type: 'test'
+  ...
+# Subtest: checkout: gateway order (mock) + verify
+ok 73 - checkout: gateway order (mock) + verify
+  ---
+  duration_ms: 16.226912
+  type: 'test'
+  ...
+# Subtest: order placement re-prices server-side and ignores tampered prices
+ok 74 - order placement re-prices server-side and ignores tampered prices
+  ---
+  duration_ms: 27.576753
+  type: 'test'
+  ...
+# Subtest: order tracking needs order id AND phone
+ok 75 - order tracking needs order id AND phone
+  ---
+  duration_ms: 5.586769
+  type: 'test'
+  ...
+# Subtest: customer sees own order history
+ok 76 - customer sees own order history
+  ---
+  duration_ms: 3.616218
+  type: 'test'
+  ...
+# Subtest: reviews: submit (pending) and public list only shows approved
+ok 77 - reviews: submit (pending) and public list only shows approved
+  ---
+  duration_ms: 4.621004
+  type: 'test'
+  ...
+# Subtest: admin: login and auth guard
+ok 78 - admin: login and auth guard
+  ---
+  duration_ms: 8.419407
+  type: 'test'
+  ...
+# Subtest: admin: dashboard, orders list/detail, status pipeline
+ok 79 - admin: dashboard, orders list/detail, status pipeline
+  ---
+  duration_ms: 32.908698
+  type: 'test'
+  ...
+# Subtest: admin: deliveries board and customers
+ok 80 - admin: deliveries board and customers
+  ---
+  duration_ms: 6.228191
+  type: 'test'
+  ...
+# Subtest: admin: products CRUD
+ok 81 - admin: products CRUD
+  ---
+  duration_ms: 14.919895
+  type: 'test'
+  ...
+# Subtest: admin: coupons, reviews, staff, analytics, settings, reports
+ok 82 - admin: coupons, reviews, staff, analytics, settings, reports
+  ---
+  duration_ms: 85.09682
+  type: 'test'
+  ...
+# Subtest: staff role restrictions (delivery agent cannot manage staff; works from own delivery board)
+ok 83 - staff role restrictions (delivery agent cannot manage staff; works from own delivery board)
+  ---
+  duration_ms: 48.112514
+  type: 'test'
+  ...
+# Subtest: unknown API routes return JSON 404; unknown pages fall back to the storefront
+ok 84 - unknown API routes return JSON 404; unknown pages fall back to the storefront
+  ---
+  duration_ms: 7.913102
+  type: 'test'
+  ...
+# Subtest: unknown pages keep their styling; missing files are not answered with HTML
+ok 85 - unknown pages keep their styling; missing files are not answered with HTML
+  ---
+  duration_ms: 13.945083
+  type: 'test'
+  ...
+# Subtest: mark delivered completes the order
+ok 86 - mark delivered completes the order
+  ---
+  duration_ms: 5.15249
+  type: 'test'
+  ...
+# Subtest: auth: correctly configured secrets
+    # Subtest: customer tokens are typed "customer"
+    ok 1 - customer tokens are typed "customer"
+      ---
+      duration_ms: 0.879238
+      type: 'test'
+      ...
+    # Subtest: BUG-001: a customer token is refused (401) on every one of the 40 admin routes
+    ok 2 - BUG-001: a customer token is refused (401) on every one of the 40 admin routes
+      ---
+      duration_ms: 132.92537
+      type: 'test'
+      ...
+    # Subtest: BUG-001: a "customer"-typed token signed with the ADMIN secret is refused by the admin API
+    ok 3 - BUG-001: a "customer"-typed token signed with the ADMIN secret is refused by the admin API
+      ---
+      duration_ms: 4.384783
+      type: 'test'
+      ...
+    # Subtest: BUG-001: an untyped 30-day customer-style token signed with the ADMIN secret is refused
+    ok 4 - BUG-001: an untyped 30-day customer-style token signed with the ADMIN secret is refused
+      ---
+      duration_ms: 3.02512
+      type: 'test'
+      ...
+    # Subtest: compatibility: an untyped staff token (≤12 h, staff role) issued before the hotfix still works until it expires
+    ok 5 - compatibility: an untyped staff token (≤12 h, staff role) issued before the hotfix still works until it expires
+      ---
+      duration_ms: 4.774349
+      type: 'test'
+      ...
+    # Subtest: an untyped token whose lifetime exceeds the 12 h staff session is refused
+    ok 6 - an untyped token whose lifetime exceeds the 12 h staff session is refused
+      ---
+      duration_ms: 2.37424
+      type: 'test'
+      ...
+    # Subtest: admin login issues "staff"-typed tokens, and they work
+    ok 7 - admin login issues "staff"-typed tokens, and they work
+      ---
+      duration_ms: 7.679242
+      type: 'test'
+      ...
+    # Subtest: no fallback: a token signed with ADMIN_PASSWORD is refused
+    ok 8 - no fallback: a token signed with ADMIN_PASSWORD is refused
+      ---
+      duration_ms: 2.886156
+      type: 'test'
+      ...
+    # Subtest: compatibility: an untyped customer token signed with the CUSTOMER secret still works
+    ok 9 - compatibility: an untyped customer token signed with the CUSTOMER secret still works
+      ---
+      duration_ms: 5.204694
+      type: 'test'
+      ...
+    # Subtest: a token forged with the published constant is refused by the customer API
+    ok 10 - a token forged with the published constant is refused by the customer API
+      ---
+      duration_ms: 2.6315
+      type: 'test'
+      ...
+    # Subtest: the server log contains no login debug output
+    ok 11 - the server log contains no login debug output
+      ---
+      duration_ms: 0.217296
+      type: 'test'
+      ...
+    1..11
+ok 87 - auth: correctly configured secrets
+  ---
+  duration_ms: 534.5612
+  type: 'test'
+  ...
+# Subtest: auth: neither secret configured (the state of the shipped .env)
+    # Subtest: BUG-001: admin login refuses (503) instead of signing with the password
+    ok 1 - BUG-001: admin login refuses (503) instead of signing with the password
+      ---
+      duration_ms: 9.484657
+      type: 'test'
+      ...
+    # Subtest: BUG-001: customer sign-up and log-in refuse (503) instead of signing with a public constant
+    ok 2 - BUG-001: customer sign-up and log-in refuse (503) instead of signing with a public constant
+      ---
+      duration_ms: 9.762209
+      type: 'test'
+      ...
+    # Subtest: BUG-001: a token forged with the published constant is not accepted (accounts answer 503 until configured)
+    ok 3 - BUG-001: a token forged with the published constant is not accepted (accounts answer 503 until configured)
+      ---
+      duration_ms: 12.316152
+      type: 'test'
+      ...
+    # Subtest: the shop itself keeps working: products and guest checkout
+    ok 4 - the shop itself keeps working: products and guest checkout
+      ---
+      duration_ms: 11.662512
+      type: 'test'
+      ...
+    1..4
+ok 88 - auth: neither secret configured (the state of the shipped .env)
+  ---
+  duration_ms: 321.72442
+  type: 'test'
+  ...
+# Subtest: auth: admin secret set, customer secret missing
+    # Subtest: BUG-001: no customer token can be obtained, so none can reach the admin API
+    ok 1 - BUG-001: no customer token can be obtained, so none can reach the admin API
+      ---
+      duration_ms: 25.236562
+      type: 'test'
+      ...
+    # Subtest: admin login still works
+    ok 2 - admin login still works
+      ---
+      duration_ms: 4.01575
+      type: 'test'
+      ...
+    1..2
+ok 89 - auth: admin secret set, customer secret missing
+  ---
+  duration_ms: 290.556864
+  type: 'test'
+  ...
+# Subtest: auth: secrets shorter than 48 characters, or reused, are refused
+ok 90 - auth: secrets shorter than 48 characters, or reused, are refused
+  ---
+  duration_ms: 546.481742
+  type: 'test'
+  ...
+# Subtest: an empty shop gets the four protected products (registry ids, the product pages' names and prices, on sale, no invented SKU or stock)
+ok 91 - an empty shop gets the four protected products (registry ids, the product pages' names and prices, on sale, no invented SKU or stock)
+  ---
+  duration_ms: 42.910556
+  type: 'test'
+  ...
+# Subtest: the product pages' cart IDs (multivitamin, iron, curcumin, probiotic) price correctly at checkout after a restore
+ok 92 - the product pages' cart IDs (multivitamin, iron, curcumin, probiotic) price correctly at checkout after a restore
+  ---
+  duration_ms: 43.511303
+  type: 'test'
+  ...
+# Subtest: edits survive a move to a new, empty data folder (restored from the snapshot outside the site folder)
+ok 93 - edits survive a move to a new, empty data folder (restored from the snapshot outside the site folder)
+  ---
+  duration_ms: 90.217885
+  type: 'test'
+  ...
+# Subtest: a protected product removed from the file by hand comes back as last saved; other products and edits are never overwritten
+ok 94 - a protected product removed from the file by hand comes back as last saved; other products and edits are never overwritten
+  ---
+  duration_ms: 119.374367
+  type: 'test'
+  ...
+# Subtest: a completely empty data folder is restored in full (orders, customers…) from the latest daily backup
+ok 95 - a completely empty data folder is restored in full (orders, customers…) from the latest daily backup
+  ---
+  duration_ms: 165.011633
+  type: 'test'
+  ...
+# Subtest: a backup made with "npm run backup" (backup-…/b2c-data) is used too, and the newest backup wins
+ok 96 - a backup made with "npm run backup" (backup-…/b2c-data) is used too, and the newest backup wins
+  ---
+  duration_ms: 51.26076
+  type: 'test'
+  ...
+# Subtest: a corrupt products file is kept aside (never overwritten) and is not snapshotted over the good snapshots
+ok 97 - a corrupt products file is kept aside (never overwritten) and is not snapshotted over the good snapshots
+  ---
+  duration_ms: 117.142202
+  type: 'test'
+  ...
+# Subtest: protected products are recognised; the server calls the guard after the demo seed and before listening; snapshots never go to the tester's home folder
+ok 98 - protected products are recognised; the server calls the guard after the demo seed and before listening; snapshots never go to the tester's home folder
+  ---
+  duration_ms: 4.671962
+  type: 'test'
+  ...
+# Subtest: with migrations 013/014 present, the MySQL test helper refuses before connecting
+ok 99 - with migrations 013/014 present, the MySQL test helper refuses before connecting # SKIP no 013/014 files in this checkout
+  ---
+  duration_ms: 0.626251
+  type: 'test'
+  ...
+# Subtest: encryption: v2 uses ENCRYPTION_KEY and survives a new session secret; v1 values stay readable; tampering is refused
+ok 100 - encryption: v2 uses ENCRYPTION_KEY and survives a new session secret; v1 values stay readable; tampering is refused
+  ---
+  duration_ms: 5.236072
+  type: 'test'
+  ...
+# Subtest: npm run reset: refuses production and a non-development folder; a development folder is reseeded with the protected products
+ok 101 - npm run reset: refuses production and a non-development folder; a development folder is reseeded with the protected products
+  ---
+  duration_ms: 126.366817
+  type: 'test'
+  ...
+# Subtest: every environment variable the code reads is documented in the schema, and the schema lists nothing unused
+ok 102 - every environment variable the code reads is documented in the schema, and the schema lists nothing unused
+  ---
+  duration_ms: 10.709008
+  type: 'test'
+  ...
+# Subtest: templates and the reference are generated from the schema and up to date; they hold no secret values
+ok 103 - templates and the reference are generated from the schema and up to date; they hold no secret values
+  ---
+  duration_ms: 41.913778
+  type: 'test'
+  ...
+# Subtest: production: a complete configuration passes; an empty one lists every required variable
+ok 104 - production: a complete configuration passes; an empty one lists every required variable
+  ---
+  duration_ms: 2.076385
+  type: 'test'
+  ...
+# Subtest: conditional requirements: business platform, ERP, SMTP, WhatsApp, S3 storage, Razorpay secret
+ok 105 - conditional requirements: business platform, ERP, SMTP, WhatsApp, S3 storage, Razorpay secret
+  ---
+  duration_ms: 1.169555
+  type: 'test'
+  ...
+# Subtest: types and unsafe values are refused in production — with messages that never contain a secret value
+ok 106 - types and unsafe values are refused in production — with messages that never contain a secret value
+  ---
+  duration_ms: 0.743002
+  type: 'test'
+  ...
+# Subtest: data folders: relative, inside the app, inside Hostinger hbuilds/public_html, or with a placeholder are refused in production
+ok 107 - data folders: relative, inside the app, inside Hostinger hbuilds/public_html, or with a placeholder are refused in production
+  ---
+  duration_ms: 0.646166
+  type: 'test'
+  ...
+# Subtest: the production template, filled in only with its placeholders, is refused (nothing deploys half-configured)
+ok 108 - the production template, filled in only with its placeholders, is refused (nothing deploys half-configured)
+  ---
+  duration_ms: 65.907415
+  type: 'test'
+  ...
+# Subtest: the server refuses to start in production when required variables are missing, and says which (no values printed)
+ok 109 - the server refuses to start in production when required variables are missing, and says which (no values printed)
+  ---
+  duration_ms: 39.201623
+  type: 'test'
+  ...
+# Subtest: secrets: generated with crypto, 64 characters (ENCRYPTION_KEY: 32 bytes hex), all different; nothing written to disk
+ok 110 - secrets: generated with crypto, 64 characters (ENCRYPTION_KEY: 32 bytes hex), all different; nothing written to disk
+  ---
+  duration_ms: 50.963103
+  type: 'test'
+  ...
+# Subtest: setup: creates .env from the development template with fresh secrets, then never overwrites it
+ok 111 - setup: creates .env from the development template with fresh secrets, then never overwrites it
+  ---
+  duration_ms: 116.664535
+  type: 'test'
+  ...
+# Subtest: encryption key: data saved with ENCRYPTION_KEY survives a change of ERP_JWT_SECRET; older data stays readable
+ok 112 - encryption key: data saved with ENCRYPTION_KEY survives a change of ERP_JWT_SECRET; older data stays readable
+  ---
+  duration_ms: 37.720238
+  type: 'test'
+  ...
+# Subtest: ERP disabled: no ERP API, page or webhook exists; shop unaffected
+ok 113 - ERP disabled: no ERP API, page or webhook exists; shop unaffected
+  ---
+  duration_ms: 743.535916
+  type: 'test'
+  ...
+# Subtest: ERP enabled, database down: shop works, ERP answers 503 without internals, webhooks refuse
+ok 114 - ERP enabled, database down: shop works, ERP answers 503 without internals, webhooks refuse
+  ---
+  duration_ms: 446.583952
+  type: 'test'
+  ...
+# Subtest: ERP in production without a strong secret: refuses with 503, shop works
+ok 115 - ERP in production without a strong secret: refuses with 503, shop works
+  ---
+  duration_ms: 406.837565
+  type: 'test'
+  ...
+# Subtest: enum change that is not an append is refused
+ok 116 - enum change that is not an append is refused
+  ---
+  duration_ms: 1.955191
+  type: 'test'
+  ...
+# Subtest: enum append is applied; identical enum is skipped
+ok 117 - enum append is applied; identical enum is skipped
+  ---
+  duration_ms: 1.490086
+  type: 'test'
+  ...
+# Subtest: live schema drift: column already present with another type is refused
+ok 118 - live schema drift: column already present with another type is refused
+  ---
+  duration_ms: 0.175246
+  type: 'test'
+  ...
+# Subtest: MariaDB-style int display widths are treated as the same type
+ok 119 - MariaDB-style int display widths are treated as the same type
+  ---
+  duration_ms: 0.267165
+  type: 'test'
+  ...
+# Subtest: NOT NULL column without DEFAULT is refused (would fail on existing rows)
+ok 120 - NOT NULL column without DEFAULT is refused (would fail on existing rows)
+  ---
+  duration_ms: 0.307801
+  type: 'test'
+  ...
+# Subtest: index name already used for other columns is refused
+ok 121 - index name already used for other columns is refused
+  ---
+  duration_ms: 0.208769
+  type: 'test'
+  ...
+# Subtest: foreign key that existing rows would violate is refused
+ok 122 - foreign key that existing rows would violate is refused
+  ---
+  duration_ms: 0.204484
+  type: 'test'
+  ...
+# Subtest: makeNullable refuses a type change
+ok 123 - makeNullable refuses a type change
+  ---
+  duration_ms: 0.536336
+  type: 'test'
+  ...
+# Subtest: missing table is refused
+ok 124 - missing table is refused
+  ---
+  duration_ms: 0.300996
+  type: 'test'
+  ...
+# Subtest: SQL file changed after review is refused; destructive SQL is refused
+ok 125 - SQL file changed after review is refused; destructive SQL is refused
+  ---
+  duration_ms: 2.902999
+  type: 'test'
+  ...
+# Subtest: the forbidden-statement guard
+ok 126 - the forbidden-statement guard
+  ---
+  duration_ms: 0.272574
+  type: 'test'
+  ...
+# Subtest: every generated migration pins its SQL file and only uses allowed operations
+ok 127 - every generated migration pins its SQL file and only uses allowed operations
+  ---
+  duration_ms: 4.672811
+  type: 'test'
+  ...
+# Subtest: ERP is inert unless B2B_ENABLED and ERP_ENABLED are both true
+ok 128 - ERP is inert unless B2B_ENABLED and ERP_ENABLED are both true
+  ---
+  duration_ms: 0.969618
+  type: 'test'
+  ...
+# Subtest: passwords: scrypt, 12+ characters, wrong password fails
+ok 129 - passwords: scrypt, 12+ characters, wrong password fails
+  ---
+  duration_ms: 110.20813
+  type: 'test'
+  ...
+# Subtest: tokens: signed, audience-bound, expire, tamper-proof
+ok 130 - tokens: signed, audience-bound, expire, tamper-proof
+  ---
+  duration_ms: 0.986972
+  type: 'test'
+  ...
+# Subtest: TOTP matches the RFC 6238 reference vectors and tolerates one step of drift only
+ok 131 - TOTP matches the RFC 6238 reference vectors and tolerates one step of drift only
+  ---
+  duration_ms: 0.881112
+  type: 'test'
+  ...
+# Subtest: MFA secrets are encrypted at rest and tamper-evident
+ok 132 - MFA secrets are encrypted at rest and tamper-evident
+  ---
+  duration_ms: 0.868299
+  type: 'test'
+  ...
+# Subtest: audit hash: deterministic, and any field change or reordering changes it
+ok 133 - audit hash: deterministic, and any field change or reordering changes it
+  ---
+  duration_ms: 0.406293
+  type: 'test'
+  ...
+# Subtest: maker-checker rules
+ok 134 - maker-checker rules
+  ---
+  duration_ms: 0.509732
+  type: 'test'
+  ...
+# Subtest: business settings: no defaults, strict validation
+ok 135 - business settings: no defaults, strict validation
+  ---
+  duration_ms: 1.426526
+  type: 'test'
+  ...
+# Subtest: WhatsApp webhook: signature over raw bytes, handshake, status parsing
+ok 136 - WhatsApp webhook: signature over raw bytes, handshake, status parsing
+  ---
+  duration_ms: 0.730379
+  type: 'test'
+  ...
+# Subtest: every permission a route checks exists in the reference data; sensitive ones need MFA
+ok 137 - every permission a route checks exists in the reference data; sensitive ones need MFA
+  ---
+  duration_ms: 1.168864
+  type: 'test'
+  ...
+# Subtest: reference roles: Super Admin holds everything; fail-safe approver is Super Admin only; nobody else can change settings
+ok 138 - reference roles: Super Admin holds everything; fail-safe approver is Super Admin only; nobody else can change settings
+  ---
+  duration_ms: 0.422516
+  type: 'test'
+  ...
+# Subtest: B2C protection: protected files unchanged and no business code reaches into B2C
+ok 139 - B2C protection: protected files unchanged and no business code reaches into B2C
+  ---
+  duration_ms: 115.221912
+  type: 'test'
+  ...
+# Subtest: migration 004 is the reviewed file and contains no destructive or data statements
+ok 140 - migration 004 is the reviewed file and contains no destructive or data statements
+  ---
+  duration_ms: 1.583915
+  type: 'test'
+  ...
+# Subtest: 15 role accounts, one each, with distinct e-mail-style logins mapped to existing roles
+ok 141 - 15 role accounts, one each, with distinct e-mail-style logins mapped to existing roles
+  ---
+  duration_ms: 2.109758
+  type: 'test'
+  ...
+# Subtest: temporary passwords: 20 characters, all four character kinds, all different, never weak
+ok 142 - temporary passwords: 20 characters, all four character kinds, all different, never weak
+  ---
+  duration_ms: 26.099194
+  type: 'test'
+  ...
+# Subtest: seeding refuses production, live data, non-trial databases, root, and 013/014
+ok 143 - seeding refuses production, live data, non-trial databases, root, and 013/014
+  ---
+  duration_ms: 0.975645
+  type: 'test'
+  ...
+# Subtest: credentials report: every role, temporary password or "exists — unchanged", and no mailbox claimed
+ok 144 - credentials report: every role, temporary password or "exists — unchanged", and no mailbox claimed
+  ---
+  duration_ms: 0.50906
+  type: 'test'
+  ...
+# Subtest: credentials never land in the project: default folder outside it, report files ignored by git
+ok 145 - credentials never land in the project: default folder outside it, report files ignored by git
+  ---
+  duration_ms: 0.590085
+  type: 'test'
+  ...
+# Subtest: sign-in: retailer, supplier and salesman workspaces, each stored where its app expects it
+ok 146 - sign-in: retailer, supplier and salesman workspaces, each stored where its app expects it
+  ---
+  duration_ms: 0.53432
+  type: 'test'
+  ...
+# Subtest: sign-in: a temporary password on any opened account → mustChangePassword
+ok 147 - sign-in: a temporary password on any opened account → mustChangePassword
+  ---
+  duration_ms: 0.155235
+  type: 'test'
+  ...
+# Subtest: sign-in lockout rule across three MySQL stores: accepted anywhere → none counted; wrong everywhere → each counted once
+ok 148 - sign-in lockout rule across three MySQL stores: accepted anywhere → none counted; wrong everywhere → each counted once
+  ---
+  duration_ms: 0.489082
+  type: 'test'
+  ...
+# Subtest: sign-in: a disabled or locked business login is reported only when nothing else opened
+ok 149 - sign-in: a disabled or locked business login is reported only when nothing else opened
+  ---
+  duration_ms: 0.418505
+  type: 'test'
+  ...
+# Subtest: new password rule: 12+ characters, letters and a number, not the temporary one
+ok 150 - new password rule: 12+ characters, letters and a number, not the temporary one
+  ---
+  duration_ms: 0.441417
+  type: 'test'
+  ...
+# Subtest: shop/trade staff with a temporary password: every admin API refuses until it is changed at /login
+ok 151 - shop/trade staff with a temporary password: every admin API refuses until it is changed at /login
+  ---
+  duration_ms: 649.347164
+  type: 'test'
+  ...
+# Subtest: one write path: only ledger.js writes stock balances and the movement ledger
+ok 152 - one write path: only ledger.js writes stock balances and the movement ledger
+  ---
+  duration_ms: 9.429226
+  type: 'test'
+  ...
+# Subtest: keyed movement: posted once; the same key again moves nothing; mustMove stops the action
+ok 153 - keyed movement: posted once; the same key again moves nothing; mustMove stops the action
+  ---
+  duration_ms: 1.228636
+  type: 'test'
+  ...
+# Subtest: two concurrent posts with one key: the database refuses the second (whole transaction rolls back)
+ok 154 - two concurrent posts with one key: the database refuses the second (whole transaction rolls back)
+  ---
+  duration_ms: 0.4142
+  type: 'test'
+  ...
+# Subtest: guarded update: not enough stock returns false and writes no ledger row; mustMove answers 409
+ok 155 - guarded update: not enough stock returns false and writes no ledger row; mustMove answers 409
+  ---
+  duration_ms: 0.265995
+  type: 'test'
+  ...
+# Subtest: actors: staff recorded as admin, business and system kept; unkeyed rows carry no key column
+ok 156 - actors: staff recorded as admin, business and system kept; unkeyed rows carry no key column
+  ---
+  duration_ms: 0.551089
+  type: 'test'
+  ...
+# Subtest: B2B stock code delegates to the one ledger with its existing arguments
+ok 157 - B2B stock code delegates to the one ledger with its existing arguments
+  ---
+  duration_ms: 2.050533
+  type: 'test'
+  ...
+# Subtest: B2B orders are filled only from company warehouses (never event, salesman, shop or distributor)
+ok 158 - B2B orders are filled only from company warehouses (never event, salesman, shop or distributor)
+  ---
+  duration_ms: 0.274258
+  type: 'test'
+  ...
+# Subtest: decision 5: direct company stock entry is refused when the ERP runs; distributors keep theirs (M7 open)
+ok 159 - decision 5: direct company stock entry is refused when the ERP runs; distributors keep theirs (M7 open)
+  ---
+  duration_ms: 1.421102
+  type: 'test'
+  ...
+# Subtest: adjustments: proposed by one person, posted by an approval with the key adj:<id>
+ok 160 - adjustments: proposed by one person, posted by an approval with the key adj:<id>
+  ---
+  duration_ms: 0.966422
+  type: 'test'
+  ...
+# Subtest: keyed events: goods receipts, transfers, dispositions and adjustments carry duplicate-proof keys
+ok 161 - keyed events: goods receipts, transfers, dispositions and adjustments carry duplicate-proof keys
+  ---
+  duration_ms: 1.717018
+  type: 'test'
+  ...
+# Subtest: migration 017 refuses before any change when two products claim one shop product
+ok 162 - migration 017 refuses before any change when two products claim one shop product
+  ---
+  duration_ms: 1.269761
+  type: 'test'
+  ...
+# [ERP JOBS] schedule: DB_NOT_CONFIGURED
+# Subtest: JOBS_MODE: cron by default in production, inprocess otherwise; an explicit value wins
+ok 163 - JOBS_MODE: cron by default in production, inprocess otherwise; an explicit value wins
+  ---
+  duration_ms: 1.062735
+  type: 'test'
+  ...
+# Subtest: budgets and the HTTP trigger secret: bounds, the 90 s HTTP cap, short secrets switch the URL off
+ok 164 - budgets and the HTTP trigger secret: bounds, the 90 s HTTP cap, short secrets switch the URL off
+  ---
+  duration_ms: 0.405893
+  type: 'test'
+  ...
+# Subtest: schedule: slots are UTC (1, 10 minutes, daily at 00:00) and labels fit the dedupe key
+ok 165 - schedule: slots are UTC (1, 10 minutes, daily at 00:00) and labels fit the dedupe key
+  ---
+  duration_ms: 0.705311
+  type: 'test'
+  ...
+# Subtest: schedule: what is due depends only on the last job of each type — restarts and repeat runs queue nothing
+ok 166 - schedule: what is due depends only on the last job of each type — restarts and repeat runs queue nothing
+  ---
+  duration_ms: 1.145186
+  type: 'test'
+  ...
+# Subtest: every scheduled job has a handler, and nothing registered is left unscheduled by accident
+ok 167 - every scheduled job has a handler, and nothing registered is left unscheduled by accident
+  ---
+  duration_ms: 55.016785
+  type: 'test'
+  ...
+# Subtest: runFor: stops when nothing is due, at the batch size, at the time budget, and never claims after the deadline
+ok 168 - runFor: stops when nothing is due, at the batch size, at the time budget, and never claims after the deadline
+  ---
+  duration_ms: 0.690146
+  type: 'test'
+  ...
+# Subtest: JOBS_MODE=cron starts no scheduler or job worker in the web process; inprocess starts both
+ok 169 - JOBS_MODE=cron starts no scheduler or job worker in the web process; inprocess starts both
+  ---
+  duration_ms: 2.170921
+  type: 'test'
+  ...
+# Subtest: cron script: one finite run — catalogue snapshot, daily backup, protected-product check — then it exits
+ok 170 - cron script: one finite run — catalogue snapshot, daily backup, protected-product check — then it exits
+  ---
+  duration_ms: 222.130743
+  type: 'test'
+  ...
+# Subtest: cron script: a damaged protected catalogue is reported (exit 1), and production refuses an unsafe configuration (exit 78)
+ok 171 - cron script: a damaged protected catalogue is reported (exit 1), and production refuses an unsafe configuration (exit 78)
+  ---
+  duration_ms: 218.719708
+  type: 'test'
+  ...
+# Subtest: HTTP trigger: 404 without CRON_SECRET, 403 with a wrong secret, a run summary with the right one
+ok 172 - HTTP trigger: 404 without CRON_SECRET, 403 with a wrong secret, a run summary with the right one
+  ---
+  duration_ms: 631.887344
+  type: 'test'
+  ...
+# Subtest: material requirement = qty per output × planned / output, plus scrap, rounded up
+ok 173 - material requirement = qty per output × planned / output, plus scrap, rounded up
+  ---
+  duration_ms: 75.400965
+  type: 'test'
+  ...
+# Subtest: a batch needs a number, manufacture before expiry, nothing in the future or already expired, and expiry within the product's shelf life
+ok 174 - a batch needs a number, manufacture before expiry, nothing in the future or already expired, and expiry within the product's shelf life
+  ---
+  duration_ms: 1.588496
+  type: 'test'
+  ...
+# Subtest: bill of materials: no self-reference, no duplicate material; a different person activates it, which archives the previous version
+ok 175 - bill of materials: no self-reference, no duplicate material; a different person activates it, which archives the previous version
+  ---
+  duration_ms: 2.716874
+  type: 'test'
+  ...
+# Subtest: manufacturing orders: contract needs an approved manufacturer (and a PO with that product, delivering to the same warehouse); in-house needs an active bill of materials
+ok 176 - manufacturing orders: contract needs an approved manufacturer (and a PO with that product, delivering to the same warehouse); in-house needs an active bill of materials
+  ---
+  duration_ms: 1.751777
+  type: 'test'
+  ...
+# Subtest: in-house output enters quarantine as a lot of our own plant (keyed), only once the own-plant vendor is decided; over-production and reused batch numbers are refused
+ok 177 - in-house output enters quarantine as a lot of our own plant (keyed), only once the own-plant vendor is decided; over-production and reused batch numbers are refused
+  ---
+  duration_ms: 2.447999
+  type: 'test'
+  ...
+# Subtest: QC: a release needs a certificate, a different person, and released + rejected = the batch; in-house moves quarantine → available / damaged, keyed; contract moves nothing
+ok 178 - QC: a release needs a certificate, a different person, and released + rejected = the batch; in-house moves quarantine → available / damaged, keyed; contract moves nothing
+  ---
+  duration_ms: 2.662527
+  type: 'test'
+  ...
+# Subtest: materials: only bill-of-materials items, earliest expiry first from available (keyed per batch), more than required needs a reason, a repeated key moves nothing
+ok 179 - materials: only bill-of-materials items, earliest expiry first from available (keyed per batch), more than required needs a reason, a repeated key moves nothing
+  ---
+  duration_ms: 2.668398
+  type: 'test'
+  ...
+# Subtest: contract dispatch notices: a product made on a manufacturing order for this PO ships only in QC-released batches, up to the released quantity, with the recorded dates
+ok 180 - contract dispatch notices: a product made on a manufacturing order for this PO ships only in QC-released batches, up to the released quantity, with the recorded dates
+  ---
+  duration_ms: 4.396345
+  type: 'test'
+  ...
+# Subtest: shipment details: vehicle numbers, phones, e-way bills and modes are checked; readiness lists what is missing before dispatch
+ok 181 - shipment details: vehicle numbers, phones, e-way bills and modes are checked; readiness lists what is missing before dispatch
+  ---
+  duration_ms: 3.277768
+  type: 'test'
+  ...
+# Subtest: who sees a shipment: all with deliveries.view; delivery staff only theirs; a distributor only its own orders
+ok 182 - who sees a shipment: all with deliveries.view; delivery staff only theirs; a distributor only its own orders
+  ---
+  duration_ms: 0.573635
+  type: 'test'
+  ...
+# Subtest: creating a shipment: only for a packed (or already moving) order, once per order; a moving order gets its challan at once
+ok 183 - creating a shipment: only for a packed (or already moving) order, once per order; a moving order gets its challan at once
+  ---
+  duration_ms: 2.27787
+  type: 'test'
+  ...
+# Subtest: dispatch drives the existing order transition, refuses an incomplete shipment, and applies the e-way bill decision (refuse above the decided value; warn above ₹50,000 while undecided)
+ok 184 - dispatch drives the existing order transition, refuses an incomplete shipment, and applies the e-way bill decision (refuse above the decided value; warn above ₹50,000 while undecided)
+  ---
+  duration_ms: 2.416456
+  type: 'test'
+  ...
+# Subtest: delivered needs who received it; back-to-warehouse needs a reason and goes through the order flow as "returned" with the condition
+ok 185 - delivered needs who received it; back-to-warehouse needs a reason and goes through the order flow as "returned" with the condition
+  ---
+  duration_ms: 2.068267
+  type: 'test'
+  ...
+# Subtest: order flow: undelivered goods can go back from dispatched / out for delivery (seller or fulfilment only), and come back to stock once per allocation
+ok 186 - order flow: undelivered goods can go back from dispatched / out for delivery (seller or fulfilment only), and come back to stock once per allocation
+  ---
+  duration_ms: 2.905346
+  type: 'test'
+  ...
+# Subtest: the shipment follows the order wherever it was moved; the challan is issued once it has left
+ok 187 - the shipment follows the order wherever it was moved; the challan is issued once it has left
+  ---
+  duration_ms: 1.087946
+  type: 'test'
+  ...
+# Subtest: an offline delivery update needs the delivery permission and runs the same online step
+ok 188 - an offline delivery update needs the delivery permission and runs the same online step
+  ---
+  duration_ms: 2.830713
+  type: 'test'
+  ...
+# Subtest: manufacturer profile: only the vendor's own business details change; legal identity (name, GSTIN, PAN, FSSAI) cannot be edited from the portal
+ok 189 - manufacturer profile: only the vendor's own business details change; legal identity (name, GSTIN, PAN, FSSAI) cannot be edited from the portal
+  ---
+  duration_ms: 4.584196
+  type: 'test'
+  ...
+# Subtest: every business decision accepts its own proposed value; the online-shop stock decisions can actually be set (regression)
+ok 190 - every business decision accepts its own proposed value; the online-shop stock decisions can actually be set (regression)
+  ---
+  duration_ms: 0.929716
+  type: 'test'
+  ...
+# Subtest: permissions: manufacturing and delivery rights exist, activating a bill of materials needs two-factor sign-in, and delivery staff get only their own deliveries
+ok 191 - permissions: manufacturing and delivery rights exist, activating a bill of materials needs two-factor sign-in, and delivery staff get only their own deliveries
+  ---
+  duration_ms: 0.569388
+  type: 'test'
+  ...
+# Subtest: migration 020: only new tables (pinned), one shipment and one challan per order, keyed material issues, batch numbers unique per order; enum extensions keep every existing value first
+ok 192 - migration 020: only new tables (pinned), one shipment and one challan per order, keyed material issues, batch numbers unique per order; enum extensions keep every existing value first
+  ---
+  duration_ms: 1.916564
+  type: 'test'
+  ...
+# Subtest: screens and routes: five new admin screens in the one sidebar; the manufacturer portal is fenced to the signed-in vendor; the order view carries the shipment
+ok 193 - screens and routes: five new admin screens in the one sidebar; the manufacturer portal is fenced to the signed-in vendor; the order view carries the shipment
+  ---
+  duration_ms: 9.02413
+  type: 'test'
+  ...
+# Subtest: recipients: business types and ERP staff only — no shop customers (D1), no staff.json (D9)
+ok 194 - recipients: business types and ERP staff only — no shop customers (D1), no staff.json (D9)
+  ---
+  duration_ms: 3.374105
+  type: 'test'
+  ...
+# Subtest: contacts are masked unless the person may see them
+ok 195 - contacts are masked unless the person may see them
+  ---
+  duration_ms: 0.437338
+  type: 'test'
+  ...
+# Subtest: who may send to whom: one permission per audience
+ok 196 - who may send to whom: one permission per audience
+  ---
+  duration_ms: 1.699152
+  type: 'test'
+  ...
+# Subtest: limits: the owner's D5 values apply until a recorded decision changes them
+ok 197 - limits: the owner's D5 values apply until a recorded decision changes them
+  ---
+  duration_ms: 0.446204
+  type: 'test'
+  ...
+# Subtest: resend rules are in the code: new send each time, original kept, only original recipients, changed contacts confirmed, one key = one send
+ok 198 - resend rules are in the code: new send each time, original kept, only original recipients, changed contacts confirmed, one key = one send
+  ---
+  duration_ms: 0.385449
+  type: 'test'
+  ...
+# Subtest: Resend is always offered; the screen never disables it because of an earlier success
+ok 199 - Resend is always offered; the screen never disables it because of an earlier success
+  ---
+  duration_ms: 0.476551
+  type: 'test'
+  ...
+# Subtest: templates: approved provider templates only; SMS DLT ids travel as dlt:<id>
+ok 200 - templates: approved provider templates only; SMS DLT ids travel as dlt:<id>
+  ---
+  duration_ms: 0.656409
+  type: 'test'
+  ...
+# Subtest: isolation: the notification center writes only notification tables
+ok 201 - isolation: the notification center writes only notification tables
+  ---
+  duration_ms: 0.617547
+  type: 'test'
+  ...
+# Subtest: routes: every notification route checks a permission; the page sits in /admin
+ok 202 - routes: every notification route checks a permission; the page sits in /admin
+  ---
+  duration_ms: 1.442317
+  type: 'test'
+  ...
+# Subtest: one key = one send: a repeat reports the send that key made, a race returns the first result, a key cannot be reused for another message
+ok 203 - one key = one send: a repeat reports the send that key made, a race returns the first result, a key cannot be reused for another message
+  ---
+  duration_ms: 2.397114
+  type: 'test'
+  ...
+# Subtest: changed contact (D3): full old and new for people who may see contacts; masked otherwise, but a change is never hidden by the mask
+ok 204 - changed contact (D3): full old and new for people who may see contacts; masked otherwise, but a change is never hidden by the mask
+  ---
+  duration_ms: 0.331614
+  type: 'test'
+  ...
+# Subtest: consent decision: offers need a recorded opt-in; any opt-out wins; "stop all" stops everything except one-time codes
+ok 205 - consent decision: offers need a recorded opt-in; any opt-out wins; "stop all" stops everything except one-time codes
+  ---
+  duration_ms: 0.805933
+  type: 'test'
+  ...
+# Subtest: addresses: matched however they are written; stored only as a hash; channels kept apart
+ok 206 - addresses: matched however they are written; stored only as a hash; channels kept apart
+  ---
+  duration_ms: 1.251053
+  type: 'test'
+  ...
+# Subtest: unsubscribe links: signed; a changed or foreign link is refused; the link holds no address
+ok 207 - unsubscribe links: signed; a changed or foreign link is refused; the link holds no address
+  ---
+  duration_ms: 1.566069
+  type: 'test'
+  ...
+# Subtest: promotional rules (D4/D8): permission, business accounts only, no SMS, unsubscribe link must be possible
+ok 208 - promotional rules (D4/D8): permission, business accounts only, no SMS, unsubscribe link must be possible
+  ---
+  duration_ms: 0.53757
+  type: 'test'
+  ...
+# Subtest: approval threshold (D5): more than the limit waits for a second person; the limit itself does not
+ok 209 - approval threshold (D5): more than the limit waits for a second person; the limit itself does not
+  ---
+  duration_ms: 0.13138
+  type: 'test'
+  ...
+# Subtest: approvals: a promotion names its approver permission while no rule is configured; maker cannot check; rejection and withdrawal reach the module
+ok 210 - approvals: a promotion names its approver permission while no rule is configured; maker cannot check; rejection and withdrawal reach the module
+  ---
+  duration_ms: 2.163553
+  type: 'test'
+  ...
+# Subtest: WhatsApp replies: STOP and START change preferences; other text is ignored; replays are refused by message id
+ok 211 - WhatsApp replies: STOP and START change preferences; other text is ignored; replays are refused by message id
+  ---
+  duration_ms: 0.553348
+  type: 'test'
+  ...
+# Subtest: groups: rules and lists are validated; geography only for business accounts
+ok 212 - groups: rules and lists are validated; geography only for business accounts
+  ---
+  duration_ms: 0.549738
+  type: 'test'
+  ...
+# Subtest: one gate: the worker asks consent for every row, so resends, approved sends and automatic messages obey it too
+ok 213 - one gate: the worker asks consent for every row, so resends, approved sends and automatic messages obey it too
+  ---
+  duration_ms: 0.820519
+  type: 'test'
+  ...
+# Subtest: screens: Consent & groups tab works (no placeholder); the business portal lets an account turn offers on and off
+ok 214 - screens: Consent & groups tab works (no placeholder); the business portal lets an account turn offers on and off
+  ---
+  duration_ms: 1.33207
+  type: 'test'
+  ...
+# Subtest: public unsubscribe page: opening the link changes nothing; only the button records the opt-out
+ok 215 - public unsubscribe page: opening the link changes nothing; only the button records the opt-out
+  ---
+  duration_ms: 0.354706
+  type: 'test'
+  ...
+# [DB] Using data directory: /tmp/soh-n1-Sp2OQ1
+# [EMAIL:MOCK] To: r1@trial.local
+#   Subject: Order approved
+# [WHATSAPP:MOCK] To: +919845000011
+#   Hello
+#   (No WhatsApp provider configured — set WHATSAPP_TOKEN + WHATSAPP_PHONE_NUMBER_ID, or Twilio keys.)
+# Subtest: no provider configured: email and WhatsApp are "not sent", never "sent"
+ok 216 - no provider configured: email and WhatsApp are "not sent", never "sent"
+  ---
+  duration_ms: 17.050937
+  type: 'test'
+  ...
+# Subtest: email through a real SMTP conversation: accepted, message id stored, history kept
+ok 217 - email through a real SMTP conversation: accepted, message id stored, history kept
+  ---
+  duration_ms: 124.64616
+  type: 'test'
+  ...
+# [EMAIL] send failed: Can't send mail - all recipients were rejected: 550 5.1.1 Recipient address rejected
+# [EMAIL] send failed: Can't send mail - all recipients were rejected: 550 5.1.1 Recipient address rejected
+# [WHATSAPP] send failed: WhatsApp template problem: the template name/language does not exist or is not approved. Check the template exists and is APPROVED in Meta, and that WHATSAPP_TEMPLATE_LANG matches its language. (Meta: Template name does not exist in the translation)
+# Subtest: provider failure: retried with the existing back-off, then failed after the last attempt
+ok 218 - provider failure: retried with the existing back-off, then failed after the last attempt
+  ---
+  duration_ms: 96.270017
+  type: 'test'
+  ...
+# Subtest: WhatsApp rows go out as their approved template, with their parameters
+ok 219 - WhatsApp rows go out as their approved template, with their parameters
+  ---
+  duration_ms: 16.681794
+  type: 'test'
+  ...
+# Subtest: WhatsApp: a template Meta refuses fails at once (no pointless retries); no number = not sent
+ok 220 - WhatsApp: a template Meta refuses fails at once (no pointless retries); no number = not sent
+  ---
+  duration_ms: 2.349757
+  type: 'test'
+  ...
+# Subtest: SMS through MSG91: DLT template, request id kept, code erased; refused SMS retried
+ok 221 - SMS through MSG91: DLT template, request id kept, code erased; refused SMS retried
+  ---
+  duration_ms: 19.807326
+  type: 'test'
+  ...
+# Subtest: status never moves backwards: a row that is no longer "sending" is left alone
+ok 222 - status never moves backwards: a row that is no longer "sending" is left alone
+  ---
+  duration_ms: 0.924284
+  type: 'test'
+  ...
+# Subtest: admin retry: failed and not-sent rows only; sent rows and one-time codes never; each retry recorded
+ok 223 - admin retry: failed and not-sent rows only; sent rows and one-time codes never; each retry recorded
+  ---
+  duration_ms: 0.99787
+  type: 'test'
+  ...
+# Subtest: before migration 016 the history table is missing: sending still works
+ok 224 - before migration 016 the history table is missing: sending still works
+  ---
+  duration_ms: 93.815493
+  type: 'test'
+  ...
+# Subtest: enqueue writes the "queued" history row and keeps template name and parameters
+ok 225 - enqueue writes the "queued" history row and keeps template name and parameters
+  ---
+  duration_ms: 1.349978
+  type: 'test'
+  ...
+# Subtest: the outbox writes only notification tables, and never rewrites history
+ok 226 - the outbox writes only notification tables, and never rewrites history
+  ---
+  duration_ms: 0.734317
+  type: 'test'
+  ...
+# Subtest: promotional email: sent only with recorded consent; opted-out or unconsented addresses are "not sent: opted out" and never reach the provider
+ok 227 - promotional email: sent only with recorded consent; opted-out or unconsented addresses are "not sent: opted out" and never reach the provider
+  ---
+  duration_ms: 93.967752
+  type: 'test'
+  ...
+# [WHATSAPP:MOCK] To: +919845000011
+#   Hello
+#   (No WhatsApp provider configured — set WHATSAPP_TOKEN + WHATSAPP_PHONE_NUMBER_ID, or Twilio keys.)
+# Subtest: opt-out of all messages on a channel stops order updates too, but never one-time sign-in codes
+ok 228 - opt-out of all messages on a channel stops order updates too, but never one-time sign-in codes
+  ---
+  duration_ms: 91.791412
+  type: 'test'
+  ...
+# Subtest: consent lookup failure: the row is retried later, never sent blind (fail closed)
+ok 229 - consent lookup failure: the row is retried later, never sent blind (fail closed)
+  ---
+  duration_ms: 2.171109
+  type: 'test'
+  ...
+# [WHATSAPP:MOCK] To: +919845011111
+#   Your code 482913 confirms order SO/9
+#   (No WhatsApp provider configured — set WHATSAPP_TOKEN + WHATSAPP_PHONE_NUMBER_ID, or Twilio keys.)
+# Subtest: provider throughput: at most the configured number per channel per minute; the rest wait without using an attempt
+ok 230 - provider throughput: at most the configured number per channel per minute; the rest wait without using an attempt
+  ---
+  duration_ms: 353.815308
+  type: 'test'
+  ...
+# Subtest: automatic account message: one record (origin workflow), its recipient and send \#1; the queued rows point at them
+ok 231 - automatic account message: one record (origin workflow), its recipient and send \#1; the queued rows point at them
+  ---
+  duration_ms: 2.071121
+  type: 'test'
+  ...
+# Subtest: administrators' alerts: one record with each alert address as a recipient (migration 018); before 018 they are queued exactly as before
+ok 232 - administrators' alerts: one record with each alert address as a recipient (migration 018); before 018 they are queued exactly as before
+  ---
+  duration_ms: 1.643204
+  type: 'test'
+  ...
+# Subtest: before migration 016: no record, rows queued exactly as before (production today)
+ok 233 - before migration 016: no record, rows queued exactly as before (production today)
+  ---
+  duration_ms: 0.613874
+  type: 'test'
+  ...
+# Subtest: field-sales codes: recorded in the history without the code; the code travels only in the queue row (and is erased after sending)
+ok 234 - field-sales codes: recorded in the history without the code; the code travels only in the queue row (and is erased after sending)
+  ---
+  duration_ms: 1.267813
+  type: 'test'
+  ...
+# Subtest: one sending service: only the outbox writes the queue (codes included); no second notification system
+ok 235 - one sending service: only the outbox writes the queue (codes included); no second notification system
+  ---
+  duration_ms: 11.720969
+  type: 'test'
+  ...
+# Subtest: payments: told once per payment, from the single place a payment is applied; a repeated gateway confirmation does not reach it
+ok 236 - payments: told once per payment, from the single place a payment is applied; a repeated gateway confirmation does not reach it
+  ---
+  duration_ms: 0.387118
+  type: 'test'
+  ...
+# Subtest: events covered without new duplicate triggers: orders, status (dispatch, delivery, invoice line), accounts, returns, recalls, payments, passwords, stock alerts, codes
+ok 237 - events covered without new duplicate triggers: orders, status (dispatch, delivery, invoice line), accounts, returns, recalls, payments, passwords, stock alerts, codes
+  ---
+  duration_ms: 0.799277
+  type: 'test'
+  ...
+# Subtest: codes are never resent from the notification center
+ok 238 - codes are never resent from the notification center
+  ---
+  duration_ms: 1.411617
+  type: 'test'
+  ...
+# Subtest: an automatic message is resent as it first went out: the original email (with its link) to the alert address, needing the staff audience
+ok 239 - an automatic message is resent as it first went out: the original email (with its link) to the alert address, needing the staff audience
+  ---
+  duration_ms: 2.414003
+  type: 'test'
+  ...
+# [SHOP-STOCK] mode could not be read: ECONNREFUSED | last known: never read
+# [SHOP-STOCK] mode could not be read: ECONNREFUSED | last known: enforce
+# [SHOP-STOCK] mode unknown at Pay: ECONNREFUSED
+# Subtest: GST on a counter line: taxable + tax = what the customer pays; CGST/SGST inside the state, IGST outside
+ok 240 - GST on a counter line: taxable + tax = what the customer pays; CGST/SGST inside the state, IGST outside
+  ---
+  duration_ms: 50.505912
+  type: 'test'
+  ...
+# Subtest: batches are picked earliest-expiry-first; expired batches never; units in no batch only when they exist outside every batch
+ok 241 - batches are picked earliest-expiry-first; expired batches never; units in no batch only when they exist outside every batch
+  ---
+  duration_ms: 1.376992
+  type: 'test'
+  ...
+# Subtest: counter sale: all stock checked first, units leave earliest-expiry-first with one keyed ledger row per batch, totals and payments recorded
+ok 242 - counter sale: all stock checked first, units leave earliest-expiry-first with one keyed ledger row per batch, totals and payments recorded
+  ---
+  duration_ms: 6.865003
+  type: 'test'
+  ...
+# Subtest: counter sale: a repeated key returns the first sale and moves nothing; short stock refuses everything; staff only sell at their events; closed events refuse
+ok 243 - counter sale: a repeated key returns the first sale and moves nothing; short stock refuses everything; staff only sell at their events; closed events refuse
+  ---
+  duration_ms: 1.416364
+  type: 'test'
+  ...
+# Subtest: invoice numbers fit GST (at most 16 characters); invoice pages escape everything and show a void across the top
+ok 244 - invoice numbers fit GST (at most 16 characters); invoice pages escape everything and show a void across the top
+  ---
+  duration_ms: 14.278568
+  type: 'test'
+  ...
+# Subtest: hold at Pay: enforce refuses with the shop's own words and holds nothing; shadow never refuses but records what enforcement would do
+ok 245 - hold at Pay: enforce refuses with the shop's own words and holds nothing; shadow never refuses but records what enforcement would do
+  ---
+  duration_ms: 2.999583
+  type: 'test'
+  ...
+# [SHOP-STOCK] commit at order failed, the catch-up job will retry: db down
+# Subtest: front layer: off = untouched; MySQL down: as today unless enforcement was on, then "temporarily unavailable" before any charge; short = refused; after payment a database error never blocks the order
+ok 246 - front layer: off = untouched; MySQL down: as today unless enforcement was on, then "temporarily unavailable" before any charge; short = refused; after payment a database error never blocks the order
+  ---
+  duration_ms: 8.556044
+  type: 'test'
+  ...
+# Subtest: front layer is registered before the shop's own checkout routes, without touching them
+ok 247 - front layer is registered before the shop's own checkout routes, without touching them
+  ---
+  duration_ms: 0.400018
+  type: 'test'
+  ...
+# Subtest: shop stock keys: every ledger row of a shop order line is keyed, so browser, webhook and catch-up move it once
+ok 248 - shop stock keys: every ledger row of a shop order line is keyed, so browser, webhook and catch-up move it once
+  ---
+  duration_ms: 0.550117
+  type: 'test'
+  ...
+# Subtest: one ledger: the new modules never write stock tables directly (only ledger.move does)
+ok 249 - one ledger: the new modules never write stock tables directly (only ledger.move does)
+  ---
+  duration_ms: 1.127553
+  type: 'test'
+  ...
+# Subtest: refunds move money: a separate permission that needs two-factor sign-in; the gateway is called once per exception
+ok 250 - refunds move money: a separate permission that needs two-factor sign-in; the gateway is called once per exception
+  ---
+  duration_ms: 2.122763
+  type: 'test'
+  ...
+# Subtest: offline: how failures end — conflicts wait for staff, refusals are kept, temporary problems are retried by the device
+ok 251 - offline: how failures end — conflicts wait for staff, refusals are kept, temporary problems are retried by the device
+  ---
+  duration_ms: 0.874809
+  type: 'test'
+  ...
+# Subtest: offline: a repeated operation returns the stored result; the same id with different content, or someone else's id, is refused
+ok 252 - offline: a repeated operation returns the stored result; the same id with different content, or someone else's id, is refused
+  ---
+  duration_ms: 0.803845
+  type: 'test'
+  ...
+# Subtest: device queue: one id per operation for every retry; network errors keep it; conflicts stay visible until the person hides them
+ok 253 - device queue: one id per operation for every retry; network errors keep it; conflicts stay visible until the person hides them
+  ---
+  duration_ms: 0.320721
+  type: 'test'
+  ...
+# Subtest: locations: coordinates are validated, device time is used only when believable, and a repeat id never records twice
+ok 254 - locations: coordinates are validated, device time is used only when believable, and a repeat id never records twice
+  ---
+  duration_ms: 0.74317
+  type: 'test'
+  ...
+# Subtest: customers: matched on a normalised email, then mobile; a conflicting pair is flagged for review, never merged
+ok 255 - customers: matched on a normalised email, then mobile; a conflicting pair is flagged for review, never merged
+  ---
+  duration_ms: 2.256445
+  type: 'test'
+  ...
+# Subtest: settings: every new switch is a business decision; while unset the shop behaves exactly as today
+ok 256 - settings: every new switch is a business decision; while unset the shop behaves exactly as today
+  ---
+  duration_ms: 0.478574
+  type: 'test'
+  ...
+# Subtest: admin and field screens: every new screen is in the one registry and calls real endpoints
+ok 257 - admin and field screens: every new screen is in the one registry and calls real endpoints
+  ---
+  duration_ms: 0.998486
+  type: 'test'
+  ...
+# Subtest: D5: only the two fixed statements or a single SELECT can be sent
+ok 258 - D5: only the two fixed statements or a single SELECT can be sent
+  ---
+  duration_ms: 1.276387
+  type: 'test'
+  ...
+# Subtest: D5 grants: only SELECT on b2b_schema_migrations, one per database that has it — never a global or database-wide grant
+ok 259 - D5 grants: only SELECT on b2b_schema_migrations, one per database that has it — never a global or database-wide grant
+  ---
+  duration_ms: 0.976839
+  type: 'test'
+  ...
+# Subtest: D5 account: any right beyond USAGE + SELECT on migration tables is refused — including global SELECT
+ok 260 - D5 account: any right beyond USAGE + SELECT on migration tables is refused — including global SELECT
+  ---
+  duration_ms: 0.477382
+  type: 'test'
+  ...
+# Subtest: D5: with global SELECT the inspection stops after checking grants — nothing else is read
+ok 261 - D5: with global SELECT the inspection stops after checking grants — nothing else is read
+  ---
+  duration_ms: 0.46774
+  type: 'test'
+  ...
+# Subtest: D5: with narrow grants it reads only server facts and the migration table of databases that have one
+ok 262 - D5: with narrow grants it reads only server facts and the migration table of databases that have one
+  ---
+  duration_ms: 0.953764
+  type: 'test'
+  ...
+# Subtest: D5 inventory: the root-run query reads only information_schema.TABLES (names and counts)
+ok 263 - D5 inventory: the root-run query reads only information_schema.TABLES (names and counts)
+  ---
+  duration_ms: 0.469971
+  type: 'test'
+  ...
+# Subtest: D5 inventory file: mysql --batch output, UTF-8 or the UTF-16 PowerShell writes; wrong files refused
+ok 264 - D5 inventory file: mysql --batch output, UTF-8 or the UTF-16 PowerShell writes; wrong files refused
+  ---
+  duration_ms: 0.370065
+  type: 'test'
+  ...
+# Subtest: Windows instructions: no global grant at all; test account only on sakeofhealth_test; D5 account only via the generated grants
+ok 265 - Windows instructions: no global grant at all; test account only on sakeofhealth_test; D5 account only via the generated grants
+  ---
+  duration_ms: 0.31722
+  type: 'test'
+  ...
+# Subtest: D5: the password goes only to the database driver — never into the report, the console or a file
+ok 266 - D5: the password goes only to the database driver — never into the report, the console or a file
+  ---
+  duration_ms: 2.462359
+  type: 'test'
+  ...
+# Subtest: D5 grants step: writes the file itself (UTF-8, no BOM) and never connects
+ok 267 - D5 grants step: writes the file itself (UTF-8, no BOM) and never connects
+  ---
+  duration_ms: 0.517957
+  type: 'test'
+  ...
+# Subtest: D5: checksums of the exact bytes and of both line-ending variants
+ok 268 - D5: checksums of the exact bytes and of both line-ending variants
+  ---
+  duration_ms: 0.530276
+  type: 'test'
+  ...
+# Subtest: D5: without an inventory file or a server it explains and exits
+ok 269 - D5: without an inventory file or a server it explains and exits
+  ---
+  duration_ms: 29.291967
+  type: 'test'
+  ...
+# Subtest: runner: only a database named *_test; _dev and _local are refused
+ok 270 - runner: only a database named *_test; _dev and _local are refused
+  ---
+  duration_ms: 0.421206
+  type: 'test'
+  ...
+# Subtest: runner: refuses root, a missing account, production, and a checkout with 013/014
+ok 271 - runner: refuses root, a missing account, production, and a checkout with 013/014
+  ---
+  duration_ms: 0.143964
+  type: 'test'
+  ...
+# Subtest: runner: an account with ANY right outside the test database is refused
+ok 272 - runner: an account with ANY right outside the test database is refused
+  ---
+  duration_ms: 0.247643
+  type: 'test'
+  ...
+# Subtest: runner: server checks — MySQL 8 only, own rights only, project tables only (read-only statements)
+ok 273 - runner: server checks — MySQL 8 only, own rights only, project tables only (read-only statements)
+  ---
+  duration_ms: 0.490585
+  type: 'test'
+  ...
+# Subtest: runner: the suites never see inherited DB_* settings — only TEST_DB_*
+ok 274 - runner: the suites never see inherited DB_* settings — only TEST_DB_*
+  ---
+  duration_ms: 0.141061
+  type: 'test'
+  ...
+# Subtest: runner, in a checkout that has 013/014: stops before connecting
+ok 275 - runner, in a checkout that has 013/014: stops before connecting # SKIP clean checkout
+  ---
+  duration_ms: 0.037666
+  type: 'test'
+  ...
+# Subtest: test helper: refuses a database not named *_test, before connecting
+ok 276 - test helper: refuses a database not named *_test, before connecting
+  ---
+  duration_ms: 68.386083
+  type: 'test'
+  ...
+# [DB] Using data directory: /root/sakeofhealth-data  (default: your account home directory — safe from redeploys)
+# Subtest: all 32 ERP screens (18 + Notifications + shop stock, events, locations, offline sync, all customers + manufacturers, manufacturing orders, batch quality, bills of materials, trade deliveries + salesmen, delivery dashboard, delivery staff) are in the one registry with exactly the permission the ERP code requires
+ok 277 - all 32 ERP screens (18 + Notifications + shop stock, events, locations, offline sync, all customers + manufacturers, manufacturing orders, batch quality, bills of materials, trade deliveries + salesmen, delivery dashboard, delivery staff) are in the one registry with exactly the permission the ERP code requires
+  ---
+  duration_ms: 2.646201
+  type: 'test'
+  ...
+# Subtest: sidebar from ERP permissions: exactly the screens those permissions open
+ok 278 - sidebar from ERP permissions: exactly the screens those permissions open
+  ---
+  duration_ms: 6.561263
+  type: 'test'
+  ...
+# Subtest: sign-in: staff + ERP with the same password → one admin workspace carrying both sessions
+ok 279 - sign-in: staff + ERP with the same password → one admin workspace carrying both sessions
+  ---
+  duration_ms: 0.502776
+  type: 'test'
+  ...
+# Subtest: sign-in: ERP-only staff land in the same admin panel
+ok 280 - sign-in: ERP-only staff land in the same admin panel
+  ---
+  duration_ms: 0.190296
+  type: 'test'
+  ...
+# Subtest: sign-in: an ERP account with two-factor on asks for the code; the code is passed through
+ok 281 - sign-in: an ERP account with two-factor on asks for the code; the code is passed through
+  ---
+  duration_ms: 0.288227
+  type: 'test'
+  ...
+# Subtest: sign-in: staff password right but ERP code needed → admin opens now, ERP can be added with the code
+ok 282 - sign-in: staff password right but ERP code needed → admin opens now, ERP can be added with the code
+  ---
+  duration_ms: 0.221456
+  type: 'test'
+  ...
+# Subtest: sign-in: a password accepted elsewhere is not counted as a failed ERP attempt; a wrong-everywhere one is
+ok 283 - sign-in: a password accepted elsewhere is not counted as a failed ERP attempt; a wrong-everywhere one is
+  ---
+  duration_ms: 0.25864
+  type: 'test'
+  ...
+# Subtest: sign-in: business database down → ERP skipped, shop sign-in still works; all down → 503
+ok 284 - sign-in: business database down → ERP skipped, shop sign-in still works; all down → 503
+  ---
+  duration_ms: 0.332278
+  type: 'test'
+  ...
+# Subtest: sign-in: a locked ERP account says so only when nothing else accepted the password
+ok 285 - sign-in: a locked ERP account says so only when nothing else accepted the password
+  ---
+  duration_ms: 0.330424
+  type: 'test'
+  ...
+# Subtest: server: ERP screens are served inside the shell (ERP on) and not at all (ERP off)
+ok 286 - server: ERP screens are served inside the shell (ERP on) and not at all (ERP off)
+  ---
+  duration_ms: 885.481176
+  type: 'test'
+  ...
+# Subtest: server: sidebar with an ERP session while the database is down → shop pages plus a clear "unavailable" flag
+ok 287 - server: sidebar with an ERP session while the database is down → shop pages plus a clear "unavailable" flag
+  ---
+  duration_ms: 13.837418
+  type: 'test'
+  ...
+# Subtest: server: /login with ERP on and the database down still signs staff in (ERP skipped)
+ok 288 - server: /login with ERP on and the database down still signs staff in (ERP skipped)
+  ---
+  duration_ms: 9.89106
+  type: 'test'
+  ...
+# Subtest: ERP sign-in accepts "do not count this failure" only from the platform sign-in (signature check)
+ok 289 - ERP sign-in accepts "do not count this failure" only from the platform sign-in (signature check)
+  ---
+  duration_ms: 0.225897
+  type: 'test'
+  ...
+# Subtest: B2B production: 47 characters is refused, 48 is accepted
+ok 290 - B2B production: 47 characters is refused, 48 is accepted
+  ---
+  duration_ms: 1.175924
+  type: 'test'
+  ...
+# Subtest: B2B production: never derived from, or equal to, the admin or customer secret
+ok 291 - B2B production: never derived from, or equal to, the admin or customer secret
+  ---
+  duration_ms: 0.312144
+  type: 'test'
+  ...
+# Subtest: B2B development keeps working as before (derived dev secret allowed outside production)
+ok 292 - B2B development keeps working as before (derived dev secret allowed outside production)
+  ---
+  duration_ms: 0.188358
+  type: 'test'
+  ...
+# Subtest: ERP production: 47 characters is refused, 48 is accepted
+ok 293 - ERP production: 47 characters is refused, 48 is accepted
+  ---
+  duration_ms: 0.26685
+  type: 'test'
+  ...
+# Subtest: ERP production: must differ from the admin, customer and B2B secrets
+ok 294 - ERP production: must differ from the admin, customer and B2B secrets
+  ---
+  duration_ms: 0.314947
+  type: 'test'
+  ...
+# Subtest: ERP development keeps the existing 32-character test secrets working
+ok 295 - ERP development keeps the existing 32-character test secrets working
+  ---
+  duration_ms: 0.16269
+  type: 'test'
+  ...
+# Subtest: every existing B2C and B2B admin page is in the one registry, at /admin/<group>/<page>
+ok 296 - every existing B2C and B2B admin page is in the one registry, at /admin/<group>/<page>
+  ---
+  duration_ms: 726.224598
+  type: 'test'
+  ...
+# Subtest: each registered page is served by the one shell with its page script
+ok 297 - each registered page is served by the one shell with its page script
+  ---
+  duration_ms: 47.856052
+  type: 'test'
+  ...
+# Subtest: /admin opens the shell home; old page addresses keep working
+ok 298 - /admin opens the shell home; old page addresses keep working
+  ---
+  duration_ms: 17.54016
+  type: 'test'
+  ...
+# Subtest: the sidebar needs a login
+ok 299 - the sidebar needs a login
+  ---
+  duration_ms: 2.265091
+  type: 'test'
+  ...
+# [DB] Using data directory: /root/sakeofhealth-data  (default: your account home directory — safe from redeploys)
+# Subtest: admin sees every module in one sidebar, grouped
+ok 300 - admin sees every module in one sidebar, grouped
+  ---
+  duration_ms: 6.914343
+  type: 'test'
+  ...
+# Subtest: for every role, the sidebar shows exactly the pages whose data the server lets them open
+ok 301 - for every role, the sidebar shows exactly the pages whose data the server lets them open
+  ---
+  duration_ms: 174.262056
+  type: 'test'
+  ...
+# Subtest: delivery agents get only their board; business-only roles get no shop pages
+ok 302 - delivery agents get only their board; business-only roles get no shop pages
+  ---
+  duration_ms: 5.725327
+  type: 'test'
+  ...
+# Subtest: with the business platform off, its pages are neither listed nor served
+ok 303 - with the business platform off, its pages are neither listed nor served
+  ---
+  duration_ms: 288.028845
+  type: 'test'
+  ...
+# Subtest: /login is one sign-in page for staff and shop customers
+ok 304 - /login is one sign-in page for staff and shop customers
+  ---
+  duration_ms: 4.216529
+  type: 'test'
+  ...
+# Subtest: staff sign in at /login and land in the admin panel
+ok 305 - staff sign in at /login and land in the admin panel
+  ---
+  duration_ms: 45.09618
+  type: 'test'
+  ...
+# Subtest: shop customers sign in at /login and land in their account
+ok 306 - shop customers sign in at /login and land in their account
+  ---
+  duration_ms: 84.764917
+  type: 'test'
+  ...
+# Subtest: someone who is both staff and a customer (same e-mail and password) chooses where to go
+ok 307 - someone who is both staff and a customer (same e-mail and password) chooses where to go
+  ---
+  duration_ms: 162.597851
+  type: 'test'
+  ...
+# Subtest: a wrong password gets one generic answer, whatever the account type
+ok 308 - a wrong password gets one generic answer, whatever the account type
+  ---
+  duration_ms: 43.443049
+  type: 'test'
+  ...
+# Subtest: /login is rate-limited like the admin login
+ok 309 - /login is rate-limited like the admin login
+  ---
+  duration_ms: 46.869511
+  type: 'test'
+  ...
+# Subtest: the old admin sign-in address now goes to /login
+ok 310 - the old admin sign-in address now goes to /login
+  ---
+  duration_ms: 12.824473
+  type: 'test'
+  ...
+# Subtest: the registry holds exactly the four products, identity pinned (a change must be deliberate and reviewed)
+ok 311 - the registry holds exactly the four products, identity pinned (a change must be deliberate and reviewed)
+  ---
+  duration_ms: 4.048624
+  type: 'test'
+  ...
+# Subtest: the store refuses to delete, hide, archive, mark upcoming or re-identify a protected product — and logs the attempt
+ok 312 - the store refuses to delete, hide, archive, mark upcoming or re-identify a protected product — and logs the attempt
+  ---
+  duration_ms: 56.257014
+  type: 'test'
+  ...
+# Subtest: price, MRP, stock and text changes need a reason; each is logged with who, when, why and before → after
+ok 313 - price, MRP, stock and text changes need a reason; each is logged with who, when, why and before → after
+  ---
+  duration_ms: 50.907936
+  type: 'test'
+  ...
+# Subtest: an insert of a protected product under another id (seed, import, old backup) is stored under its registry id and registry identity
+ok 314 - an insert of a protected product under another id (seed, import, old backup) is stored under its registry id and registry identity
+  ---
+  duration_ms: 36.638329
+  type: 'test'
+  ...
+# Subtest: acceptance 1 — restart: the four products and their edits are there after the server restarts
+ok 315 - acceptance 1 — restart: the four products and their edits are there after the server restarts
+  ---
+  duration_ms: 657.274322
+  type: 'test'
+  ...
+# Subtest: acceptance 2 — redeploy in production: a new empty data folder gets the products back from the snapshot outside the site folder, same ids, edits kept
+ok 316 - acceptance 2 — redeploy in production: a new empty data folder gets the products back from the snapshot outside the site folder, same ids, edits kept
+  ---
+  duration_ms: 643.016963
+  type: 'test'
+  ...
+# Subtest: acceptance 3 — migrations: no migration or migration tool touches the shop store; a start after migrating still verifies
+ok 317 - acceptance 3 — migrations: no migration or migration tool touches the shop store; a start after migrating still verifies
+  ---
+  duration_ms: 148.323949
+  type: 'test'
+  ...
+# Subtest: acceptance 4 — backup and restore: npm run backup, a lost data folder, npm run restore:shop → the same four products, same ids
+ok 318 - acceptance 4 — backup and restore: npm run backup, a lost data folder, npm run restore:shop → the same four products, same ids
+  ---
+  duration_ms: 258.766129
+  type: 'test'
+  ...
+# Subtest: acceptance 5 — CSV import: rows for the protected products cannot rename, hide or duplicate them; other rows import; the trade import never reaches the shop
+ok 319 - acceptance 5 — CSV import: rows for the protected products cannot rename, hide or duplicate them; other rows import; the trade import never reaches the shop
+  ---
+  duration_ms: 45.2472
+  type: 'test'
+  ...
+# Subtest: acceptance 6 — bulk updates: hiding every product hides the others but not the four; a bulk price change applies to all with one reason, logged per product
+ok 320 - acceptance 6 — bulk updates: hiding every product hides the others but not the four; a bulk price change applies to all with one reason, logged per product
+  ---
+  duration_ms: 48.804165
+  type: 'test'
+  ...
+# Subtest: acceptance 7 — Admin: delete, hide and rename are refused by the API (not just a hidden button); edits need a reason; the change log is readable
+ok 321 - acceptance 7 — Admin: delete, hide and rename are refused by the API (not just a hidden button); edits need a reason; the change log is readable
+  ---
+  duration_ms: 321.061465
+  type: 'test'
+  ...
+# Subtest: acceptance 8 — synchronisation: the business platform's shop-stock sync only reads the shop; the four products are unchanged by it
+ok 322 - acceptance 8 — synchronisation: the business platform's shop-stock sync only reads the shop; the four products are unchanged by it
+  ---
+  duration_ms: 106.512472
+  type: 'test'
+  ...
+# Subtest: integrity: identity edited in the file by hand is repaired at start and logged; npm run verify:products reports OK / FAIL with an exit code
+ok 323 - integrity: identity edited in the file by hand is repaired at start and logged; npm run verify:products reports OK / FAIL with an exit code
+  ---
+  duration_ms: 169.684943
+  type: 'test'
+  ...
+# Subtest: fail safe: in production a damaged catalogue that cannot be repaired automatically (a duplicate) stops the server before it takes orders
+ok 324 - fail safe: in production a damaged catalogue that cannot be repaired automatically (a duplicate) stops the server before it takes orders
+  ---
+  duration_ms: 480.899108
+  type: 'test'
+  ...
+# Subtest: pack sizes and names are normalised the way the price list and the invoice write them
+ok 325 - pack sizes and names are normalised the way the price list and the invoice write them
+  ---
+  duration_ms: 2.213427
+  type: 'test'
+  ...
+# Report: /tmp/soh-recon-GgZMMQ/reconciliation.md
+# Subtest: the supplied price list and invoice: every finding, and the Excel file is not changed
+ok 326 - the supplied price list and invoice: every finding, and the Excel file is not changed
+  ---
+  duration_ms: 426.283559
+  type: 'test'
+  ...
+# Subtest: database comparison: existing, missing, only-in-database, conflicts and duplicate SAP codes
+ok 327 - database comparison: existing, missing, only-in-database, conflicts and duplicate SAP codes
+  ---
+  duration_ms: 0.604868
+  type: 'test'
+  ...
+# Subtest: the database is only read: READ ONLY transaction, rolled back; production needs an explicit flag
+ok 328 - the database is only read: READ ONLY transaction, rolled back; production needs an explicit flag
+  ---
+  duration_ms: 433.469056
+  type: 'test'
+  ...
+# Subtest: the invoice extraction matches the invoice's own totals
+ok 329 - the invoice extraction matches the invoice's own totals
+  ---
+  duration_ms: 0.506313
+  type: 'test'
+  ...
+# Subtest: SigV4 signing key matches the AWS documentation example (20120215, us-east-1, iam)
+ok 330 - SigV4 signing key matches the AWS documentation example (20120215, us-east-1, iam)
+  ---
+  duration_ms: 1.216652
+  type: 'test'
+  ...
+# Subtest: SigV4 request signature matches the AWS example (IAM ListUsers, 20150830T123600Z)
+ok 331 - SigV4 request signature matches the AWS example (IAM ListUsers, 20150830T123600Z)
+  ---
+  duration_ms: 0.731714
+  type: 'test'
+  ...
+# Subtest: SigV4 URI encoding follows RFC 3986 (keeps / in object keys only when asked)
+ok 332 - SigV4 URI encoding follows RFC 3986 (keeps / in object keys only when asked)
+  ---
+  duration_ms: 0.126439
+  type: 'test'
+  ...
+# Subtest: S3: put, exists, get and remove send correctly signed path-style requests
+ok 333 - S3: put, exists, get and remove send correctly signed path-style requests
+  ---
+  duration_ms: 23.185229
+  type: 'test'
+  ...
+# Subtest: S3: a rejected request fails with the provider code and never the secret
+ok 334 - S3: a rejected request fails with the provider code and never the secret
+  ---
+  duration_ms: 3.625091
+  type: 'test'
+  ...
+# Subtest: S3: missing bucket settings fail clearly instead of sending a request
+ok 335 - S3: missing bucket settings fail clearly instead of sending a request
+  ---
+  duration_ms: 0.319266
+  type: 'test'
+  ...
+# Subtest: S3: files uploaded before the switch are still read from the private folder; storage-copy moves them
+ok 336 - S3: files uploaded before the switch are still read from the private folder; storage-copy moves them
+  ---
+  duration_ms: 10.857786
+  type: 'test'
+  ...
+# Subtest: local: the folder is B2B_PRIVATE_DIR (same as the trade portal), files are written atomically with 0600
+ok 337 - local: the folder is B2B_PRIVATE_DIR (same as the trade portal), files are written atomically with 0600
+  ---
+  duration_ms: 0.90811
+  type: 'test'
+  ...
+# Subtest: names and folders that are not storage names are refused (no path traversal)
+ok 338 - names and folders that are not storage names are refused (no path traversal)
+  ---
+  duration_ms: 0.689984
+  type: 'test'
+  ...
+# Subtest: send: headers and the before() hook only when the file exists; private, no-store by default
+ok 339 - send: headers and the before() hook only when the file exists; private, no-store by default
+  ---
+  duration_ms: 47.14175
+  type: 'test'
+  ...
+# Subtest: uploads: content decides the type; withDocument stores before the transaction and removes on failure
+ok 340 - uploads: content decides the type; withDocument stores before the transaction and removes on failure
+  ---
+  duration_ms: 1.45998
+  type: 'test'
+  ...
+# Subtest: a temporary password is long, readable, accepted by the password rules and different every time
+ok 341 - a temporary password is long, readable, accepted by the password rules and different every time
+  ---
+  duration_ms: 45.042821
+  type: 'test'
+  ...
+# Subtest: staff add a manufacturer with its owner's sign-in: vendor, capabilities, address, owner login (hashed, must change) and an audit row
+ok 342 - staff add a manufacturer with its owner's sign-in: vendor, capabilities, address, owner login (hashed, must change) and an audit row
+  ---
+  duration_ms: 79.117167
+  type: 'test'
+  ...
+# Subtest: adding without a capability, with a bad PIN or an unknown state is refused
+ok 343 - adding without a capability, with a bad PIN or an unknown state is refused
+  ---
+  duration_ms: 0.835561
+  type: 'test'
+  ...
+# Subtest: bank accounts: the staff member who added one cannot verify it; an account the vendor added can be verified by any checker
+ok 344 - bank accounts: the staff member who added one cannot verify it; an account the vendor added can be verified by any checker
+  ---
+  duration_ms: 0.578189
+  type: 'test'
+  ...
+# Subtest: adding a bank account stores it encrypted with the last 4 digits only in clear, and records which account it was
+ok 345 - adding a bank account stores it encrypted with the last 4 digits only in clear, and records which account it was
+  ---
+  duration_ms: 1.195279
+  type: 'test'
+  ...
+# Subtest: sign-ins: the only active owner cannot be turned off, nobody turns off themselves, a reset gives a new one-time password and ends old sessions
+ok 346 - sign-ins: the only active owner cannot be turned off, nobody turns off themselves, a reset gives a new one-time password and ends old sessions
+  ---
+  duration_ms: 70.692966
+  type: 'test'
+  ...
+# Subtest: a capability is approved only for an approved business; the vendor can ask for another
+ok 347 - a capability is approved only for an approved business; the vendor can ask for another
+  ---
+  duration_ms: 1.008993
+  type: 'test'
+  ...
+# Subtest: staff edits are audited with the old values; a duplicate GSTIN is a clear 409
+ok 348 - staff edits are audited with the old values; a duplicate GSTIN is a clear 409
+  ---
+  duration_ms: 0.743996
+  type: 'test'
+  ...
+# Subtest: the one-time invitation link points at the supplier portal
+ok 349 - the one-time invitation link points at the supplier portal
+  ---
+  duration_ms: 0.810372
+  type: 'test'
+  ...
+# Subtest: a salesman holding cash that was not handed over cannot be switched off (unless forced); changes are audited
+ok 350 - a salesman holding cash that was not handed over cannot be switched off (unless forced); changes are audited
+  ---
+  duration_ms: 0.814178
+  type: 'test'
+  ...
+# Subtest: the sidebar has a Delivery group (dashboard, shop deliveries, trade deliveries, delivery staff) and a Salesmen screen; old addresses still work
+ok 351 - the sidebar has a Delivery group (dashboard, shop deliveries, trade deliveries, delivery staff) and a Salesmen screen; old addresses still work
+  ---
+  duration_ms: 1.340773
+  type: 'test'
+  ...
+# Subtest: the APIs behind the new screens exist, with fixed paths before the :id routes
+ok 352 - the APIs behind the new screens exist, with fixed paths before the :id routes
+  ---
+  duration_ms: 51.639101
+  type: 'test'
+  ...
+# Subtest: the screens: suppliers in full, salesmen, delivery; the supplier portal registration and team; the field-app dashboard; the sign-in page links
+ok 353 - the screens: suppliers in full, salesmen, delivery; the supplier portal registration and team; the field-app dashboard; the sign-in page links
+  ---
+  duration_ms: 0.870252
+  type: 'test'
+  ...
+# Subtest: the admin menu keeps its scroll position between pages and always shows the open page
+ok 354 - the admin menu keeps its scroll position between pages and always shows the open page
+  ---
+  duration_ms: 0.192662
+  type: 'test'
+  ...
+1..354
+# tests 371
+# suites 0
+# pass 368
+# fail 0
+# cancelled 0
+# skipped 3
+# todo 0
+# duration_ms 89305.920726

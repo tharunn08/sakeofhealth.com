@@ -16,7 +16,7 @@ const db = require('../../../db/connection.js');
 const TYPES = ['retailer', 'distributor', 'salesman', 'supplier', 'manufacturer', 'staff'];
 const AUDIENCE = { retailer: 'trade', distributor: 'trade', salesman: 'salesmen', supplier: 'vendors', manufacturer: 'vendors', staff: 'staff',
   address: 'staff' };   // 'address': a plain address on an automatic message (the administrators' alert emails, N5); never offered in the picker
-const CAPABILITY = { manufacturer: ['manufacturer'], supplier: ['supplier_wholesaler', 'authorised_distributor'] };
+const CAPABILITY = { manufacturer: ['manufacturer', 'contract_manufacturer'], supplier: ['supplier_wholesaler', 'authorised_distributor'] };
 
 function maskEmail(e) {
   if (!e) return null;

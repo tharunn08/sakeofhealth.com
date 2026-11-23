@@ -149,11 +149,8 @@ router.post('/me/documents', writeLimit, uploads.documentUpload, h(async functio
 
 router.get('/me/documents/:id/file', h(async function (req, res) {
   const f = await accounts.documentFile(id(req), req.b2b.account.id);     // scoped: only this account's own documents
-  res.setHeader('Content-Type', f.doc.mime_type);
-  res.setHeader('Content-Disposition', 'inline; filename="document-' + f.doc.id + '.' + f.doc.stored_name.split('.').pop() + '"');
-  res.setHeader('Cache-Control', 'private, no-store');
-  res.setHeader('X-Content-Type-Options', 'nosniff');
-  f.stream().pipe(res);
+  await f.send(res, { 'Content-Type': f.doc.mime_type, 'Content-Disposition': 'inline; filename="document-' + f.doc.id + '.' + f.doc.stored_name.split('.').pop() + '"',
+    'Cache-Control': 'private, no-store', 'X-Content-Type-Options': 'nosniff' });
 }));
 
 router.get('/notifications', h(async function (req, res) {
@@ -345,7 +342,36 @@ dist.get('/retailer-orders', h(async function (req, res) {
 dist.get('/retailer-orders/:id', h(async function (req, res) { res.json(await orders.get(id(req), asSeller(req))); }));
 dist.post('/retailer-orders/:id/status', writeLimit, h(async function (req, res) {
   const b = req.body || {};
-  res.json(await orders.transition(id(req), String(b.status || ''), asSeller(req), audit.businessActor(req), { note: b.note, delivered: b.delivered }));
+  res.json(await orders.transition(id(req), String(b.status || ''), asSeller(req), audit.businessActor(req), { note: b.note, delivered: b.delivered, condition: b.condition }));
+}));
+
+// Delivery details and challans (the delivery module, migration 020). Before 020 is applied: 503.
+const delivery = function () { return require('../../erp/delivery/service.js'); };
+function deliveryReady(e) {
+  if (e && e.code === 'ER_NO_SUCH_TABLE') return Object.assign(new Error('Delivery details are not available yet'), { status: 503, expose: true });
+  return e;
+}
+function challanOut(res, html) {
+  res.setHeader('Content-Security-Policy', "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'");
+  res.type('html').send(html);
+}
+/** The distributor records how its order travels (vehicle, driver, courier, tracking, e-way bill, expected time). */
+dist.post('/retailer-orders/:id/shipment', writeLimit, h(async function (req, res) {
+  const actor = audit.businessActor(req), sc = { sellerAccountId: req.b2b.account.id };
+  const b = Object.assign({}, req.body || {});
+  delete b.deliveryStaffId;
+  try {
+    const ex = await db.queryOne('SELECT id FROM b2b_shipments WHERE order_id = ?', [id(req)]);
+    if (ex) return res.json(await db.transaction(function (t) { return delivery().update(t, actor, sc, Number(ex.id), b); }));
+    b.orderId = id(req);
+    res.status(201).json(await db.transaction(function (t) { return delivery().create(t, actor, sc, b); }));
+  } catch (e) { throw deliveryReady(e); }
+}));
+dist.get('/retailer-orders/:id/challan', h(async function (req, res) {
+  try { challanOut(res, await delivery().challan({ sellerAccountId: req.b2b.account.id }, { orderId: id(req) })); } catch (e) { throw deliveryReady(e); }
+}));
+router.get('/orders/:id/challan', h(async function (req, res) {
+  try { challanOut(res, await delivery().challan({ buyerAccountId: req.b2b.account.id }, { orderId: id(req) })); } catch (e) { throw deliveryReady(e); }
 }));
 dist.post('/retailer-orders/:id/payments', writeLimit, h(async function (req, res) {
   res.status(201).json(await payments.recordManual(id(req), req.body || {}, audit.businessActor(req), asSeller(req)));

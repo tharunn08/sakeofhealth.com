@@ -144,7 +144,8 @@ async function boot() {
       return out;
     }
     await require('./imports/service.js').recoverInterrupted();
-    require('./notifications/service.js').startWorker();
+    // JOBS_MODE=cron (production): no sender timer — scripts/cron/run-jobs.js sends, and new messages are sent on commit.
+    if (require('../../platform/jobs-config.js').mode() === 'inprocess') require('./notifications/service.js').startWorker();
     console.log('[B2B] Business portal ready — database connected, schema verified.');
     await require('../erp/index.js').boot();
   } catch (e) {

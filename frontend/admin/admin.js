@@ -273,6 +273,34 @@
     }).join('');
   }
 
+  /* The menu keeps its scroll position from page to page (each menu link opens a new page, which used to
+     redraw the menu at the top). The position is saved when a link is clicked or the page is left, and put
+     back after every redraw; the open page's link is always brought into view. */
+  var NAV_SCROLL_KEY = 'soh_admin_nav_scroll';
+  function saveNavScroll() {
+    var el = document.getElementById('sbNav');
+    if (el) { try { sessionStorage.setItem(NAV_SCROLL_KEY, String(el.scrollTop)); } catch (e) { /* storage blocked */ } }
+  }
+  function restoreNavScroll() {
+    var el = document.getElementById('sbNav');
+    if (!el) return;
+    var saved = null;
+    try { saved = sessionStorage.getItem(NAV_SCROLL_KEY); } catch (e) { /* storage blocked */ }
+    if (saved !== null && !isNaN(+saved)) el.scrollTop = +saved;
+    var a = el.querySelector('.sb-link.active');
+    if (!a) return;
+    var box = el.getBoundingClientRect(), r = a.getBoundingClientRect();
+    if (r.top < box.top || r.bottom > box.bottom) el.scrollTop += (r.top - box.top) - (box.height - r.height) / 2;
+  }
+  function watchNavScroll() {
+    var el = document.getElementById('sbNav');
+    if (!el) return;
+    el.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('a.sb-link')) saveNavScroll(); }, true);
+    var t = null;
+    el.addEventListener('scroll', function () { clearTimeout(t); t = setTimeout(saveNavScroll, 120); }, { passive: true });
+    window.addEventListener('pagehide', saveNavScroll);
+  }
+
   /** /admin: open the signed-in user's first permitted page. */
   async function goHome() {
     if (!Auth.require()) return;
@@ -336,6 +364,8 @@
     }
     document.body.className = 'shell';
     document.body.innerHTML = renderShell(activeId, title);
+    restoreNavScroll();
+    watchNavScroll();
 
     document.getElementById('logoutBtn').addEventListener('click', function () {
       if (confirm('Sign out of the admin panel?')) Auth.logout();
@@ -356,7 +386,7 @@
     fetchNav().then(function (nav) {
       if (nav.home && !navItems(nav).some(function (i) { return i.id === activeId; })) { location.replace(nav.home); return; }
       var el = document.getElementById('sbNav');
-      if (el) el.innerHTML = navHTML(nav, activeId);
+      if (el) { el.innerHTML = navHTML(nav, activeId); restoreNavScroll(); }
       loadBadges();
     }).catch(function (e) {
       var el = document.getElementById('sbNav');

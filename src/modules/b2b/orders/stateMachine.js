@@ -6,6 +6,7 @@
  *             └──────────────────────────►┘      ▲            │                                   │
  *                                                └─(declined)─┘                                   ▼
  *        delivered / partially_delivered ◄── out_for_delivery ◄──────────────────────────── dispatched
+ *                 (undeliverable: dispatched / out_for_delivery ─► returned, goods back to the warehouse)
  *
  *  cancelled / rejected / returned ─► refunded
  */
@@ -29,8 +30,9 @@ const EDGES = {
   accepted: { processing: ['fulfil', 'seller'], cancelled: ['cancel', 'seller', 'buyer'] },
   processing: { packed: ['fulfil', 'seller'], cancelled: ['cancel', 'seller'] },
   packed: { dispatched: ['fulfil', 'seller'], cancelled: ['cancel', 'seller'] },
-  dispatched: { out_for_delivery: ['fulfil', 'seller'], delivered: ['fulfil', 'seller'], partially_delivered: ['fulfil', 'seller'] },
-  out_for_delivery: { delivered: ['fulfil', 'seller'], partially_delivered: ['fulfil', 'seller'] },
+  // returned (from dispatched / out for delivery) = nothing could be delivered: the goods come back to the warehouse
+  dispatched: { out_for_delivery: ['fulfil', 'seller'], delivered: ['fulfil', 'seller'], partially_delivered: ['fulfil', 'seller'], returned: ['fulfil', 'seller'] },
+  out_for_delivery: { delivered: ['fulfil', 'seller'], partially_delivered: ['fulfil', 'seller'], returned: ['fulfil', 'seller'] },
   delivered: { returned: ['system'] },
   partially_delivered: { returned: ['system'] },
   cancelled: { refunded: ['refund'] },

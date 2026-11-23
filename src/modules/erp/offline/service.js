@@ -22,7 +22,7 @@ const identity = require('../core/identity.js');
 const { fail, posId } = require('../lib/http.js');
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const KINDS = ['event_sale', 'event_payment', 'field_order', 'visit', 'location'];
+const KINDS = ['event_sale', 'event_payment', 'field_order', 'visit', 'location', 'delivery'];
 const CONFLICT = ['insufficient_stock', 'event_not_open', 'voided', 'not_approved', 'retailer_inactive', 'bad_status'];
 const MAX_BATCH = 50;
 
@@ -47,6 +47,19 @@ async function run(tx, actor, principal, kind, p, opId) {
   if (kind === 'location') {
     need(principal.permissions.has('locations.capture'), 'You may not record locations', 'forbidden', 403);
     return require('../field/locations.js').capture(tx, principal, Object.assign({}, p, { clientUuid: p.clientUuid || opId }));
+  }
+  if (kind === 'delivery') {
+    // a driver's update made without signal: the same delivery steps as online, deduplicated by the operation id
+    need(['deliveries.update', 'deliveries.manage'].some(function (x) { return principal.permissions.has(x); }), 'You may not update deliveries', 'forbidden', 403);
+    const d = require('../delivery/service.js');
+    const by = { staff: principal }, sid = posId(p.shipmentId);
+    if (!sid) throw fail(400, 'Unknown shipment');
+    const body = Object.assign({}, p, { clientUuid: p.clientUuid || opId });
+    if (p.action === 'out_for_delivery') return d.outForDelivery(actor, by, sid, body);
+    if (p.action === 'location') return d.location(actor, by, sid, body);
+    if (p.action === 'attempt_failed') return d.attemptFailed(actor, by, sid, body);
+    if (p.action === 'delivered') return d.deliver(actor, by, sid, body, null);
+    throw fail(400, 'Unknown delivery action', 'bad_kind');
   }
   // field sales: the same rules as the salesman app
   const sm = await tx.queryOne('SELECT * FROM b2b_salesmen WHERE staff_id = ? AND is_active = 1', [principal.id]);

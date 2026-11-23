@@ -7,7 +7,7 @@
  */
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { startServer } = require('./helpers/server.js');
+const { startServer, prodEnv } = require('./helpers/server.js');
 
 async function b2cWorks(s) {
   for (const p of ['/', '/account.html', '/checkout/', '/admin/', '/config.js']) {
@@ -69,8 +69,10 @@ test('B2B enabled but database down: customer site works, B2B answers 503 cleanl
 });
 
 test('production without a signing secret: business logins are refused, customer site works', async () => {
-  const s = await startServer({ NODE_ENV: 'production', B2B_ENABLED: 'true', DB_HOST: '127.0.0.1', DB_PORT: '1', DB_USER: 'nobody', DB_PASSWORD: 'x', DB_NAME: 'nothing',
-    B2B_JWT_SECRET: '', JWT_SECRET: '', ADMIN_JWT_SECRET: 'short' });
+  // CONFIG_STRICT=false: start despite the weak secrets (the start-up check refuses them — tests/env-config.test.js)
+  // to prove each feature still fails closed on its own (defence in depth).
+  const s = await startServer(prodEnv({ CONFIG_STRICT: 'false', B2B_ENABLED: 'true', DB_HOST: '127.0.0.1', DB_PORT: '1', DB_USER: 'nobody', DB_PASSWORD: 'x', DB_NAME: 'nothing',
+    B2B_JWT_SECRET: '', JWT_SECRET: '', ADMIN_JWT_SECRET: 'short' }));
   try {
     assert.equal((await s.get('/')).status, 200);
     assert.equal((await s.get('/api/shop/products')).status, 200);

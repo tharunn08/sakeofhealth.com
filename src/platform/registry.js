@@ -23,10 +23,12 @@
 const GROUPS = [
   { id: 'overview', label: 'Overview' },
   { id: 'sales', label: 'Sales & Orders' },
+  { id: 'delivery', label: 'Delivery' },
   { id: 'accounts', label: 'Business Accounts' },
   { id: 'customers', label: 'Customers' },
   { id: 'catalogue', label: 'Products & Catalogue' },
   { id: 'inventory', label: 'Inventory' },
+  { id: 'manufacturing', label: 'Manufacturing & Quality' },
   { id: 'procurement', label: 'Procurement & Suppliers' },
   { id: 'finance', label: 'Finance & Reports' },
   { id: 'administration', label: 'Administration' },
@@ -42,11 +44,11 @@ const B2B = (id, group, slug, label, icon, script, perms, extra) => Object.assig
 }, extra || {});
 
 /** An ERP screen: `view` is its id in erp-web/admin (app.js / modules.js), `perm` the permission that screen requires. */
-const ERP = (view, group, slug, label, icon, perm) => ({
+const ERP = (view, group, slug, label, icon, perm, extra) => Object.assign({
   id: 'erp-' + view, view, group, path: '/admin/' + group + '/' + slug, label, icon, module: 'erp', perm,
   base: '/admin/erp/', css: ['/platform/erp-embed.css'],
-  scripts: ['/admin/erp/app.js', '/admin/erp/modules.js', '/admin/erp/operations.js', '/platform/erp-host.js'],
-});
+  scripts: ['/admin/erp/app.js', '/admin/erp/modules.js', '/admin/erp/operations.js', '/admin/erp/production.js', '/admin/erp/people.js', '/platform/erp-host.js'],
+}, extra || {});
 
 const PAGES = [
   B2C('dashboard', 'overview', 'dashboard', 'Dashboard', 'dashboard', 'page-dashboard.js', ['GET', '/dashboard']),
@@ -55,7 +57,6 @@ const PAGES = [
 
   B2C('orders', 'sales', 'online', 'Online Orders', 'orders', 'page-orders.js', ['GET', '/orders'], { badge: 'pending' }),
   B2B('b2b-orders', 'sales', 'trade', 'Trade Orders', 'orders', 'page-orders.js', ['b2b.orders.view'], { badge: 'b2b-orders' }),
-  B2C('deliveries', 'sales', 'deliveries', 'Deliveries', 'deliveries', 'page-deliveries.js', ['GET', '/deliveries']),
 
   B2B('b2b-accounts', 'accounts', 'business', 'Retailers & Distributors', 'store', 'page-accounts.js', ['b2b.users.view'], { badge: 'b2b-accounts' }),
   B2B('b2b-network', 'accounts', 'network', 'Network & Mapping', 'network', 'page-network.js', ['b2b.network.view']),
@@ -80,9 +81,16 @@ const PAGES = [
   B2C('settings', 'administration', 'settings', 'Shop Settings', 'settings', 'page-settings.js', ['GET', '/settings']),
   B2B('b2b-settings', 'administration', 'trade-settings', 'Trade Settings', 'settings', 'page-settings.js', ['b2b.settings.view']),
 
-  /* ERP screens (24) — same screen code as /admin/erp, now inside this shell */
+  /* ERP screens (32) — same screen code as /admin/erp, now inside this shell */
   ERP('overview', 'overview', 'system', 'System Health', 'analytics', 'core.monitoring.view'),
   ERP('salesdesk', 'sales', 'desk', 'Sales Desk', 'orders', 'sales.reports.view'),
+  ERP('salesmen', 'sales', 'salesmen', 'Salesmen', 'staff', 'sales.reports.view'),
+  // Delivery: dashboard, shop deliveries, trade deliveries, staff. The two delivery lists keep their
+  // existing addresses (bookmarks, the shop delivery role's home page).
+  ERP('deliveryhub', 'delivery', 'dashboard', 'Delivery Dashboard', 'truck', 'deliveries.view'),
+  B2C('deliveries', 'sales', 'deliveries', 'Shop Deliveries', 'deliveries', 'page-deliveries.js', ['GET', '/deliveries'], { group: 'delivery' }),
+  ERP('deliveries', 'sales', 'trade-deliveries', 'Trade Deliveries', 'truck', 'deliveries.view', { group: 'delivery' }),
+  ERP('deliverystaff', 'delivery', 'staff', 'Delivery Staff', 'staff', 'deliveries.manage'),
   ERP('events', 'sales', 'events', 'Events & Counter Sales', 'tag', 'events.view'),
   ERP('locations', 'sales', 'locations', 'Field & Event Locations', 'map', 'locations.view'),
   ERP('network', 'accounts', 'distribution', 'Distribution Network', 'network', 'network.map.view'),
@@ -91,6 +99,10 @@ const PAGES = [
   ERP('stock', 'inventory', 'batches', 'Stock & Batches', 'box', 'inventory.view'),
   ERP('shopstock', 'inventory', 'shop-stock', 'Online Shop Stock', 'store', 'shop_stock.view'),
   ERP('recalls', 'inventory', 'recalls', 'Recalls', 'alert', 'recalls.view'),
+  ERP('manufacturers', 'manufacturing', 'manufacturers', 'Manufacturers', 'store', 'manufacturing.view'),
+  ERP('manufacturing', 'manufacturing', 'orders', 'Manufacturing Orders', 'box', 'manufacturing.view'),
+  ERP('quality', 'manufacturing', 'quality', 'Batch Quality & Release', 'check', 'manufacturing.view'),
+  ERP('boms', 'manufacturing', 'boms', 'Bills of Materials', 'reports', 'manufacturing.view'),
   ERP('vendors', 'procurement', 'vendors', 'Manufacturers & Suppliers', 'store', 'vendors.view'),
   ERP('purchasing', 'procurement', 'purchasing', 'Purchasing', 'orders', 'procurement.pr.view'),
   ERP('receiving', 'procurement', 'receiving', 'Goods Receipt', 'deliveries', 'warehouse.grn.create'),

@@ -69,6 +69,43 @@ async function runDue(limit) {
   } finally { running = false; }
 }
 
+/**
+ * A finite run (cron): claim and run due jobs a few at a time until none are due, `max` jobs have been
+ * claimed, or `deadline` (ms timestamp) has passed — a job already started is finished, nothing new is
+ * claimed after the deadline. `step` is runDue (replaceable in tests).
+ */
+async function runFor(opts) {
+  opts = opts || {};
+  const step = opts.step || runDue;
+  const max = Math.max(1, opts.max || 50);
+  const deadline = opts.deadline || (Date.now() + 240000);
+  const out = { done: 0, failed: 0, retried: 0, rounds: 0, stoppedBy: 'nothing due' };
+  while (true) {
+    const used = out.done + out.failed + out.retried;
+    if (used >= max) { out.stoppedBy = 'batch size'; break; }
+    if (Date.now() >= deadline) { out.stoppedBy = 'time budget'; break; }
+    const r = await step(Math.min(5, max - used));
+    if (r.skipped) { out.stoppedBy = 'another worker in this process'; break; }
+    out.rounds++;
+    out.done += r.done; out.failed += r.failed; out.retried += r.retried;
+    if (!(r.done + r.failed + r.retried)) break;
+  }
+  return out;
+}
+
+/** Scheduled maintenance: remove finished jobs (30 days) and failed or cancelled ones (90 days), in small batches. */
+async function cleanup() {
+  let removed = 0;
+  for (const rule of [["'done'", 30], ["'failed','cancelled'", 90]]) {
+    for (let i = 0; i < 50; i++) {   // at most 50 × 1000 rows a day; short statements, no long lock
+      const r = await db.query('DELETE FROM b2b_jobs WHERE status IN (' + rule[0] + ') AND COALESCE(finished_at, created_at) < UTC_TIMESTAMP() - INTERVAL ' + rule[1] + ' DAY ORDER BY id LIMIT 1000');
+      removed += r.affectedRows;
+      if (r.affectedRows < 1000) break;
+    }
+  }
+  return { removed: removed };
+}
+
 function start() {
   if (timer) return;
   timer = setInterval(function () { runDue().catch(function (e) { console.warn('[ERP JOBS]', e.code || e.message); }); }, config.workerIntervalMs());
@@ -78,4 +115,4 @@ function stop() { if (timer) clearInterval(timer); timer = null; }
 
 async function get(id) { return db.queryOne('SELECT id, job_type, status, attempts, last_error, result_json, created_by, created_at, finished_at FROM b2b_jobs WHERE id = ?', [id]); }
 
-module.exports = { register, enqueue, runDue, start, stop, get };
+module.exports = { register, enqueue, runDue, runFor, cleanup, start, stop, get, handlers: function () { return Object.keys(handlers).sort(); } };

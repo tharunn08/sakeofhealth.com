@@ -22,6 +22,7 @@ const MATRIX = {
   'DELETE /orders/:id': AM,             // answers 410: orders are cancelled, not deleted (D10)
   'POST /orders/:id/cancel': AM,
   'GET /products': AMS, 'POST /products': AM, 'PATCH /products/:id': AM, 'DELETE /products/:id': AM,
+  'GET /products/:id/history': AM,   // change log of a protected product (2026-11-19)
   'GET /coupons': AMS, 'POST /coupons': AM, 'PATCH /coupons/:id': AM, 'DELETE /coupons/:id': AM,
   'GET /customers': AMS, 'GET /customers/:id': AMS, 'PATCH /customers/:id': AM,
   'GET /reviews': AMS, 'PATCH /reviews/:id': AMS, 'DELETE /reviews/:id': AM,
@@ -80,7 +81,7 @@ test('every route in routes/admin.js has a rule in the permission middleware', (
   assert.deepStrictEqual(missing, []);
 });
 
-test('BUG-005: role × route matrix is enforced on the server (4 roles × 39 routes)', async () => {
+test('BUG-005: role × route matrix is enforced on the server (4 roles × 40 routes)', async () => {
   const wrong = [];
   for (const r of adminRoutes()) {
     const key = r.method + ' ' + r.path.replace('/api/admin', '').replace(/x-(\w+)/g, ':$1');

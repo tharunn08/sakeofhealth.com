@@ -1,0 +1,13 @@
+Sake of Health — all checks
+When: 2026-11-18T12:51:45.824Z
+Node: v22.23.4
+Folder: /tmp/clean
+
+PASS    B2C guard — B2C protection OK — 108 protected files unchanged, no business code reaches into B2C  [b2c-guard.log]
+PASS    Build check — Build check passed — 191 JavaScript files, 10 dependencies, 18 migrations. Nothing to compile; start with "npm  [build-check.log]
+PASS    Syntax check — 0 errors in 250 files  [syntax-check.log]
+PASS    Tests without a database — tests 296, pass 293, fail 0, skipped 3  [tests-without-a-database.log]
+PASS    Online shop regression — tests 20, pass 20, fail 0, skipped 0  [online-shop-regression.log]
+NOT RUN MySQL 8 suites — NOT RUN (add --mysql; needs the throw-away test database)
+
+RESULT: PASSED without a database; MySQL 8 suites NOT RUN — the platform is not fully validated

@@ -1,4 +1,7 @@
 require('dotenv').config();
+// Environment check first: in production a missing or unsafe setting stops the start with a clear list
+// (src/config/env.js, docs/unified/ENVIRONMENT.md). Values of secrets are never printed.
+if (!require('./config/env.js').startupCheck()) process.exit(1);
 const express = require('express');
 const compression = require('compression');
 const helmet = require('helmet');
@@ -93,11 +96,12 @@ app.get('/api/health', function (req, res) {
       service: 'sake-of-health',
       version: require('../package.json').version,
       env: isProd ? 'production' : (process.env.NODE_ENV || 'development'),
+      protectedProducts: app.locals.protectedProducts === true,
       b2b: h,
       ts: Date.now(),
     });
   }).catch(function () {
-    res.json({ ok: true, service: 'sake-of-health', b2b: { enabled: b2b.enabled(), database: 'down' }, ts: Date.now() });
+    res.json({ ok: true, service: 'sake-of-health', protectedProducts: app.locals.protectedProducts === true, b2b: { enabled: b2b.enabled(), database: 'down' }, ts: Date.now() });
   });
 });
 
@@ -218,10 +222,10 @@ if (isProd) {
 
 if (db.products.count() === 0 && isProd) {
   // Never refill a live shop with demo data or demo staff (Phase 0.5.8, BUG-008).
-  console.error('\n✗ [SEED] Products collection is empty — not seeding in production.');
-  console.error('✗ [SEED] If the shop had products, orders or staff, the data directory is');
-  console.error('✗ [SEED] wrong or was wiped: check the "[DB] Using data directory" line and');
-  console.error('✗ [SEED] restore from your latest backup. Add products in Admin → Products.\n');
+  console.error('\n✗ [SEED] Products collection is empty — no demo data in production.');
+  console.error('✗ [SEED] The catalogue guard restores the products below (see the [CATALOGUE] lines).');
+  console.error('✗ [SEED] If orders or staff are missing too, the data directory is wrong or was');
+  console.error('✗ [SEED] wiped: check the "[DB] Using data directory" line and your backups.\n');
 } else if (db.products.count() === 0 && String(process.env.AUTO_SEED || 'true') === 'true') {
   console.warn('\n⚠️  [SEED] Products collection is empty — auto-seeding demo data now.');
   console.warn('⚠️  [SEED] If you previously created real staff, products, or orders and');
@@ -236,6 +240,24 @@ if (db.products.count() === 0 && isProd) {
     console.warn('[SEED] skipped:', e.message);
   }
 }
+
+// The shop's products survive redeploys and migrations: restore what is missing, keep snapshots
+// and daily backups outside the site folder (src/services/catalogueGuard.js). The four protected
+// products must pass the integrity check; in production the server will not start without it.
+(function protectedCatalogue() {
+  const catalogueGuard = require('./services/catalogueGuard.js');
+  let check = null;
+  try {
+    check = catalogueGuard.ensure(db);
+    catalogueGuard.watch();
+  } catch (e) { console.error('[CATALOGUE] check failed:', e.message); }
+  app.locals.protectedProducts = check && check.integrity ? check.integrity.ok : false;
+  if (!app.locals.protectedProducts && catalogueGuard.strict()) {
+    console.error('[PROTECTED] Not starting: the four protected products failed the integrity check (see above).' +
+      ' Fix the data or restore a backup — docs/unified/PROTECTED-PRODUCTS.md. (PROTECTED_PRODUCTS_STRICT=false would start anyway.)');
+    process.exit(78);
+  }
+})();
 
 const server = app.listen(PORT, '0.0.0.0', function () {
   console.log('\n  ' + (process.env.BRAND_NAME || 'Sake of Health'));

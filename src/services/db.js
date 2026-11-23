@@ -131,6 +131,8 @@ function collection(name) {
 
 const db = {};
 COLLECTIONS.forEach(c => { db[c] = collection(c); });
+// The four protected products: every write through this store is checked (src/services/productProtection.js).
+db.products = require('./productProtection.js').wrap(db.products);
 db.flushSync = flushSync;
 
 process.on('SIGINT', () => { flushSync(); process.exit(0); });

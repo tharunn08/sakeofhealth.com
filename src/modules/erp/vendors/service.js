@@ -21,7 +21,7 @@ const approvals = require('../core/approvals.js');
 const monitor = require('../core/monitor.js');
 const { fail, posId } = require('../lib/http.js');
 
-const CAPS = ['manufacturer', 'authorised_distributor', 'supplier_wholesaler'];
+const CAPS = ['manufacturer', 'authorised_distributor', 'supplier_wholesaler', 'contract_manufacturer'];   // contract_manufacturer needs migration 020
 const DOC_TYPES = ['gst_certificate', 'pan', 'business_registration', 'bank_proof', 'cancelled_cheque', 'fssai_licence', 'other_licence',
   'quality_certificate', 'product_catalogue', 'manufacturer_authorisation', 'contract', 'other'];
 const STAGES = ['verification', 'document_review', 'procurement', 'finance_compliance', 'admin'];
@@ -57,8 +57,7 @@ async function stateOfGstin(q, gstin) {
 // ── self-registration (public, rate-limited at the route) ──
 async function register(tx, b, ip) {
   const vendor = cleanVendor(b.vendor || b);
-  const caps = Array.isArray(b.capabilities) ? b.capabilities.filter(function (c) { return CAPS.indexOf(c) !== -1; }) : [];
-  if (!caps.length) throw fail(400, 'Choose at least one capability: ' + CAPS.join(', '));
+  const caps = pickCaps(b.capabilities);
   const u = b.user || {};
   const name = v.text(u.name, 120), email = v.email(u.email), mobile = v.mobile(u.mobile);
   if (!name || !v.isEmail(email)) throw fail(400, 'Your name and a valid e-mail are required');
@@ -76,6 +75,7 @@ async function register(tx, b, ip) {
   }
   const vendorId = Number(r.insertId);
   for (const c of caps) await tx.query("INSERT INTO b2b_vendor_capabilities (vendor_id, capability, status) VALUES (?, ?, 'requested')", [vendorId, c]);
+  if (b.address && (b.address.line1 || b.address.city || b.address.pincode)) await insertAddress(tx, vendorId, Object.assign({ type: 'registered' }, b.address));
   try {
     await tx.query("INSERT INTO b2b_vendor_users (vendor_id, name, email, mobile, password_hash, role, status) VALUES (?, ?, ?, ?, ?, 'owner', 'active')", [vendorId, name, email, mobile, hash]);
   } catch (e) {
@@ -99,13 +99,203 @@ async function invite(tx, actor, b) {
     r = await tx.query('INSERT INTO b2b_vendors (' + Object.keys(vendor).concat(['status', 'onboarding']).join(', ') + ') VALUES (' +
       Object.keys(vendor).map(function () { return '?'; }).concat(["'draft'", "'invited'"]).join(', ') + ')', Object.values(vendor));
   } catch (e) { if (e.code === 'ER_DUP_ENTRY') throw fail(409, 'A vendor with this GSTIN already exists'); throw e; }
+  const vendorId = Number(r.insertId);
+  for (const c of pickCaps(b.capabilities)) await tx.query("INSERT INTO b2b_vendor_capabilities (vendor_id, capability, status) VALUES (?, ?, 'requested')", [vendorId, c]);
+  if (b.address && (b.address.line1 || b.address.city || b.address.pincode)) await insertAddress(tx, vendorId, Object.assign({ type: 'registered' }, b.address));
   const token = crypto.randomBytes(24).toString('base64url');
   try {
     await tx.query("INSERT INTO b2b_vendor_users (vendor_id, name, email, mobile, role, status, invite_token_hash, invite_expires_at) VALUES (?, ?, ?, ?, 'owner', 'invited', ?, UTC_TIMESTAMP() + INTERVAL 7 DAY)",
-      [r.insertId, name, email, mobile, sha(token)]);
+      [vendorId, name, email, mobile, sha(token)]);
   } catch (e) { if (e.code === 'ER_DUP_ENTRY') throw fail(409, 'A vendor user with this e-mail already exists'); throw e; }
-  await audit.write(tx, actor, { module: 'vendors', action: 'vendor.invited', entity: 'vendor', entityId: r.insertId, new: { legal: vendor.legal_name, email: email } });
-  return { vendorId: Number(r.insertId), inviteToken: token, expiresInDays: 7, note: 'Share this one-time link privately: /vendor/?invite=<token>. It is not stored and cannot be shown again.' };
+  await audit.write(tx, actor, { module: 'vendors', action: 'vendor.invited', entity: 'vendor', entityId: vendorId, new: { legal: vendor.legal_name, email: email } });
+  return { vendorId: vendorId, inviteToken: token, invitePath: '/vendor-portal/?invite=' + token, expiresInDays: 7,
+    note: 'Share this one-time link privately. It is not stored and cannot be shown again.' };
+}
+function pickCaps(list) {
+  const caps = Array.isArray(list) ? list.filter(function (c, i, a) { return CAPS.indexOf(c) !== -1 && a.indexOf(c) === i; }) : [];
+  if (!caps.length) throw fail(400, 'Choose at least one: manufacturer, contract manufacturer, authorised distributor or supplier / wholesaler');
+  return caps;
+}
+
+/** A readable one-time password (shown once to the person who created it; must be changed at first sign-in). */
+function temporaryPassword() {
+  const abc = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
+  let out = '';
+  const bytes = crypto.randomBytes(14);
+  for (let i = 0; i < 14; i++) out += abc[bytes[i] % abc.length];
+  return out.slice(0, 5) + '-' + out.slice(5, 10) + '-' + out.slice(10) + '7';
+}
+async function setMustChange(tx, userId) {
+  try { await tx.query('UPDATE b2b_vendor_users SET must_change_password = 1 WHERE id = ?', [userId]); return true; }
+  catch (e) { if (require('../../../db/mustChange.js').missingColumn(e)) return false; throw e; }
+}
+async function insertLogin(tx, vendorId, u, role) {
+  const name = v.text(u.name, 120), email = v.email(u.email), mobile = v.mobile(u.mobile);
+  if (!name || name.length < 2) throw fail(400, 'Give the person\'s name');
+  if (!v.isEmail(email)) throw fail(400, 'A valid e-mail is required (it is the sign-in name)');
+  if (!mobile) throw fail(400, 'A valid 10-digit mobile number is required');
+  if (['owner', 'sales', 'dispatch', 'accounts'].indexOf(role) === -1) throw fail(400, 'Role must be owner, sales, dispatch or accounts');
+  const temp = temporaryPassword();
+  let r;
+  try {
+    r = await tx.query("INSERT INTO b2b_vendor_users (vendor_id, name, email, mobile, password_hash, role, status) VALUES (?, ?, ?, ?, ?, ?, 'active')",
+      [vendorId, name, email, mobile, security.hashPassword(temp), role]);
+  } catch (e) { if (e.code === 'ER_DUP_ENTRY') throw fail(409, 'Someone already signs in with this e-mail'); throw e; }
+  const forced = await setMustChange(tx, r.insertId);
+  return { userId: Number(r.insertId), email: email, temporaryPassword: temp, mustChangeAtFirstSignIn: forced };
+}
+
+/**
+ * Staff add a manufacturer or supplier directly, with its owner's sign-in. The temporary password is shown
+ * once (never stored in clear, never e-mailed by us); the owner signs in at /login and must choose their own.
+ */
+async function createWithLogin(tx, actor, b) {
+  const vendor = cleanVendor(b);
+  const caps = pickCaps(b.capabilities);
+  if (vendor.gstin) vendor.state_id = vendor.state_id || await stateOfGstin(tx, vendor.gstin);
+  ['paymentTermsDays:payment_terms_days', 'defaultLeadDays:default_lead_days'].forEach(function (x) {
+    const [k, col] = x.split(':'); if (b[k] !== undefined && b[k] !== '' && b[k] != null) { const n = Number(b[k]); if (!(Number.isInteger(n) && n >= 0 && n <= 365)) throw fail(400, k + ' must be 0–365 days'); vendor[col] = n; }
+  });
+  let r;
+  try {
+    r = await tx.query('INSERT INTO b2b_vendors (' + Object.keys(vendor).concat(['status', 'onboarding']).join(', ') + ') VALUES (' +
+      Object.keys(vendor).map(function () { return '?'; }).concat(["'submitted'", "'invited'"]).join(', ') + ')', Object.values(vendor));
+  } catch (e) { if (e.code === 'ER_DUP_ENTRY') throw fail(409, 'A manufacturer or supplier with this GSTIN already exists'); throw e; }
+  const vendorId = Number(r.insertId);
+  for (const c of caps) await tx.query("INSERT INTO b2b_vendor_capabilities (vendor_id, capability, status) VALUES (?, ?, 'requested')", [vendorId, c]);
+  if (b.address && (b.address.line1 || b.address.city || b.address.pincode)) await insertAddress(tx, vendorId, Object.assign({ type: 'registered' }, b.address));
+  const login = await insertLogin(tx, vendorId, b.user || {}, 'owner');
+  await audit.write(tx, actor, { module: 'vendors', action: 'vendor.created', entity: 'vendor', entityId: vendorId, new: { legal: vendor.legal_name, gstin: vendor.gstin, capabilities: caps, owner: login.email } });
+  return { vendorId: vendorId, status: 'submitted', login: login, signInAt: '/login' };
+}
+
+// ── addresses (registered office, factory, warehouse, billing) ──
+const ADDRESS_TYPES = ['registered', 'factory', 'warehouse', 'billing'];
+async function insertAddress(tx, vendorId, b) {
+  const type = String(b.type || b.addressType || '');
+  if (ADDRESS_TYPES.indexOf(type) === -1) throw fail(400, 'Address type must be registered, factory, warehouse or billing');
+  const line1 = v.text(b.line1, 200), city = v.text(b.city, 80), pin = String(b.pincode || '').replace(/\D/g, '');
+  if (!line1) throw fail(400, 'Address line 1 is required');
+  if (!city) throw fail(400, 'City is required');
+  if (!/^[1-9]\d{5}$/.test(pin)) throw fail(400, 'PIN code must be 6 digits');
+  const stateId = posId(b.stateId);
+  if (!stateId || !(await tx.queryOne('SELECT id FROM b2b_states WHERE id = ?', [stateId]))) throw fail(400, 'Choose the state');
+  const num = function (x, lim) { if (x == null || x === '') return null; const n = Number(x); if (!(Math.abs(n) <= lim)) throw fail(400, 'Invalid map position'); return n; };
+  const r = await tx.query('INSERT INTO b2b_vendor_addresses (vendor_id, address_type, line1, line2, city, state_id, pincode, latitude, longitude) VALUES (?,?,?,?,?,?,?,?,?)',
+    [vendorId, type, line1, v.text(b.line2, 200) || null, city, stateId, pin, num(b.latitude, 90), num(b.longitude, 180)]);
+  return Number(r.insertId);
+}
+async function addAddress(tx, actor, vendorId, b) {
+  if (!(await tx.queryOne('SELECT id FROM b2b_vendors WHERE id = ?', [vendorId]))) throw fail(404, 'Vendor not found');
+  const addressId = await insertAddress(tx, vendorId, b || {});
+  await audit.write(tx, actor, { module: 'vendors', action: 'vendor.address_added', entity: 'vendor', entityId: vendorId, new: Object.assign({ addressId: addressId }, b) });
+  return { addressId: addressId };
+}
+async function removeAddress(tx, actor, vendorId, addressId) {
+  const a = await tx.queryOne('SELECT * FROM b2b_vendor_addresses WHERE id = ? AND vendor_id = ? FOR UPDATE', [addressId, vendorId]);
+  if (!a) throw fail(404, 'Address not found');
+  await tx.query('DELETE FROM b2b_vendor_addresses WHERE id = ?', [addressId]);
+  await audit.write(tx, actor, { module: 'vendors', action: 'vendor.address_removed', entity: 'vendor', entityId: vendorId, old: a });
+  return { ok: true };
+}
+async function listAddresses(vendorId) {
+  const rows = await db.query('SELECT a.id, a.address_type, a.line1, a.line2, a.city, a.state_id, s.name AS state, a.pincode, a.latitude, a.longitude FROM b2b_vendor_addresses a ' +
+    'LEFT JOIN b2b_states s ON s.id = a.state_id WHERE a.vendor_id = ? ORDER BY FIELD(a.address_type, \'registered\', \'factory\', \'warehouse\', \'billing\'), a.id', [vendorId]);
+  return rows.map(function (a) { return { id: Number(a.id), type: a.address_type, line1: a.line1, line2: a.line2, city: a.city, stateId: Number(a.state_id), state: a.state, pincode: a.pincode,
+    latitude: a.latitude == null ? null : Number(a.latitude), longitude: a.longitude == null ? null : Number(a.longitude) }; });
+}
+
+// ── bank accounts (masked everywhere; the full number is encrypted at rest) ──
+async function listBankAccounts(vendorId) {
+  const rows = await db.query('SELECT b.id, b.account_name, b.account_last4, b.ifsc, b.status, b.created_at, st.name AS verified_by_name FROM b2b_vendor_bank_accounts b ' +
+    'LEFT JOIN b2b_staff st ON st.id = b.verified_by WHERE b.vendor_id = ? ORDER BY b.id DESC', [vendorId]);
+  return rows.map(function (b) { return { id: Number(b.id), accountName: b.account_name, accountMasked: 'XXXX' + b.account_last4, ifsc: b.ifsc, status: b.status, verifiedBy: b.verified_by_name || null, addedAt: b.created_at }; });
+}
+
+// ── people who sign in for the vendor ──
+async function addUser(tx, actor, vendorId, b) {
+  if (!(await tx.queryOne('SELECT id FROM b2b_vendors WHERE id = ?', [vendorId]))) throw fail(404, 'Vendor not found');
+  const login = await insertLogin(tx, vendorId, b || {}, String((b || {}).role || 'sales'));
+  await audit.write(tx, actor, { module: 'vendors', action: 'vendor.user_added', entity: 'vendor', entityId: vendorId, new: { userId: login.userId, email: login.email, role: (b || {}).role } });
+  return login;
+}
+async function resetUserPassword(tx, actor, vendorId, userId) {
+  const u = await tx.queryOne("SELECT id, email, status FROM b2b_vendor_users WHERE id = ? AND vendor_id = ? FOR UPDATE", [userId, vendorId]);
+  if (!u) throw fail(404, 'User not found');
+  if (u.status === 'disabled') throw fail(409, 'Turn the sign-in back on first');
+  const temp = temporaryPassword();
+  await tx.query("UPDATE b2b_vendor_users SET password_hash = ?, status = 'active', invite_token_hash = NULL, invite_expires_at = NULL, failed_logins = 0, locked_until = NULL, token_version = token_version + 1 WHERE id = ?",
+    [security.hashPassword(temp), userId]);
+  const forced = await setMustChange(tx, userId);
+  await audit.write(tx, actor, { module: 'vendors', action: 'vendor.user_password_reset', entity: 'vendor', entityId: vendorId, new: { userId: userId } });
+  return { userId: userId, email: u.email, temporaryPassword: temp, mustChangeAtFirstSignIn: forced };
+}
+async function setUserStatus(tx, actor, vendorId, userId, status, byVendorUserId) {
+  if (['active', 'disabled'].indexOf(status) === -1) throw fail(400, 'status must be active or disabled');
+  const u = await tx.queryOne('SELECT id, role, status, password_hash FROM b2b_vendor_users WHERE id = ? AND vendor_id = ? FOR UPDATE', [userId, vendorId]);
+  if (!u) throw fail(404, 'User not found');
+  if (byVendorUserId && Number(byVendorUserId) === Number(userId)) throw fail(409, 'You cannot turn off your own sign-in');
+  if (status === 'disabled' && u.role === 'owner') {
+    const others = await tx.queryOne("SELECT COUNT(*) AS n FROM b2b_vendor_users WHERE vendor_id = ? AND role = 'owner' AND status = 'active' AND id <> ?", [vendorId, userId]);
+    if (!Number(others.n)) throw fail(409, 'This is the only active owner. Add another owner first.');
+  }
+  if (status === 'active' && !u.password_hash) throw fail(409, 'This person has not set a password yet: reset the password instead');
+  await tx.query('UPDATE b2b_vendor_users SET status = ?, token_version = token_version + 1 WHERE id = ?', [status, userId]);
+  await audit.write(tx, actor, { module: 'vendors', action: 'vendor.user_' + status, entity: 'vendor', entityId: vendorId, old: { status: u.status }, new: { userId: userId, status: status } });
+  return { userId: userId, status: status };
+}
+async function listUsers(vendorId) {
+  const rows = await db.query('SELECT * FROM b2b_vendor_users WHERE vendor_id = ? ORDER BY role = \'owner\' DESC, id', [vendorId]);
+  return rows.map(function (u) { return { id: Number(u.id), name: u.name, email: u.email, mobile: u.mobile, role: u.role, status: u.status, lastLoginAt: u.last_login_at,
+    mustChangePassword: Number(u.must_change_password) === 1, locked: !!(u.locked_until && new Date(u.locked_until).getTime() > Date.now()), invited: u.status === 'invited' }; });
+}
+
+// ── staff edit of the vendor record (identity changes re-checked; all audited) ──
+async function staffUpdate(tx, actor, vendorId, b) {
+  const old = await tx.queryOne('SELECT * FROM b2b_vendors WHERE id = ? FOR UPDATE', [vendorId]);
+  if (!old) throw fail(404, 'Vendor not found');
+  const set = cleanVendor(b, true);
+  ['paymentTermsDays:payment_terms_days', 'defaultLeadDays:default_lead_days'].forEach(function (x) {
+    const [k, col] = x.split(':');
+    if (b[k] === undefined) return;
+    if (b[k] === '' || b[k] == null) { set[col] = null; return; }
+    const n = Number(b[k]); if (!(Number.isInteger(n) && n >= 0 && n <= 365)) throw fail(400, 'Days must be 0–365'); set[col] = n;
+  });
+  if (b.creditTermsNote !== undefined) set.credit_terms_note = v.text(b.creditTermsNote, 255) || null;
+  if (b.capabilitiesNote !== undefined) set.capabilities_note = v.text(b.capabilitiesNote, 1000) || null;
+  if (set.gstin && set.gstin !== old.gstin && b.stateId === undefined) set.state_id = await stateOfGstin(tx, set.gstin);
+  if (!Object.keys(set).length) throw fail(400, 'Nothing to change');
+  try {
+    await tx.query('UPDATE b2b_vendors SET ' + Object.keys(set).map(function (k) { return k + ' = ?'; }).join(', ') + ' WHERE id = ?', Object.values(set).concat([vendorId]));
+  } catch (e) { if (e.code === 'ER_DUP_ENTRY') throw fail(409, 'Another manufacturer or supplier has this GSTIN'); throw e; }
+  const before = {}; Object.keys(set).forEach(function (k) { before[k] = old[k]; });
+  await audit.write(tx, actor, { module: 'vendors', action: 'vendor.updated', entity: 'vendor', entityId: vendorId, old: before, new: set, reason: b.reason || null });
+  return { vendorId: vendorId, changed: Object.keys(set) };
+}
+
+/** Approve, reject or suspend one capability (e.g. a supplier who later asks to be a contract manufacturer). */
+async function decideCapability(tx, actor, vendorId, b) {
+  const cap = String(b.capability || ''), status = String(b.status || '');
+  if (CAPS.indexOf(cap) === -1) throw fail(400, 'Unknown capability');
+  if (['approved', 'rejected', 'suspended'].indexOf(status) === -1) throw fail(400, 'status must be approved, rejected or suspended');
+  const vd = await tx.queryOne('SELECT status FROM b2b_vendors WHERE id = ?', [vendorId]);
+  if (!vd) throw fail(404, 'Vendor not found');
+  if (status === 'approved' && vd.status !== 'approved') throw fail(409, 'Approve the business first (all verification stages)');
+  const c = await tx.queryOne('SELECT status FROM b2b_vendor_capabilities WHERE vendor_id = ? AND capability = ? FOR UPDATE', [vendorId, cap]);
+  if (!c) throw fail(404, 'This capability was not requested');
+  await tx.query('UPDATE b2b_vendor_capabilities SET status = ?, decided_by = ?, decided_at = UTC_TIMESTAMP() WHERE vendor_id = ? AND capability = ?', [status, actor.id, vendorId, cap]);
+  await audit.write(tx, actor, { module: 'vendors', action: 'vendor.capability_' + status, entity: 'vendor', entityId: vendorId, old: { capability: cap, status: c.status }, new: { capability: cap, status: status }, reason: b.note || null });
+  return { capability: cap, status: status };
+}
+/** The vendor asks for another capability; our team decides. */
+async function requestCapability(tx, vendor, cap) {
+  if (CAPS.indexOf(cap) === -1) throw fail(400, 'Unknown capability');
+  const c = await tx.queryOne('SELECT status FROM b2b_vendor_capabilities WHERE vendor_id = ? AND capability = ?', [vendor.vendorId, cap]);
+  if (c && c.status !== 'rejected') throw fail(409, 'Already ' + c.status);
+  if (c) await tx.query("UPDATE b2b_vendor_capabilities SET status = 'requested', decided_by = NULL, decided_at = NULL WHERE vendor_id = ? AND capability = ?", [vendor.vendorId, cap]);
+  else await tx.query("INSERT INTO b2b_vendor_capabilities (vendor_id, capability, status) VALUES (?, ?, 'requested')", [vendor.vendorId, cap]);
+  await audit.write(tx, vendorActor({ id: vendor.userId, role: vendor.role }), { module: 'vendors', action: 'vendor.capability_requested', entity: 'vendor', entityId: vendor.vendorId, new: { capability: cap } });
+  return { capability: cap, status: 'requested' };
 }
 function sha(t) { return crypto.createHash('sha256').update(String(t)).digest('hex'); }
 
@@ -170,17 +360,27 @@ function vendorRole(roles) {
 }
 
 async function me(vendor) {
-  const vd = await db.queryOne('SELECT id, vendor_code, legal_name, trade_name, gstin, pan, status, onboarding, payment_terms_days, state_id, created_at FROM b2b_vendors WHERE id = ?', [vendor.vendorId]);
+  const vd = await db.queryOne('SELECT id, vendor_code, legal_name, trade_name, gstin, pan, fssai_licence, fssai_valid_to, website, categories_note, brands_note, capabilities_note, default_lead_days, status, onboarding, payment_terms_days, state_id, created_at FROM b2b_vendors WHERE id = ?', [vendor.vendorId]);
   const caps = await db.query('SELECT capability, status FROM b2b_vendor_capabilities WHERE vendor_id = ?', [vendor.vendorId]);
   const docs = await db.query('SELECT id, doc_type, original_name, review_status, review_note, valid_to, created_at FROM b2b_vendor_documents WHERE vendor_id = ? ORDER BY id', [vendor.vendorId]);
-  return { user: { id: vendor.userId, name: vendor.name, email: vendor.email, role: vendor.role }, vendor: vd, capabilities: caps, documents: docs };
+  const u = await db.queryOne('SELECT name, mobile FROM b2b_vendor_users WHERE id = ?', [vendor.userId]);
+  const out = { user: { id: vendor.userId, name: u ? u.name : vendor.name, mobile: u ? u.mobile : null, email: vendor.email, role: vendor.role }, vendor: vd, capabilities: caps, documents: docs,
+    addresses: await listAddresses(vendor.vendorId) };
+  if (vendor.role === 'owner' || vendor.role === 'accounts') out.bankAccounts = await listBankAccounts(vendor.vendorId);
+  if (vendor.role === 'owner') out.users = (await listUsers(vendor.vendorId)).map(function (x) { return { id: x.id, name: x.name, email: x.email, mobile: x.mobile, role: x.role, status: x.status, lastLoginAt: x.lastLoginAt }; });
+  return out;
 }
 
-async function uploadDocument(tx, vendor, file, b, ip) {
+/** Checks before the file is stored (so a bad request stores nothing). */
+function checkDocumentRequest(file, b) {
   if (!file) throw fail(400, 'Attach the document as "file"');
-  const type = String(b.docType || '');
+  const type = String((b || {}).docType || '');
   if (DOC_TYPES.indexOf(type) === -1) throw fail(400, 'docType must be one of ' + DOC_TYPES.join(', '));
-  const saved = uploads.saveDocument(file);   // magic-byte check, random name, private folder
+  return type;
+}
+/** saved = the stored file (uploads.withDocument stores it before this transaction and removes it if this fails). */
+async function uploadDocument(tx, vendor, saved, b, ip) {
+  const type = checkDocumentRequest(saved, b);
   const validTo = b.validTo ? v.date(b.validTo) : null;
   const r = await tx.query('INSERT INTO b2b_vendor_documents (vendor_id, doc_type, original_name, stored_name, mime_type, size_bytes, sha256, valid_to, uploaded_by_vendor_user) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
     [vendor.vendorId, type, saved.originalName, saved.storedName, saved.mime, saved.size, saved.sha256, validTo, vendor.userId]);
@@ -226,12 +426,23 @@ async function submitPrice(tx, vendor, b) {
 async function list(q) {
   const where = ['1=1'], params = [];
   if (q.status) { where.push('vd.status = ?'); params.push(String(q.status).slice(0, 30)); }
-  if (q.q) { const t = '%' + String(q.q).replace(/[\\%_]/g, '\\$&').slice(0, 80) + '%'; where.push('(vd.legal_name LIKE ? OR vd.trade_name LIKE ? OR vd.gstin LIKE ?)'); params.push(t, t, t); }
+  if (q.capability) { where.push('EXISTS (SELECT 1 FROM b2b_vendor_capabilities c2 WHERE c2.vendor_id = vd.id AND c2.capability = ?)'); params.push(String(q.capability).slice(0, 40)); }
+  if (q.q) { const t = '%' + String(q.q).replace(/[\\%_]/g, '\\$&').slice(0, 80) + '%'; where.push('(vd.legal_name LIKE ? OR vd.trade_name LIKE ? OR vd.gstin LIKE ? OR vd.vendor_code LIKE ? OR EXISTS (SELECT 1 FROM b2b_vendor_users u2 WHERE u2.vendor_id = vd.id AND (u2.email LIKE ? OR u2.mobile LIKE ? OR u2.name LIKE ?)))'); params.push(t, t, t, t, t, t, t); }
   const rows = await db.query('SELECT vd.id, vd.vendor_code, vd.legal_name, vd.trade_name, vd.gstin, vd.status, vd.onboarding, vd.created_at, vd.approved_at, ' +
     "(SELECT GROUP_CONCAT(CONCAT(c.capability, ':', c.status)) FROM b2b_vendor_capabilities c WHERE c.vendor_id = vd.id) AS capabilities, " +
-    "(SELECT COUNT(*) FROM b2b_vendor_documents d WHERE d.vendor_id = vd.id AND d.review_status = 'pending') AS docs_pending " +
-    'FROM b2b_vendors vd WHERE ' + where.join(' AND ') + ' ORDER BY vd.id DESC LIMIT ' + db.int(q.limit, 50, 1, 200), params);
-  return { items: rows };
+    "(SELECT COUNT(*) FROM b2b_vendor_documents d WHERE d.vendor_id = vd.id AND d.review_status = 'pending') AS docs_pending, " +
+    "(SELECT COUNT(*) FROM b2b_vendor_bank_accounts ba WHERE ba.vendor_id = vd.id AND ba.status = 'pending') AS banks_pending, " +
+    "(SELECT COUNT(*) FROM b2b_vendor_products p WHERE p.vendor_id = vd.id AND p.status IN ('submitted','under_review')) AS products_pending, " +
+    "(SELECT CONCAT(u.name, '|', u.email, '|', u.mobile, '|', u.status, '|', COALESCE(u.last_login_at, '')) FROM b2b_vendor_users u WHERE u.vendor_id = vd.id AND u.role = 'owner' ORDER BY u.id LIMIT 1) AS owner, " +
+    "(SELECT CONCAT(a.city, '|', COALESCE(s.name, '')) FROM b2b_vendor_addresses a LEFT JOIN b2b_states s ON s.id = a.state_id WHERE a.vendor_id = vd.id ORDER BY a.address_type = 'registered' DESC, a.id LIMIT 1) AS place " +
+    'FROM b2b_vendors vd WHERE ' + where.join(' AND ') + ' ORDER BY vd.id DESC LIMIT ' + db.int(q.limit, 100, 1, 500), params);
+  const counts = await db.query('SELECT status, COUNT(*) AS n FROM b2b_vendors GROUP BY status');
+  const byStatus = {}; counts.forEach(function (c) { byStatus[c.status] = Number(c.n); });
+  return { items: rows.map(function (r) {
+    const o = r.owner ? String(r.owner).split('|') : null, pl = r.place ? String(r.place).split('|') : null;
+    return Object.assign({}, r, { docs_pending: Number(r.docs_pending), banks_pending: Number(r.banks_pending), products_pending: Number(r.products_pending),
+      owner: o ? { name: o[0], email: o[1], mobile: o[2], status: o[3], lastLoginAt: o[4] || null } : null, city: pl ? pl[0] : null, state: pl ? pl[1] || null : null });
+  }), byStatus: byStatus };
 }
 
 async function detail(id) {
@@ -240,10 +451,28 @@ async function detail(id) {
   return {
     vendor: vd,
     capabilities: await db.query('SELECT * FROM b2b_vendor_capabilities WHERE vendor_id = ?', [id]),
-    users: await db.query('SELECT id, name, email, mobile, role, status, last_login_at FROM b2b_vendor_users WHERE vendor_id = ?', [id]),
+    users: await listUsers(id),
+    addresses: await listAddresses(id),
+    bankAccounts: await listBankAccounts(id),
+    prices: await db.query('SELECT pl.id, pl.vendor_product_id, vp.name AS product, pl.unit_price, pl.gst_rate, pl.discount_pct, pl.freight_per_unit, pl.moq, pl.lead_days, pl.payment_terms_days, pl.valid_from, pl.valid_to, pl.status, pl.created_at ' +
+      'FROM b2b_vendor_price_lists pl JOIN b2b_vendor_products vp ON vp.id = pl.vendor_product_id WHERE pl.vendor_id = ? ORDER BY pl.id DESC LIMIT 300', [id]),
+    state: vd.state_id ? await db.queryOne('SELECT id, name, gst_code FROM b2b_states WHERE id = ?', [vd.state_id]) : null,
+    trade: await tradeSummary(id),
     documents: await db.query('SELECT id, doc_type, original_name, mime_type, size_bytes, sha256, valid_to, review_status, review_note, created_at FROM b2b_vendor_documents WHERE vendor_id = ?', [id]),
     verifications: await db.query('SELECT stage, outcome, note, staff_id, created_at FROM b2b_vendor_verifications WHERE vendor_id = ? ORDER BY id', [id]),
-    products: await db.query('SELECT * FROM b2b_vendor_products WHERE vendor_id = ? ORDER BY id DESC LIMIT 500', [id]),
+    products: await db.query('SELECT vp.*, p.sku AS mapped_sku, p.name AS mapped_name FROM b2b_vendor_products vp LEFT JOIN b2b_products p ON p.id = vp.product_id WHERE vp.vendor_id = ? ORDER BY vp.id DESC LIMIT 500', [id]),
+  };
+}
+/** Purchase orders, manufacturing orders, deliveries and bills with this vendor (each read only if its module's tables exist). */
+async function tradeSummary(id) {
+  const one = async function (sql) { try { return await db.queryOne(sql, [id]); } catch (e) { if (e.code === 'ER_NO_SUCH_TABLE' || e.errno === 1146 || e.errno === 1054) return null; throw e; } };
+  const po = await one("SELECT COUNT(*) AS n, COALESCE(SUM(grand_total), 0) AS v, SUM(status IN ('sent','accepted','partially_accepted','partially_received')) AS open_n FROM b2b_purchase_orders WHERE vendor_id = ?");
+  const mo = await one("SELECT COUNT(*) AS n, SUM(status IN ('released','accepted','in_production')) AS open_n FROM b2b_mfg_orders WHERE vendor_id = ?");
+  const asn = await one("SELECT COUNT(*) AS n, SUM(status IN ('dispatched','arrived')) AS open_n FROM b2b_asns WHERE vendor_id = ?");
+  return {
+    purchaseOrders: po ? { count: Number(po.n), open: Number(po.open_n || 0), value: Number(po.v) } : null,
+    manufacturingOrders: mo ? { count: Number(mo.n), open: Number(mo.open_n || 0) } : null,
+    deliveries: asn ? { count: Number(asn.n), inTransit: Number(asn.open_n || 0) } : null,
   };
 }
 
@@ -256,7 +485,8 @@ async function reviewDocument(tx, actor, vendorId, docId, b) {
   return { documentId: docId, status: b.status };
 }
 
-function documentFile(doc) { return uploads.documentPath(doc.stored_name); }
+/** Sends a vendor document; false = the stored file is missing. */
+function sendDocument(res, doc, headers, before) { return uploads.sendDocument(res, doc.stored_name, headers, before); }
 
 async function recordVerification(tx, actor, vendorId, b) {
   const vd = await tx.queryOne('SELECT id, status FROM b2b_vendors WHERE id = ? FOR UPDATE', [vendorId]);
@@ -341,12 +571,17 @@ async function addBankAccount(tx, actor, vendorId, b) {
   if (!(await tx.queryOne('SELECT id FROM b2b_vendors WHERE id = ?', [vendorId]))) throw fail(404, 'Vendor not found');
   const r = await tx.query("INSERT INTO b2b_vendor_bank_accounts (vendor_id, account_name, account_no_enc, account_last4, ifsc, status) VALUES (?, ?, ?, ?, ?, 'pending')",
     [vendorId, name, security.encrypt(no), no.slice(-4), ifsc]);
-  await audit.write(tx, actor, { module: 'vendors', action: 'vendor.bank_added', entity: 'vendor', entityId: vendorId, new: { last4: no.slice(-4), ifsc: ifsc } });
+  await audit.write(tx, actor, { module: 'vendors', action: 'vendor.bank_added', entity: 'vendor', entityId: vendorId, new: { bankAccountId: Number(r.insertId), last4: no.slice(-4), ifsc: ifsc } });
   return { bankAccountId: Number(r.insertId), status: 'pending' };
 }
 async function verifyBankAccount(tx, actor, vendorId, bankId, b) {
   const ba = await tx.queryOne('SELECT id, status FROM b2b_vendor_bank_accounts WHERE id = ? AND vendor_id = ? FOR UPDATE', [bankId, vendorId]);
   if (!ba) throw fail(404, 'Not found');
+  if (ba.status !== 'pending') throw fail(409, 'Already ' + ba.status);
+  // the staff member who added this account cannot verify it (an account the vendor added can be verified by any checker)
+  const added = await tx.queryOne("SELECT actor_type, actor_id FROM b2b_audit_logs WHERE action = 'vendor.bank_added' AND entity = 'vendor' AND entity_id = ? AND new_value LIKE ? ORDER BY id DESC LIMIT 1",
+    [String(vendorId), '{"bankAccountId":' + Number(bankId) + ',%']);
+  if (added && added.actor_type === 'admin' && Number(added.actor_id) === Number(actor.id)) throw fail(403, 'The person who added the bank account cannot verify it', 'maker_cannot_check');
   const status = b.status === 'verified' ? 'verified' : (b.status === 'rejected' ? 'rejected' : null);
   if (!status) throw fail(400, 'status must be verified or rejected');
   await tx.query('UPDATE b2b_vendor_bank_accounts SET status = ?, verified_by = ? WHERE id = ?', [status, actor.id, bankId]);
@@ -354,5 +589,52 @@ async function verifyBankAccount(tx, actor, vendorId, bankId, b) {
   return { bankAccountId: bankId, status: status };
 }
 
-module.exports = { register, invite, acceptInvite, login, requireVendor, requireApprovedVendor, vendorRole, me, uploadDocument, submitProduct, submitPrice,
-  list, detail, reviewDocument, documentFile, recordVerification, setStatus, decideProduct, decidePrice, addBankAccount, verifyBankAccount, vendorActor, STAGES };
+/** The vendor's own product submissions, each with its latest price submission and review status. */
+async function myProducts(vendor) {
+  const rows = await db.query('SELECT vp.id, vp.name, vp.vendor_sku, vp.hsn_code, vp.mrp, vp.pack_size, vp.shelf_life_days, vp.moq, vp.lead_days, vp.status, vp.review_note, vp.created_at, ' +
+    '(SELECT CONCAT(pl.unit_price, \'|\', pl.gst_rate, \'|\', pl.status, \'|\', pl.valid_from) FROM b2b_vendor_price_lists pl WHERE pl.vendor_product_id = vp.id ORDER BY pl.id DESC LIMIT 1) AS last_price ' +
+    'FROM b2b_vendor_products vp WHERE vp.vendor_id = ? ORDER BY vp.id DESC LIMIT 500', [vendor.vendorId]);
+  return { items: rows.map(function (r) {
+    const lp = r.last_price ? String(r.last_price).split('|') : null;
+    return { id: Number(r.id), name: r.name, vendorSku: r.vendor_sku, hsn: r.hsn_code, mrp: r.mrp == null ? null : Number(r.mrp), packSize: r.pack_size, shelfLifeDays: r.shelf_life_days, moq: r.moq, leadDays: r.lead_days,
+      status: r.status, reviewNote: r.review_note, lastPrice: lp ? { unitPrice: Number(lp[0]), gstRate: Number(lp[1]), status: lp[2], validFrom: lp[3] ? String(lp[3]).slice(0, 10) : null } : null };
+  }) };
+}
+
+/**
+ * Profile fields the vendor may change itself. Legal identity (legal name, GSTIN, PAN, CIN, FSSAI) is
+ * NOT here: those change only through our verification (a renewed licence is uploaded as a document).
+ */
+async function updateProfile(tx, vendor, b) {
+  const set = {}, user = {};
+  if (b.tradeName !== undefined) set.trade_name = v.text(b.tradeName, 200) || null;
+  if (b.website !== undefined) {
+    const w = v.text(b.website, 200);
+    if (w && !/^https?:\/\/[^\s/$.?#].[^\s]*$/i.test(w)) throw fail(400, 'Website must start with http:// or https://');
+    set.website = w || null;
+  }
+  if (b.categories !== undefined) set.categories_note = v.text(b.categories, 500) || null;
+  if (b.brands !== undefined) set.brands_note = v.text(b.brands, 500) || null;
+  if (b.capabilitiesNote !== undefined) set.capabilities_note = v.text(b.capabilitiesNote, 1000) || null;
+  if (b.defaultLeadDays !== undefined) {
+    const n = b.defaultLeadDays === '' || b.defaultLeadDays == null ? null : Number(b.defaultLeadDays);
+    if (n != null && !(Number.isInteger(n) && n >= 0 && n <= 365)) throw fail(400, 'Lead time must be 0–365 days');
+    set.default_lead_days = n;
+  }
+  if (b.contactName !== undefined) { const n = v.text(b.contactName, 120); if (n.length < 2) throw fail(400, 'Give your name'); user.name = n; }
+  if (b.contactMobile !== undefined) {
+    const m = String(b.contactMobile || '').replace(/\D/g, '').replace(/^91(?=\d{10}$)/, '');
+    if (!v.isMobile(m)) throw fail(400, 'Mobile must be a 10-digit Indian number');
+    user.mobile = m;
+  }
+  if (!Object.keys(set).length && !Object.keys(user).length) throw fail(400, 'Nothing to change');
+  const old = await tx.queryOne('SELECT trade_name, website, categories_note, brands_note, capabilities_note, default_lead_days FROM b2b_vendors WHERE id = ? FOR UPDATE', [vendor.vendorId]);
+  if (Object.keys(set).length) await tx.query('UPDATE b2b_vendors SET ' + Object.keys(set).map(function (k) { return k + ' = ?'; }).join(', ') + ' WHERE id = ?', Object.keys(set).map(function (k) { return set[k]; }).concat([vendor.vendorId]));
+  if (Object.keys(user).length) await tx.query('UPDATE b2b_vendor_users SET ' + Object.keys(user).map(function (k) { return k + ' = ?'; }).join(', ') + ' WHERE id = ? AND vendor_id = ?', Object.keys(user).map(function (k) { return user[k]; }).concat([vendor.userId, vendor.vendorId]));
+  await audit.write(tx, vendorActor({ id: vendor.userId, role: vendor.role }), { module: 'vendors', action: 'vendor.profile_updated', entity: 'vendor', entityId: vendor.vendorId, old: old, new: Object.assign({}, set, user) });
+  return { ok: true, changed: Object.keys(set).concat(Object.keys(user)) };
+}
+
+module.exports = { createWithLogin, addAddress, removeAddress, listAddresses, listBankAccounts, addUser, resetUserPassword, setUserStatus, listUsers, staffUpdate,
+  decideCapability, requestCapability, temporaryPassword, CAPS, ADDRESS_TYPES, myProducts, updateProfile, register, invite, acceptInvite, login, requireVendor, requireApprovedVendor, vendorRole, me, checkDocumentRequest, uploadDocument, submitProduct, submitPrice,
+  list, detail, reviewDocument, sendDocument, recordVerification, setStatus, decideProduct, decidePrice, addBankAccount, verifyBankAccount, vendorActor, STAGES };

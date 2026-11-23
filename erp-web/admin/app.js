@@ -84,8 +84,10 @@
   function overview(main) {
     main.appendChild(el('h1', { text: 'Overview' }));
     api('GET', '/monitoring').then(function (s) {
-      var q = s.notificationQueue || {}, j = s.jobs || {};
+      var q = s.notificationQueue || {}, j = s.jobs || {}, bg = s.backgroundJobs || {};
+      if (bg.warning) main.appendChild(msg('err', bg.warning));
       main.appendChild(el('div', { class: 'grid' }, [
+        kpi('Background jobs', (bg.mode === 'cron' ? 'Hostinger Cron Jobs' : 'in the web process') + (bg.lastCronRun ? ' · last run ' + fmt(bg.lastCronRun.at) + (bg.lastCronRun.status === 'done' ? '' : ' (problem)') : '')),
         kpi('Database', s.database), kpi('Open critical events', String(s.openCritical)),
         kpi('Messages failed / skipped', (q.failed || 0) + ' / ' + (q.skipped_no_provider || 0)), kpi('Jobs failed', String(j.failed || 0)),
         kpi('Last backup (worker)', s.lastBackup.at ? fmt(s.lastBackup.at) : s.lastBackup.status), kpi('Stock reconciliation', typeof s.inventoryReconciliation === 'string' ? s.inventoryReconciliation : (s.inventoryReconciliation.result ? s.inventoryReconciliation.result.issues + ' issue(s) · ' + fmt(s.inventoryReconciliation.at) : s.inventoryReconciliation.status))

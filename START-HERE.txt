@@ -1,21 +1,65 @@
 SAKE OF HEALTH — UNIFIED PLATFORM (complete build)
 
 This folder is the whole project, ready to run on Windows: online shop, central admin, B2B
-retailer/distributor portals, vendor portal, ERP (inventory ledger, approvals, notifications),
-online shop stock, events & counter sales, field app with offline queue, locations, central
-customers. The packages it needs are already included (node_modules), so no download is needed.
-Needs: Node.js 18 or newer (https://nodejs.org) and, for the business platform, MySQL 8.
+retailer/distributor portals, supplier & manufacturer portal, ERP (inventory ledger, approvals,
+notifications), online shop stock, events & counter sales, field app with offline queue, locations,
+central customers, manufacturers & manufacturing (orders, bills of materials, batch QC release),
+and trade deliveries (shipments, challans, proof of delivery, driver app). The packages it needs are already included (node_modules), so no download is needed.
+Needs: Node.js 20.6 or newer — 22 recommended (https://nodejs.org) — and, for the business platform, MySQL 8.
 
 ────────────────────────────────────────────────────────────────────────────
-VALIDATION STATUS — READ FIRST
+VALIDATION STATUS — READ FIRST (build of 2026-11-19)
 ────────────────────────────────────────────────────────────────────────────
-  PASSED in the build environment: B2C guard (108 shop files unchanged), build check, syntax
-  check of every file, 275 database-free tests (0 failures), 20 shop regression tests, browser
-  checks of the new screens, the field app's offline queue and the shop checkout.
-  NOT RUN: the 14 MySQL 8 test suites (no MySQL server was available there). Until they pass on
-  your computer, the database behaviour is written but not proven. Real email / WhatsApp sending
-  has not been tried with your accounts.
-  Full report: docs\unified\DELIVERY-REPORT.md
+  PASSED in the build environment:
+    - the B2C guard: 108 shop files; the 5 changed at your request are re-pinned with reasons;
+    - the build check and a syntax check of every file;
+    - 368 database-free tests: 0 failures, 3 skipped by design;
+    - 20 shop regression tests;
+    - a browser sweep of 94 screens (shop, admin and portals, on desktop and mobile): 0 errors,
+      0 blank screens, 0 sideways scrolling;
+    - the supplier, salesmen, delivery and manufacturing screen checks.
+  NOT RUN: the 17 MySQL 8 test suites, 172 tests, because no MySQL server was available there.
+    The release gate (node scripts/release-gate.js) and the GitHub check BLOCK a release until
+    they pass. Real e-mail / WhatsApp / SMS sending has not been tried with your accounts.
+  Reports: docs\unified\reports\ (TEST-REPORT, QUALITY-REGISTER, SECURITY-REPORT,
+    PERFORMANCE-REPORT, KNOWN-LIMITATIONS, DEVELOPMENT-LOG)
+
+────────────────────────────────────────────────────────────────────────────
+NEW IN THIS BUILD (2026-11-19)
+────────────────────────────────────────────────────────────────────────────
+  • The four shop products are permanently protected by the server itself. They cannot be
+    deleted, switched off, renamed or duplicated by anything: admin, import, bulk change, sync,
+    seed, restore. Every edit needs a reason and is logged (who, when, before/after).
+    Production will not start if they are damaged.
+    Check them any time: npm run verify:products
+    Details: docs\unified\PROTECTED-PRODUCTS.md
+  • Settings: every variable is in docs\unified\ENVIRONMENT.md. Use these commands:
+      npm run setup       creates your .env with new secrets
+      npm run check:env   lists what is missing; it never shows values
+      npm run secrets     prints new random secrets
+    In production the app stops with a clear list if a required setting is missing or unsafe.
+  • Hostinger Business: background work now runs from a Hostinger Cron Job
+    (scripts\cron\run-jobs.js, every 5 minutes). Business documents can stay in the private folder
+    or go to an S3-compatible bucket. See docs\DEPLOYMENT-HOSTINGER.md and
+    docs\unified\BACKGROUND-JOBS.md.
+  • Price list and invoice reconciliation (read-only; nothing imported):
+    docs\reconciliation\README.md — it lists the decisions it needs from you.
+  • Release gate: node scripts\release-gate.js. Deploy only when it says RELEASE ALLOWED.
+
+────────────────────────────────────────────────────────────────────────────
+EARLIER (2026-11-18)
+────────────────────────────────────────────────────────────────────────────
+  • The four shop products can no longer disappear: at every start the server restores them
+    (your last saved version, or the product pages' names and prices) and they cannot be deleted
+    in Admin. (Since 2026-11-19 they cannot be switched off either; see above.) Set DATA_DIR, CATALOGUE_DIR and BACKUP_DIR to folders
+    outside the site folder on Hostinger (.env.example explains).
+  • Procurement & Suppliers → Manufacturers & Suppliers: everything about each business, their
+    sign-ins, addresses, bank accounts, documents, products and prices; "Add manufacturer /
+    supplier" creates their sign-in. They sign in at /login (or /vendor-portal/); new ones
+    register at /vendor-portal/?register.
+  • Sales & Orders → Salesmen, and "My day" for salesmen in the field app (/sales-app/).
+  • New Delivery group: Delivery Dashboard, Shop Deliveries, Trade Deliveries, Delivery Staff.
+  • The admin menu keeps its scroll position when you open a page.
 
 ────────────────────────────────────────────────────────────────────────────
 1. RUN EVERY CHECK (about 2 minutes, no database)
@@ -43,15 +87,19 @@ VALIDATION STATUS — READ FIRST
 ────────────────────────────────────────────────────────────────────────────
   docs\phase-1\LOCAL-TRIAL-ON-WINDOWS.txt — a local database (sakeofhealth_local), settings
   for that window only, then  npm start  and open http://localhost:3000/login
-  New screens: Sales & Orders → Events & Counter Sales, Field & Event Locations;
-  Inventory → Online Shop Stock; Customers → All Customers; Administration → Offline Sync.
-  Field app: http://localhost:3000/sales-app/
+  New screens: Sales & Orders → Trade Deliveries, Events & Counter Sales, Field & Event Locations;
+  Inventory → Online Shop Stock; Manufacturing & Quality → Manufacturers, Manufacturing Orders,
+  Batch Quality & Release, Bills of Materials; Customers → All Customers; Administration →
+  Offline Sync.
+  Field app (salesmen, event staff, drivers): http://localhost:3000/sales-app/
+  Supplier & manufacturer portal: http://localhost:3000/vendor-portal/
 
 ────────────────────────────────────────────────────────────────────────────
 4. SETTINGS AND PRODUCTION
 ────────────────────────────────────────────────────────────────────────────
-  .env.example lists every setting by name (no values). Never put live payment keys on a test
-  computer — use Razorpay test keys (rzp_test_...).
+  .env.example, .env.development.example and .env.production.example list every setting (no secret
+  values; generated from src\\config\\env-schema.js). Never put live payment keys on a test computer —
+  use Razorpay test keys (rzp_test_...); the app refuses live keys outside production.
   Online shop stock stays OFF until two people approve it in Administration → Business Decisions.
   Migrations 013/014 are deliberately not included (decision D5 is still open).
   Production: do not deploy or migrate without the backup and runbook in

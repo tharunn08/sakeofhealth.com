@@ -101,11 +101,11 @@ test('every generated migration pins its SQL file and only uses allowed operatio
   // Exactly the ERP migrations 004–012 and 015 (013/014 are reserved and never reused).
   // Anything else in the folder (e.g. the untracked 013/014 under the D5 inspection) fails here, by name.
   const EXPECTED = ['004_core_governance.js', '005_products_pricing.js', '006_vendors.js', '007_procurement_lots.js', '008_inventory.js',
-    '009_network.js', '010_field_sales.js', '011_returns_recalls.js', '012_finance.js', '015_identity_bootstrap.js', '016_notification_center.js', '017_inventory_ledger.js', '018_notification_workflow.js', '019_operations_channels.js'];
+    '009_network.js', '010_field_sales.js', '011_returns_recalls.js', '012_finance.js', '015_identity_bootstrap.js', '016_notification_center.js', '017_inventory_ledger.js', '018_notification_workflow.js', '019_operations_channels.js', '020_manufacturing_delivery.js'];
   const unexpected = files.filter(function (f) { return EXPECTED.indexOf(f) === -1; });
   const missing = EXPECTED.filter(function (f) { return files.indexOf(f) === -1; });
   assert.deepStrictEqual({ unexpected: unexpected, missing: missing }, { unexpected: [], missing: [] },
-    'migration files differ from 004–012 + 015–019' + (unexpected.length ? ' — unexpected: ' + unexpected.join(', ') + ' (D5: do not run, edit or delete without the owner\'s decision)' : ''));
+    'migration files differ from 004–012 + 015–020' + (unexpected.length ? ' — unexpected: ' + unexpected.join(', ') + ' (D5: do not run, edit or delete without the owner\'s decision)' : ''));
   files.forEach(function (f) {
     const m = require(path.join(dir, f));
     const src = fs.readFileSync(path.join(dir, f), 'utf8');

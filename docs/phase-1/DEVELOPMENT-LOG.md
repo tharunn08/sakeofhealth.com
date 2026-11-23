@@ -446,3 +446,80 @@ Owner decisions D4, D5 and D8 (16 Nov). No new migration: the tables were create
 - `START-HERE.txt` is the entry point.
 - The ZIP includes `node_modules`: 10 dependencies, all plain JavaScript with no compiled parts, so it works on Windows without a download.
 - The MySQL 8 suites are still NOT RUN here, because no server is available.
+
+## Manufacturers, manufacturing and delivery (2026-11-18)
+
+- **Requirement:** the owner reported that the manufacturer and delivery sections had not been built. The requirement documents were checked:
+    - the platform audit §5 and the screen list (Manufacturing & Quality, Delivery Challans);
+    - Phase 1 §4;
+    - the complete-platform brief C and G.
+- **What already existed and was reused:** vendors with capabilities, document review, product and price submission and approval, POs, ASN, GRN, QC at receipt, lots, recalls, and the order flow with statuses.
+- **Migration 020** (guarded, SHA-pinned):
+    - 11 new tables;
+    - `b2b_products.item_kind`;
+    - `b2b_asns.delay_alerted_at`;
+    - enum extensions, each keeping the existing values first: capability `contract_manufacturer`, movement `production_issue`, offline kind `delivery`.
+- **Manufacturing** (`manufacturing/service.js`, routes `/api/erp/manufacturing`):
+    - facilities, versioned bills of materials (a second person activates, with two-factor), and contract and in-house manufacturing orders;
+    - FEFO material issue with an idempotency key; output to quarantine; QC that needs a CoA, is done by a different person, and releases to available or rejects to damaged;
+    - a contract ASN may carry only released batches, up to the released quantity, with the canonical batch number and dates;
+    - manufacturer performance computed from POs, GRNs, QC and ASNs;
+    - late manufacturer deliveries are alerted once.
+- **Manufacturer workspace** (supplier portal):
+    - manufacturing orders: accept or decline, production updates, batches with a CoA upload;
+    - deliveries to us, invoices and payments;
+    - own products with their latest price, and price submission;
+    - profile and contact editing (legal identity locked).
+- **Delivery** (`delivery/service.js`, routes `/api/erp/deliveries`):
+    - one shipment per order (vehicle, driver or delivery staff, courier, tracking, LR, e-way bill);
+    - dispatch, out for delivery, failed attempt (buyer notified), delivered with proof (multipart; short deliveries give a credit note through the existing flow), and back to warehouse;
+    - every step calls `orders.transition`;
+    - a challan snapshot at dispatch;
+    - an after-commit hook (`orders.onTransition`) and a 10-minute catch-up; the order view is extended through `orders.extendDetail`;
+    - late shipments are alerted once.
+- **Order flow:**
+    - new edge: dispatched / out_for_delivery → returned (fulfilment or seller, with a reason);
+    - `inventory.returnUndelivered` is keyed per allocation, and batch figures follow only a real posting.
+- **Screens:**
+    - 5 admin screens; a new sidebar group, Manufacturing & Quality (29 ERP screens in total);
+    - field app: My deliveries, offline-capable;
+    - trade portal: shipment card, distributor delivery details, challan, and a "could not deliver" action;
+    - the trade-orders admin page asks for a reason when goods come back.
+- **Permissions:** `manufacturing.*` and `deliveries.*`; new role `delivery_staff`; QC release belongs to quality control only.
+- **Settings:** `manufacturing.own_manufacturer_vendor_id`, `delivery.eway_bill_required_above`, `delivery.max_attempts` and `delivery.delay_alert_hours`, all pending decision.
+- **Bugs found and fixed:**
+    - The settings validator did not recognise the types of 3 earlier decisions (shop stock mode, warehouse, hold minutes), so they could never be set. Fixed, and a test now checks that every catalogue proposal validates.
+    - The new tabbed screens did not open their first tab.
+    - The field app would have stopped completely if the deliveries list failed (e.g. before migration 020); that list is now optional.
+- **Tests:**
+    - `manufacturing-delivery.test.js`: 21, DB-free, pass. Mutation checks: 12 deliberate defects, all caught.
+    - `manufacturing-delivery.mysql.test.js`: 8, MySQL 8, NOT RUN here.
+    - Browser check `mfg_ui.py`: pass on desktop and mobile.
+
+## 2026-11-18 (2) — permanent products, suppliers & manufacturers, salesmen, delivery group, admin menu
+
+- **Permanent products:**
+    - New `src/services/catalogueGuard.js` and `src/catalogue/core-products.json` (the four products with the product pages' names and prices).
+    - `server.js` calls the guard at start.
+    - Admin refuses to delete a core product.
+    - Snapshots and daily backups are kept outside the site folder; restore order: whole-folder backup → product snapshot → core file; missing core products are put back.
+    - Tests: `catalogue-guard.test.js` (8).
+    - BUG-008 test updated: production with an empty folder now shows the four real products, still no demo data or staff.
+- **Manufacturers & Suppliers:**
+    - Full admin record in `erp-web/admin/people.js`; it replaces the old screen in `modules.js`.
+    - Staff add a business with its owner's sign-in (temporary password, must change), or by invitation.
+    - Addresses, team sign-ins, capability decisions and audited staff edits.
+    - Vendor portal: richer registration, addresses, bank accounts, team, capability requests; `/login` links.
+    - Fixes: the invite link path, invited vendors had no capabilities, bank maker-checker matched the wrong audit rows, re-verifying a verified account.
+- **Salesmen:**
+    - `sales/team.js`: list, detail, update (cash-in-hand rule), lookups, and the salesman dashboard.
+    - New admin screen; field-app "My day"; the Sales Desk uses pickers.
+- **Delivery:** new sidebar group (dashboard, shop deliveries, trade deliveries, staff) and `GET /api/erp/deliveries/summary`.
+- **Admin menu:** keeps its scroll position between pages (`frontend/admin/admin.js`).
+- **Protected files changed (requested):**
+    - `src/server.js`, `src/routes/admin.js`, `frontend/admin/admin.js`.
+    - Manifest re-pinned with reasons.
+- **Tests:**
+    - `suppliers-salesmen-delivery.test.js`: 14, DB-free, pass.
+    - `suppliers-salesmen-delivery.mysql.test.js`: 5, NOT RUN here (no MySQL 8).
+    - Browser check `people_ui.py`: pass on desktop and mobile; earlier checks re-run, all pass.

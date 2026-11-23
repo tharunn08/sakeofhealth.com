@@ -76,11 +76,29 @@ Restore into an **empty** database — never on top of live tables.
 ### Uploaded documents
 
 Copy `private-files/` back into `B2B_PRIVATE_DIR`, keeping the folder
-structure.
+structure. With `STORAGE_PROVIDER=s3`, the documents uploaded since the switch are in the bucket, not in the
+backup. Restore those from the bucket's versioning (the backup's `manifest.json` records which provider was
+in use).
 
-### Customer website
+### Customer website (shop data)
 
-Stop the app, copy `b2c-data/*.json` back into `DATA_DIR`, start the app.
+Use the restore script. It never replaces anything without `--yes`.
+
+```bash
+node scripts/restore-shop.js /home/u123456789/sakeofhealth-backups/backup-20261119-020000         # shows what would change
+node scripts/restore-shop.js /home/u123456789/sakeofhealth-backups/backup-20261119-020000 --yes   # does it
+```
+
+1. **Stop the app first.** In hPanel, stop the Node.js app.
+2. **Choose a backup folder.** The script accepts any of these:
+   - a full backup folder made by `npm run backup`;
+   - its `b2c-data` subfolder;
+   - one of the daily `auto-YYYYMMDD` copies the cron job makes.
+3. **What the script does:**
+   - Before replacing anything, it copies the current files to `BACKUP_DIR/pre-restore-<time>`, so a restore can itself be undone.
+   - It refuses a backup that would lose any of the four protected products (`docs/unified/PROTECTED-PRODUCTS.md`).
+   - After restoring, it runs the protected-product integrity check. Check it again yourself with `npm run verify:products`.
+4. **Start the app again.**
 
 ## Rolling back a deploy
 

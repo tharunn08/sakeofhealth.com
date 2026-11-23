@@ -1,0 +1,12 @@
+Sake of Health — release gate
+When: 2026-11-19T12:16:32.546Z
+Node: v22.23.4
+Results: /home/claude/dev/soh/test-results/2026-11-19T12-14-45-551Z
+
+PASS     no held-back migration (013/014) in the checkout
+PASS     environment templates match src/config/env-schema.js
+PASS     the four protected products pass the integrity check on a fresh shop
+BLOCKED  the MySQL 8 suites cannot run: TEST_DB_HOST, TEST_DB_USER, TEST_DB_NAME not set (a release is never validated without them)
+BLOCKED  not every check ran — RESULT: PASSED without a database; MySQL 8 suites NOT RUN — the platform is not fully validated
+
+RELEASE BLOCKED (2 reason(s)). Do not deploy.

@@ -47,6 +47,7 @@ function pageHtml(page) {
     '<link rel="icon" type="image/png" href="/assets/images/carousel/favicon.png"/>\n' +
     '<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>\n' +
     '<link rel="stylesheet" href="/admin/admin.css"/>\n' +
+    '<link rel="stylesheet" href="/platform/shell.css"/>\n' +
     page.css.map(h => '<link rel="stylesheet" href="' + h + '"/>\n').join('') +
     '</head>\n<body>\n<script>window.SOH_PAGE=' + JSON.stringify(meta).replace(/</g, '\\u003c') + ';</script>\n' +
     '<script src="/config.js"></script>\n<script src="/admin/admin.js"></script>\n' +
@@ -57,12 +58,15 @@ function pageHtml(page) {
 function mount(app, opts) {
   const b2bEnabled = () => !!(opts && opts.b2bEnabled && opts.b2bEnabled());
 
+  /* ── Background run for an outside cron service (404 unless CRON_SECRET is set) ── */
+  require('./cron-route.js').mount(app);
+
   /* ── Single sign-in ── */
   app.get('/login', function (req, res) {
     noStore(res);
     res.sendFile(path.join(WEB, 'login.html'));
   });
-  ['login.js', 'erp-host.js', 'erp-embed.css'].forEach(function (f) {
+  ['login.js', 'erp-host.js', 'erp-embed.css', 'shell.css'].forEach(function (f) {
     app.get('/platform/' + f, function (req, res) {
       res.setHeader('Cache-Control', 'no-cache');
       res.setHeader('X-Content-Type-Options', 'nosniff');

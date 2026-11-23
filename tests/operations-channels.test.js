@@ -338,7 +338,7 @@ test('offline: how failures end — conflicts wait for staff, refusals are kept,
   assert.equal(off.classify({ status: 403, code: 'event_forbidden', expose: true }), 'failed');
   assert.equal(off.classify({ code: 'ER_LOCK_WAIT_TIMEOUT' }), 'retry');
   assert.equal(off.classify(new Error('socket hang up')), 'retry');
-  assert.deepEqual(off.KINDS, ['event_sale', 'event_payment', 'field_order', 'visit', 'location']);
+  assert.deepEqual(off.KINDS, ['event_sale', 'event_payment', 'field_order', 'visit', 'location', 'delivery']);
   const src = code(read('src/modules/erp/offline/service.js'));
   assert.doesNotMatch(src, /DELETE FROM b2b_offline_ops/, 'never deleted');
   assert.match(read('src/db/migrations/sql/019_operations_channels.sql'), /UNIQUE KEY uq_b2b_oo_client \(client_op_id\)/);

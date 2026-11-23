@@ -394,9 +394,26 @@ async function createAsn(tx, vendor, b) {
     sent[pi.id] = (sent[pi.id] || 0) + q;
     const cap = Number(pi.qty_accepted_by_vendor == null ? pi.qty_ordered : pi.qty_accepted_by_vendor) - Number(pi.qty_received) - (inFlight[pi.id] || 0);
     need(sent[pi.id] <= cap, 'Dispatch quantity exceeds what is still open on the PO for line ' + pi.id, 'over_dispatch');
-    const batch = v.text(it.batchNo, 60);
-    if (Number(pi.is_batch_tracked)) need(batch && v.date(it.expiryDate), 'Batch number and expiry date are required for every line');
-    const mfg = it.mfgDate ? v.date(it.mfgDate) : null, exp = it.expiryDate ? v.date(it.expiryDate) : null;
+    let batch = v.text(it.batchNo, 60);
+    if (Number(pi.is_batch_tracked) && !batch) need(false, 'Batch number and expiry date are required for every line');
+    let mfg = it.mfgDate ? v.date(it.mfgDate) : null, exp = it.expiryDate ? v.date(it.expiryDate) : null;
+    // Contract manufacturing: a product made on a manufacturing order for this PO ships only in batches
+    // our QC released, up to the released quantity, with the dates recorded on the batch.
+    const mos = await tx.query("SELECT id FROM b2b_mfg_orders WHERE po_id = ? AND product_id = ? AND mode = 'contract' AND status <> 'cancelled'", [po.id, pi.product_id])
+      .catch(function (e) { if (e.code === 'ER_NO_SUCH_TABLE') return []; throw e; });   // before migration 020: no manufacturing orders
+    if (mos.length) {
+      const mb = await tx.queryOne("SELECT b.* FROM b2b_mfg_batches b WHERE b.mo_id IN (" + mos.map(function () { return '?'; }).join(',') + ") AND b.batch_no_norm = ? FOR UPDATE",
+        mos.map(function (x) { return x.id; }).concat([lots.normBatch(batch)]));
+      need(mb && mb.status === 'released', 'Batch ' + (batch || '(none)') + ' has not been released by our quality control; only released batches can be dispatched', 'batch_not_released');
+      const shipped = await tx.queryOne("SELECT COALESCE(SUM(ai.qty), 0) AS n FROM b2b_asn_items ai JOIN b2b_asns a ON a.id = ai.asn_id JOIN b2b_purchase_order_items x ON x.id = ai.po_item_id " +
+        "WHERE a.po_id = ? AND x.product_id = ? AND a.status <> 'cancelled' AND ai.batch_no = ?", [po.id, pi.product_id, mb.batch_no]);
+      sent['b|' + mb.id] = (sent['b|' + mb.id] || 0) + q;
+      need(Number(shipped.n) + sent['b|' + mb.id] <= Number(mb.released_qty), 'Only ' + (Number(mb.released_qty) - Number(shipped.n)) + ' units of batch ' + mb.batch_no + ' are released and not yet dispatched', 'over_dispatch');
+      const bm = lots.fmt(mb.mfg_date), be = lots.fmt(mb.expiry_date);
+      need((!mfg || mfg === bm) && (!exp || exp === be), 'Batch ' + mb.batch_no + ' was recorded with manufacture ' + bm + ' and expiry ' + be + '; the dispatch notice must match');
+      mfg = bm; exp = be; batch = mb.batch_no;   // the batch exactly as recorded and released
+    }
+    if (Number(pi.is_batch_tracked)) need(batch && exp, 'Batch number and expiry date are required for every line');
     if (mfg && exp) need(exp > mfg, 'Expiry must be after manufacture');
     await tx.query('INSERT INTO b2b_asn_items (asn_id, po_item_id, batch_no, mfg_date, expiry_date, mrp, qty) VALUES (?, ?, ?, ?, ?, ?, ?)',
       [r.insertId, pi.id, batch || 'NA', mfg, exp, it.mrp == null ? null : R(M.paise(it.mrp)), q]);

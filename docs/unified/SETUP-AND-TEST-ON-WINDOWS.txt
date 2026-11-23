@@ -43,7 +43,7 @@ B1  B2C protection (the 108 shop files and the import rule):
 
 B2  Build / syntax check of every JavaScript file and the migration list:
       npm run build
-        -> "Build check passed — ... 19 migrations"
+        -> "Build check passed — ... 18 migrations" (001–012 and 015–020)
 
 B3  All database-free tests (the MySQL suites are left out here; they need Part C):
       $mysqlSuites = (node -e "console.log(require('./scripts/run-mysql-tests.js').SUITES.map(s=>'tests/'+s+'.test.js').join(';'))").Split(';')
@@ -59,7 +59,7 @@ PART C — MySQL 8 tests on the throw-away database (10–20 minutes)
 The runner refuses before connecting if 013/014 are present, the name does not end in _test, the
 account is root, or NODE_ENV is production; after connecting it refuses (changing nothing) if the
 server is not MySQL 8, the account has any right outside the test database, or the database holds
-tables that are not this project's. Each suite wipes the project tables and applies migrations 001–012 and 015–019 itself.
+tables that are not this project's. Each suite wipes the project tables and applies migrations 001–012 and 015–020 itself.
 
 C1    $env:TEST_DB_HOST = "127.0.0.1"
       $env:TEST_DB_USER = "soh_test"
@@ -72,6 +72,12 @@ C1    $env:TEST_DB_HOST = "127.0.0.1"
          6 (returns / damage / void), 11 (permissions), 8 (offline sync without duplicates),
          3b.2 locations, 9 (customer mapping without duplicates), 2+4 (B2B and field orders on the
          same ledger), expiry, reconciliation.
+         manufacturing-delivery.mysql covers manufacturers and delivery: facilities, a contract
+         manufacturing order from release to goods receipt (batch + CoA, QC partial release, only
+         released units on the dispatch notice), an in-house order (BOM by two people, materials FEFO
+         once per key, output to quarantine, QC release to stock), trade deliveries (dispatch with
+         challan, failed attempt, partial delivery with proof and credit note, back to warehouse),
+         driver and distributor isolation, the portal shipment card and challan, offline updates.
 C2    Compress-Archive -Path test-results-mysql -DestinationPath test-results-mysql.zip
         -> send me test-results-mysql.zip (passwords are masked in it)
 C3    Remove-Item Env:TEST_DB_HOST, Env:TEST_DB_USER, Env:TEST_DB_NAME
@@ -83,15 +89,18 @@ PART D — Migrations on a local trial database (optional; shows the screens wit
 ──────────────────────────────────────────────────────────────────────────────────────────────
 D1  Follow docs\phase-1\LOCAL-TRIAL-ON-WINDOWS.txt Steps 2–5 in this folder (database
     sakeofhealth_local, account soh_local, settings for this window only). Its Step 4
-    (node scripts\seed-accounts.js --migrate) applies every migration including 019. To check:
-      npm run migrate:status         -> 001–012 and 015–019 marked ✓ (applied), then "Up to date."
+    (node scripts\seed-accounts.js --migrate) applies every migration including 020. To check:
+      npm run migrate:status         -> 001–012 and 015–020 marked ✓ (applied), then "Up to date."
       npm run migrate:verify         -> every expected table exists
 D2  Sign in at http://localhost:3000/login as Super Admin. New screens in the one sidebar:
-      Sales & Orders  -> Events & Counter Sales, Field & Event Locations
+      Sales & Orders  -> Trade Deliveries, Events & Counter Sales, Field & Event Locations
       Inventory       -> Online Shop Stock
+      Manufacturing & Quality -> Manufacturers, Manufacturing Orders, Batch Quality & Release,
+                                 Bills of Materials
       Customers       -> All Customers
       Administration  -> Offline Sync
-    The field app (salesman / event staff) is at http://localhost:3000/sales-app/
+    The field app (salesman / event staff / delivery staff) is at http://localhost:3000/sales-app/
+    The supplier and manufacturer portal is at http://localhost:3000/vendor-portal/
 D3  Online shop stock stays OFF until two people decide it (Administration -> Business
     Decisions): inventory.b2c_warehouse_id (an online_shop stock point), then
     inventory.b2c_stock_mode = shadow. Leave it in shadow until the Online Shop Stock screen shows
@@ -101,9 +110,19 @@ D3  Online shop stock stays OFF until two people decide it (Administration -> Bu
     gateway is not configured, and nothing is sent).
 D4  Shop customers appear in All Customers after "Import / refresh from the shop" (or daily, once
     customers.import.enabled is decided). Shop logins are unchanged; nobody registers again.
+D5  Manufacturing and delivery decisions (Administration -> Business Decisions, two people):
+      manufacturing.own_manufacturer_vendor_id  the vendor record that stands for your own plant
+                                                (needed before in-house output can be recorded)
+      delivery.eway_bill_required_above         e.g. 50000 (refuse dispatch above it without one)
+      delivery.max_attempts                     e.g. 3
+      delivery.delay_alert_hours                e.g. 24 (late shipments / manufacturer deliveries
+                                                are alerted once to the admin alert emails)
+    Give drivers the "Delivery Staff" role (Administration -> Business Staff & Roles); they see
+    only the shipments assigned to them in the field app.
 
 ROLLBACK (trial or, later, production — production only with your separate approval):
-  Migration 019 adds tables and one index only; it changes no existing row. To go back, restore
+  Migrations 019 and 020 add tables, columns with defaults, one index and enum values only; they
+  change no existing row. To go back, restore
   the backup taken before migrating (docs\BACKUP-RESTORE.md). The runbook for production is
   docs\erp\MIGRATION-RUNBOOK.md; it has not been run against production.
 

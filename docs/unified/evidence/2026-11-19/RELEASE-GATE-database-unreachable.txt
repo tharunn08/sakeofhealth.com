@@ -1,0 +1,11 @@
+Sake of Health — release gate
+When: 2026-11-19T12:18:25.192Z
+Node: v22.23.4
+Results: /home/claude/dev/soh/test-results/2026-11-19T12-16-38-409Z
+
+PASS     no held-back migration (013/014) in the checkout
+PASS     environment templates match src/config/env-schema.js
+PASS     the four protected products pass the integrity check on a fresh shop
+BLOCKED  checks failed — RESULT: FAILED (1 step(s)) — send the whole test-results folder
+
+RELEASE BLOCKED (1 reason(s)). Do not deploy.

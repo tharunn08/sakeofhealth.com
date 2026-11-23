@@ -33,9 +33,9 @@ test('auth: correctly configured secrets', async (t) => {
     assert.strictEqual(decode(customerToken).typ, 'customer');
   });
 
-  await t.test('BUG-001: a customer token is refused (401) on every one of the 39 admin routes', async () => {
+  await t.test('BUG-001: a customer token is refused (401) on every one of the 40 admin routes', async () => {
     const routes = adminRoutes();
-    assert.strictEqual(routes.length, 39);   // 38 + POST /orders/:id/cancel (Phase 0.5.7)
+    assert.strictEqual(routes.length, 40);   // 38 + POST /orders/:id/cancel (Phase 0.5.7) + GET /products/:id/history (2026-11-19)
     const leaks = [];
     for (const r of routes) {
       const res = await callRoute(s, r, customerToken);

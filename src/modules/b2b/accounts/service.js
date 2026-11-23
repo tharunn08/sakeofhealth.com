@@ -1,7 +1,6 @@
 /**
  * Business accounts: registration, KYC documents, approval workflow, login.
  */
-const fs = require('fs');
 const db = require('../../../db/connection.js');
 const v = require('../lib/validate.js');
 const security = require('../lib/security.js');
@@ -141,7 +140,7 @@ async function register(type, body, files, ctx) {
   const saved = [];
   try {
     for (const field of uploads.DOC_FIELDS) {
-      if (files[field] && files[field][0]) saved.push(Object.assign({ docType: field }, uploads.saveDocument(files[field][0])));
+      if (files[field] && files[field][0]) saved.push(Object.assign({ docType: field }, await uploads.saveDocument(files[field][0])));
     }
     const passwordHash = security.hashPassword(body.password);
     const result = await db.transaction(async function (tx) {
@@ -186,7 +185,7 @@ async function register(type, body, files, ctx) {
     });
     return result;
   } catch (e) {
-    saved.forEach(function (d) { uploads.removeDocument(d.storedName); });
+    await Promise.all(saved.map(function (d) { return uploads.removeDocument(d.storedName); }));
     if (e.code === 'ER_DUP_ENTRY') throw conflict('This business is already registered (mobile, email or GSTIN is already in use)');
     throw e;
   }
@@ -496,9 +495,13 @@ async function documentFile(documentId, accountIdScope) {
   const doc = await db.queryOne('SELECT * FROM b2b_documents WHERE id = ?', [documentId]);
   if (!doc) throw notFound('Document not found');
   if (accountIdScope != null && Number(doc.account_id) !== Number(accountIdScope)) throw forbidden();
-  const p = uploads.documentPath(doc.stored_name);
-  if (!p) throw notFound('The stored file is missing');
-  return { doc: doc, path: p, stream: function () { return fs.createReadStream(p); } };
+  return {
+    doc: doc,
+    /** Sends the file (headers and before() only once it exists); a missing file is a 404. */
+    send: async function (res, headers, before) {
+      if (!(await uploads.sendDocument(res, doc.stored_name, headers, before))) throw notFound('The stored file is missing');
+    },
+  };
 }
 
 async function addDocument(accountId, docType, file, uploadedBy) {
@@ -506,13 +509,13 @@ async function addDocument(accountId, docType, file, uploadedBy) {
   if (!file) throw bad('Choose a file to upload');
   const count = await db.queryOne('SELECT COUNT(*) AS n FROM b2b_documents WHERE account_id = ?', [accountId]);
   if (Number(count.n) >= 20) throw bad('This account already has the maximum number of documents');
-  const saved = uploads.saveDocument(file);
+  const saved = await uploads.saveDocument(file);
   try {
     const res = await db.query(
       'INSERT INTO b2b_documents (account_id, doc_type, original_name, stored_name, mime_type, size_bytes, sha256, uploaded_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
       [accountId, docType, saved.originalName, saved.storedName, saved.mime, saved.size, saved.sha256, uploadedBy]);
     return { id: res.insertId };
-  } catch (e) { uploads.removeDocument(saved.storedName); throw e; }
+  } catch (e) { await uploads.removeDocument(saved.storedName); throw e; }
 }
 
 module.exports = {

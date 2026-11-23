@@ -43,7 +43,9 @@ test('events covered without new duplicate triggers: orders, status (dispatch, d
   assert.match(read('src/modules/b2b/routes/portal.js'), /event: 'security\.password_changed', channels: \['email'\]/);
   assert.match(read('src/modules/b2b/accounts/service.js'), /event: 'security\.password_reset', channels: \['email'\]/);
   const erp = read('src/modules/erp/index.js');
-  assert.match(erp, /jobs\.enqueue\(null, 'notifications\.stock_alerts', \{\}, \{ dedupeKey: 'notifications\.stock_alerts:' \+ day \}\)/, 'one stock alert a day');
+  // one stock alert a day: a daily slot in the one schedule (core/schedule.js), queued with the key "<type>:<slot>"
+  assert.match(read('src/modules/erp/core/schedule.js'), /\{ type: 'notifications\.stock_alerts', every: 1440,/, 'one stock alert a day');
+  assert.match(read('src/modules/erp/core/schedule.js'), /dedupeKey: r\.type \+ ':' \+ slotLabel\(s\)/);
   assert.match(erp, /jobs\.register\('notifications\.stock_alerts'/);
   // security notices never block the password change itself
   assert.match(read('src/modules/b2b/routes/portal.js'), /password_changed[\s\S]{0,400}\.catch\(function \(e\)/);

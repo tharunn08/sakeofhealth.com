@@ -469,7 +469,7 @@
 
   var TRACK = ['submitted', 'accepted', 'packed', 'dispatched', 'delivered'];
   function trackPos(s) { return { submitted: 0, pending_admin_approval: 0, approved: 0, assigned: 0, accepted: 1, processing: 1, packed: 2, dispatched: 3, out_for_delivery: 3, delivered: 4, partially_delivered: 4 }[s]; }
-  var SELLER_ACTION = { accepted: 'Accept order', processing: 'Start processing', packed: 'Mark packed', dispatched: 'Dispatch', out_for_delivery: 'Out for delivery', delivered: 'Mark delivered', cancelled: 'Cancel order' };
+  var SELLER_ACTION = { accepted: 'Accept order', processing: 'Start processing', packed: 'Mark packed', dispatched: 'Dispatch', out_for_delivery: 'Out for delivery', delivered: 'Mark delivered', cancelled: 'Cancel order', returned: 'Could not deliver — take back' };
 
   async function orderDetail(id, base, apiPath, activeNav) {
     var seller = base === 'retailer-orders';
@@ -492,10 +492,13 @@
       acts = d.nextStatuses.filter(function (s) { return s !== 'approved' && s !== 'cancelled'; }).map(function (s, i) { return '<button class="btn ' + (i === 0 ? 'pri' : '') + '" data-go="' + s + '">' + esc(SELLER_ACTION[s] || label(s)) + '</button>'; }).join('') +
         (d.nextStatuses.indexOf('approved') !== -1 ? '<button class="btn danger" data-go="approved">Decline</button>' : '') + (d.nextStatuses.indexOf('cancelled') !== -1 ? '<button class="btn danger" data-go="cancelled">Cancel order</button>' : '') +
         '<button class="btn" data-print="label">' + icon('print') + 'Delivery label</button><button class="btn" data-print="bill">' + icon('doc') + (d.invoice ? 'Invoice' : 'Order summary') + '</button>' +
+        (['packed', 'dispatched', 'out_for_delivery'].indexOf(o.status) !== -1 ? '<button class="btn" id="shipBtn">' + icon('truck') + (d.shipment ? 'Delivery details' : 'Add delivery details') + '</button>' : '') +
+        (d.shipment && d.shipment.challanNo ? '<button class="btn" id="challanBtn">' + icon('doc') + 'Challan</button>' : '') +
         (Number(d.outstanding) > 0 && !dead ? '<button class="btn" id="recPay">' + icon('rupee') + 'Record payment</button>' : '');
     } else {
       acts = (canPayOnline ? '<button class="btn pri" id="payNow">Pay ' + money(d.outstanding, 0) + ' online</button>' : '') + '<button class="btn" id="reorder">' + icon('undo') + 'Reorder</button>' +
         '<button class="btn" data-print="bill">' + icon('doc') + (d.invoice && d.invoice.status === 'final' ? 'Invoice' : 'Order summary') + '</button>' +
+        (d.shipment && d.shipment.challanNo ? '<button class="btn" id="challanBtn">' + icon('doc') + 'Delivery challan</button>' : '') +
         (canReturn ? '<button class="btn" id="retBtn">Return items</button>' : '') + (d.nextStatuses.indexOf('cancelled') !== -1 ? '<button class="btn danger" id="cancelBtn">Cancel order</button>' : '');
     }
     html += '<div class="btn-row" style="margin:14px 0">' + acts + '</div>';
@@ -517,6 +520,19 @@
         '<dt>Outstanding</dt><dd><b>' + money(d.outstanding) + '</b></dd>' + (d.invoice ? '<dt>Invoice</dt><dd class="mono">' + esc(d.invoice.invoice_no) + '</dd>' + (d.invoice.due_date && Number(d.outstanding) > 0 ? '<dt>Due</dt><dd>' + esc(date(d.invoice.due_date)) + '</dd>' : '') : '') + '</dl>' +
         (d.payments.length ? '<div style="margin-top:10px;border-top:1px solid var(--line-2);padding-top:8px">' + d.payments.map(function (p) { return '<div class="small" style="display:flex;justify-content:space-between;padding:3px 0"><span>' + esc(date(p.received_at)) + ' · ' + esc(label(p.method)) + (p.reference ? ' · ' + esc(p.reference) : '') + '</span><b>' + (p.status === 'reversed' ? '− ' : '') + money(p.amount) + '</b></div>'; }).join('') + '</div>' : '') + '</div></div></div>';
 
+    if (d.shipment) {
+      var sh = d.shipment, how = { own_vehicle: 'Our vehicle', courier: 'Courier', transporter: 'Transporter', pickup: 'Pickup' }[sh.mode] || sh.mode;
+      html += '<div class="card" style="margin-top:14px"><div class="card-h"><h2>Shipment</h2><span class="sp"></span>' + badge(sh.status === 'attempt_failed' ? 'pending' : (sh.status === 'ready' ? 'packed' : sh.status)) + '</div><div class="card-b"><dl class="kv">' +
+        '<dt>Shipment</dt><dd class="mono">' + esc(sh.shipmentNo) + '</dd><dt>How</dt><dd>' + esc(how) + (sh.carrier ? ' · ' + esc(sh.carrier) : '') + '</dd>' +
+        (sh.vehicleNo ? '<dt>Vehicle</dt><dd class="mono">' + esc(sh.vehicleNo) + '</dd>' : '') +
+        (sh.driverName ? '<dt>Driver</dt><dd>' + esc(sh.driverName) + (sh.driverPhone ? ' · <a class="link" href="tel:+91' + esc(sh.driverPhone) + '">' + esc(phone(sh.driverPhone)) + '</a>' : '') + '</dd>' : '') +
+        (sh.trackingNo ? '<dt>Tracking no.</dt><dd class="mono">' + esc(sh.trackingNo) + '</dd>' : '') + (sh.lrNo ? '<dt>LR no.</dt><dd class="mono">' + esc(sh.lrNo) + '</dd>' : '') +
+        (sh.ewayBillNo ? '<dt>E-way bill</dt><dd class="mono">' + esc(sh.ewayBillNo) + '</dd>' : '') + (sh.challanNo ? '<dt>Challan</dt><dd class="mono">' + esc(sh.challanNo) + '</dd>' : '') +
+        (sh.expectedAt ? '<dt>Expected</dt><dd>' + esc(dateTime(sh.expectedAt)) + (sh.late ? ' <b style="color:var(--red,#b00)">(late)</b>' : '') + '</dd>' : '') +
+        (sh.receivedBy ? '<dt>Received by</dt><dd>' + esc(sh.receivedBy) + '</dd>' : '') + (sh.attempts ? '<dt>Failed attempts</dt><dd>' + sh.attempts + '</dd>' : '') + '</dl>' +
+        (sh.events && sh.events.length ? '<ul class="tl" style="margin-top:10px">' + sh.events.slice().reverse().map(function (e) {
+          return '<li><b>' + esc(label(e.kind)) + '</b><span>' + esc(dateTime(e.at)) + (e.place ? ' · ' + esc(e.place) : '') + (e.note ? ' · ' + esc(e.note) : '') + '</span></li>'; }).join('') + '</ul>' : '') + '</div></div>';
+    }
     html += '<div class="card"><div class="card-h"><h2>History</h2></div><div class="card-b"><ul class="tl">' + d.history.slice().reverse().map(function (h) {
       return '<li><b>' + esc(label(h.to_status)) + '</b><span>' + esc(dateTime(h.created_at)) + (h.note ? ' · ' + esc(h.note) : '') + '</span></li>'; }).join('') + '</ul></div></div>';
     main.innerHTML = html;
@@ -528,6 +544,7 @@
         var to = b.dataset.go, send = function (payload) { return post('/retailer-orders/' + id + '/status', Object.assign({ status: to }, payload)).then(function (r) { toast(r.invoiceNo && to === 'dispatched' ? 'Dispatched — invoice ' + r.invoiceNo : 'Order updated'); reload(); }); };
         if (to === 'approved') return ask('Decline this order', 'It goes back to Sake of Health to be reassigned.', { ok: 'Decline order', danger: true, label: 'Why can’t you supply it?' }, function (r) { return send({ note: r }); });
         if (to === 'cancelled') return ask('Cancel this order', 'The retailer is notified.', { ok: 'Cancel order', danger: true }, function (r) { return send({ note: r }); });
+        if (to === 'returned') return ask('Could not deliver', 'Nothing was delivered: the goods come back to your stock and the retailer is told. Use “Mark delivered” if part of the order was accepted.', { ok: 'Take the goods back', danger: true, label: 'Why could it not be delivered?' }, function (r) { return send({ note: r }); });
         if (to === 'delivered') return sheet({ title: 'Confirm delivery', ok: 'Confirm delivery', body: '<p class="muted small" style="margin-bottom:12px">Change a quantity only if something could not be delivered — a credit note is raised for the difference.</p>' +
           d.items.map(function (i) { return '<div class="field"><label>' + esc(i.name) + ' <span class="muted">(ordered ' + i.qty + ')</span></label><input class="in" type="number" inputmode="numeric" min="0" max="' + i.qty + '" value="' + i.qty + '" data-del="' + i.id + '"/></div>'; }).join(''),
           onOk: function () { var del2 = {}; $$('[data-del]').forEach(function (x) { del2[x.dataset.del] = Number(x.value); }); return send({ delivered: del2 }); } });
@@ -535,6 +552,25 @@
       });
     });
     var on = function (sel, fn) { var el = $(sel); if (el) el.addEventListener('click', fn); };
+    on('#challanBtn', async function () {
+      var w = window.open('', '_blank');
+      try { var res = await fetch('/api/b2b' + apiPath + '/' + id + '/challan', { headers: { Authorization: 'Bearer ' + session().token } }); if (!res.ok) throw new Error('Could not open the challan');
+        w.location = URL.createObjectURL(new Blob([await res.text()], { type: 'text/html' })); } catch (e) { if (w) w.close(); toast(e.message, true); }
+    });
+    on('#shipBtn', function () {
+      var sh = d.shipment || {};
+      var f = function (k, lbl, attrs) { return '<div class="field"><label for="sh_' + k + '">' + lbl + '</label><input class="in" id="sh_' + k + '" ' + (attrs || '') + ' value="' + esc(sh[k] == null ? '' : sh[k]) + '"/></div>'; };
+      sheet({ title: 'Delivery details for ' + o.order_no, ok: 'Save', body: '<div class="field"><label for="sh_mode">How it travels</label><select class="sel" id="sh_mode">' +
+        [['own_vehicle', 'Our vehicle'], ['courier', 'Courier'], ['transporter', 'Transporter'], ['pickup', 'Retailer picks up']].map(function (m) { return '<option value="' + m[0] + '"' + (sh.mode === m[0] ? ' selected' : '') + '>' + m[1] + '</option>'; }).join('') + '</select></div>' +
+        f('carrier', 'Courier / transporter') + f('vehicleNo', 'Vehicle number', 'placeholder="KA01AB1234"') + f('driverName', 'Driver name') + f('driverPhone', 'Driver phone', 'inputmode="numeric"') +
+        f('trackingNo', 'Tracking number') + f('lrNo', 'LR number') + f('ewayBillNo', 'E-way bill (12 digits)', 'inputmode="numeric"') +
+        '<div class="field"><label for="sh_exp">Expected delivery</label><input class="in" type="datetime-local" id="sh_exp" value="' + (sh.expectedAt ? new Date(sh.expectedAt).toISOString().slice(0, 16) : '') + '"/></div>',
+        onOk: function () {
+          var v2 = function (k) { return $('#sh_' + k).value.trim(); };
+          return post('/retailer-orders/' + id + '/shipment', { mode: $('#sh_mode').value, carrier: v2('carrier'), vehicleNo: v2('vehicleNo'), driverName: v2('driverName'), driverPhone: v2('driverPhone'),
+            trackingNo: v2('trackingNo'), lrNo: v2('lrNo'), ewayBillNo: v2('ewayBillNo'), expectedAt: $('#sh_exp').value ? new Date($('#sh_exp').value).toISOString() : null }).then(function () { toast('Delivery details saved'); reload(); });
+        } });
+    });
     on('#recPay', function () {
       sheet({ title: 'Record payment received', ok: 'Record payment', body: '<div class="field"><label>Method</label><select class="sel" id="pm"><option value="upi">UPI</option><option value="bank_transfer">Bank transfer</option><option value="cash">Cash</option><option value="cheque">Cheque</option></select></div>' +
         '<div class="field"><label>Amount (₹)</label><input class="in" id="pa" inputmode="decimal" value="' + esc(d.outstanding) + '"/><div class="hint">Outstanding: ' + money(d.outstanding) + '</div></div><div class="field"><label>Reference (UTR / cheque no.)</label><input class="in" id="pr"/></div>',

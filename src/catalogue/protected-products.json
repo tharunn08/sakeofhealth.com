@@ -1,0 +1,204 @@
+{
+  "note": "Registry of the four protected shop products. The IDs are immutable: a record with one of these slugs, SKUs or legacy IDs is always stored under its registry ID. Identity (id, slug, name, category, a confirmed SKU) can only change by editing this file in source control; Admin, imports, sync and scripts cannot change it, delete the product, deactivate it or archive it. Price, MRP, stock, text and images stay editable in Admin with a reason, and every change is logged with before/after values. 'restore' is used only when a product is missing everywhere (no snapshot, no backup). See docs/unified/PROTECTED-PRODUCTS.md.",
+  "version": 2,
+  "sources": {
+    "identity": "frontend/products/<slug>.html — the live product pages (cart id = slug, name and price in the Add to Cart button, MRP on the page)",
+    "sku": "src/seed.js — the demo catalogue the shop was first filled from; to be confirmed by the owner",
+    "hsnCode": "not found in the code, the price list or the invoice — to be confirmed by the owner",
+    "gstRate": "not found in the code, the price list or the invoice — to be confirmed by the owner"
+  },
+  "products": [
+    {
+      "id": "soh-core-multivitamin",
+      "slug": "multivitamin",
+      "name": "Multivitamin Gummies",
+      "category": "multivitamins",
+      "sku": null,
+      "skuCandidate": "SOH-MV-60",
+      "hsnCode": null,
+      "gstRate": null,
+      "legacyIds": [
+        "7d45a245-a104-47e6-a402-5a9df646c8ff"
+      ],
+      "formerNames": [],
+      "toConfirm": [
+        "sku",
+        "hsnCode",
+        "gstRate"
+      ],
+      "page": "frontend/products/multivitamin.html",
+      "restore": {
+        "price": 621,
+        "mrp": 690,
+        "shortDescription": "Daily essentials in a delicious mixed-berry gummy.",
+        "description": "A complete daily multivitamin with 12 essential vitamins and minerals. Vegan, gelatin-free and made with real fruit pectin. 60 gummies — a 30-day supply.",
+        "image": "/assets/images/multivitamin.png",
+        "images": [
+          "/assets/images/carousel/multivitamin-1.png",
+          "/assets/images/carousel/multivitamin-2.png",
+          "/assets/images/carousel/multivitamin-3.png",
+          "/assets/images/carousel/multivitamin-4.png"
+        ],
+        "badge": "Bestseller",
+        "sortOrder": 1,
+        "highlights": [
+          "12 essential vitamins",
+          "Vegan & gelatin-free",
+          "No artificial colours",
+          "30-day supply"
+        ],
+        "tags": [
+          "daily",
+          "immunity",
+          "energy"
+        ],
+        "stock": null
+      }
+    },
+    {
+      "id": "soh-core-iron",
+      "slug": "iron",
+      "name": "Iron Gummies",
+      "category": "iron",
+      "sku": null,
+      "skuCandidate": "SOH-FE-60",
+      "hsnCode": null,
+      "gstRate": null,
+      "legacyIds": [
+        "3f967cc8-959c-4072-bb9c-a94bf79cd4aa"
+      ],
+      "formerNames": [
+        "Iron + Folic Acid Gummies"
+      ],
+      "toConfirm": [
+        "sku",
+        "hsnCode",
+        "gstRate"
+      ],
+      "page": "frontend/products/iron.html",
+      "restore": {
+        "price": 581,
+        "mrp": 645,
+        "shortDescription": "Gentle, non-constipating iron that actually tastes good.",
+        "description": "Ferrous fumarate paired with folic acid and vitamin C for maximum absorption. Formulated to avoid the metallic aftertaste and stomach upset of iron tablets.",
+        "image": "/assets/images/iron.png",
+        "images": [
+          "/assets/images/carousel/iron-1.png",
+          "/assets/images/carousel/iron-2.png",
+          "/assets/images/carousel/iron-3.png",
+          "/assets/images/carousel/iron-4.png"
+        ],
+        "badge": "",
+        "sortOrder": 2,
+        "highlights": [
+          "Gentle on the stomach",
+          "With vitamin C for absorption",
+          "Folic acid included",
+          "No metallic taste"
+        ],
+        "tags": [
+          "iron",
+          "women",
+          "energy"
+        ],
+        "stock": null
+      }
+    },
+    {
+      "id": "soh-core-curcumin",
+      "slug": "curcumin",
+      "name": "Curcumin Gummies",
+      "category": "athletic",
+      "sku": null,
+      "skuCandidate": "SOH-CU-60",
+      "hsnCode": null,
+      "gstRate": null,
+      "legacyIds": [
+        "ce7c4d01-c9df-4902-96eb-e5214a4d2d06"
+      ],
+      "formerNames": [],
+      "toConfirm": [
+        "sku",
+        "hsnCode",
+        "gstRate"
+      ],
+      "page": "frontend/products/curcumin.html",
+      "restore": {
+        "price": 576,
+        "mrp": 640,
+        "shortDescription": "High-absorption turmeric for recovery and joint comfort.",
+        "description": "Curcumin with piperine for up to 20× better bioavailability. Supports joint comfort and post-workout recovery without the earthy taste of turmeric powder.",
+        "image": "/assets/images/curcumin.png",
+        "images": [
+          "/assets/images/carousel/curcumin-1.png",
+          "/assets/images/carousel/curcumin-2.png",
+          "/assets/images/carousel/curcumin-3.png",
+          "/assets/images/carousel/curcumin-4.png"
+        ],
+        "badge": "New",
+        "sortOrder": 3,
+        "highlights": [
+          "20× better absorption",
+          "Joint & recovery support",
+          "With black pepper extract",
+          "Anti-inflammatory"
+        ],
+        "tags": [
+          "recovery",
+          "joints",
+          "athletic"
+        ],
+        "stock": null
+      }
+    },
+    {
+      "id": "soh-core-probiotic",
+      "slug": "probiotic",
+      "name": "Probiotic & Prebiotic Gummies",
+      "category": "multivitamins",
+      "sku": null,
+      "skuCandidate": "SOH-PB-60",
+      "hsnCode": null,
+      "gstRate": null,
+      "legacyIds": [
+        "acb9f135-5d47-4b66-a235-bd44708fe449"
+      ],
+      "formerNames": [
+        "Probiotic Gummies"
+      ],
+      "toConfirm": [
+        "sku",
+        "hsnCode",
+        "gstRate"
+      ],
+      "page": "frontend/products/probiotic.html",
+      "restore": {
+        "price": 626,
+        "mrp": 695,
+        "shortDescription": "Two billion CFU for everyday gut balance.",
+        "description": "Shelf-stable Bacillus coagulans delivering 2 billion CFU per serving. Supports digestion and gut balance — no refrigeration required.",
+        "image": "/assets/images/probiotic.png",
+        "images": [
+          "/assets/images/carousel/probiotic-1.png",
+          "/assets/images/carousel/probiotic-2.png",
+          "/assets/images/carousel/probiotic-3.png",
+          "/assets/images/carousel/probiotic-4.png"
+        ],
+        "badge": "",
+        "sortOrder": 4,
+        "highlights": [
+          "2 billion CFU",
+          "Shelf stable",
+          "Supports digestion",
+          "No refrigeration needed"
+        ],
+        "tags": [
+          "gut",
+          "digestion",
+          "daily"
+        ],
+        "stock": null
+      }
+    }
+  ]
+}

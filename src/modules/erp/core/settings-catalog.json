@@ -186,7 +186,7 @@
     },
     {
       "key": "inventory.b2c_stock_mode",
-      "type": "one of off, shadow, enforce",
+      "type": "enum: off|shadow|enforce",
       "proposal": "shadow",
       "status": "pending_business_decision",
       "decision": "3b.3 / 3b.4 (owner sequence: shadow first, then enforcement)",
@@ -194,7 +194,7 @@
     },
     {
       "key": "inventory.b2c_warehouse_id",
-      "type": "integer (id of the warehouse of type online_shop that ships shop orders)",
+      "type": "id (a warehouse of type online_shop that ships shop orders)",
       "proposal": null,
       "status": "pending_business_decision",
       "decision": "3b.3",
@@ -223,6 +223,38 @@
       "status": "pending_business_decision",
       "decision": "N4",
       "while_unset": "Shop customers are linked into the unified customer list only when staff run the import from the Customers screen."
+    },
+    {
+      "key": "manufacturing.own_manufacturer_vendor_id",
+      "type": "id (the vendor record that stands for our own plant; batches made in-house carry it as manufacturer)",
+      "proposal": null,
+      "status": "pending_business_decision",
+      "decision": "Manufacturing (in-house)",
+      "while_unset": "In-house manufacturing orders can be planned and materials issued, but their output cannot be recorded, because the batch would have no manufacturer of record."
+    },
+    {
+      "key": "delivery.eway_bill_required_above",
+      "type": "number",
+      "proposal": 50000,
+      "status": "pending_business_decision",
+      "decision": "Delivery (e-way bill)",
+      "while_unset": "Dispatch warns when a shipment worth more than 50,000 rupees has no e-way bill number, but does not stop it."
+    },
+    {
+      "key": "delivery.max_attempts",
+      "type": "integer 1-10",
+      "proposal": 3,
+      "status": "pending_business_decision",
+      "decision": "Delivery (failed attempts)",
+      "while_unset": "No limit: staff decide when to stop trying and return the goods to the warehouse."
+    },
+    {
+      "key": "delivery.delay_alert_hours",
+      "type": "integer 1-168",
+      "proposal": 24,
+      "status": "pending_business_decision",
+      "decision": "Delivery (delay alerts)",
+      "while_unset": "Late shipments and late manufacturer deliveries are marked on the screens; no alert is sent."
     }
   ]
 }

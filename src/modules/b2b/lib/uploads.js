@@ -4,14 +4,17 @@
  *  - Files are received into memory with hard size/count limits (multer).
  *  - The type is decided by the file's magic bytes, never by the client's
  *    filename or Content-Type header.
- *  - Stored under a random name in a private directory outside the web root;
- *    the only way to read one back is through an authorised API route.
+ *  - Business documents are stored under a random name through src/platform/storage.js
+ *    (a private folder outside the web root, or an S3-compatible bucket); the only way
+ *    to read one back is through an authorised API route.
+ *  - Import files stay in the private folder: they are read back within minutes.
  */
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const multer = require('multer');
 const config = require('../config.js');
+const storage = require('../../../platform/storage.js');
 const { bad } = require('./http.js');
 
 const DOC_FIELDS = ['gst_certificate', 'business_proof', 'address_proof', 'shop_proof', 'pan_card'];
@@ -53,19 +56,17 @@ const importUpload = multer({
   limits: { fileSize: config.maxImportBytes(), files: 1, fields: 10 },
 }).single('file');
 
-/** Validate + persist one uploaded KYC document. Returns metadata for the database row. */
-function saveDocument(file) {
-  const kind = sniff(file.buffer);
-  if (!kind) throw bad('"' + safeDisplayName(file.originalname) + '" is not a supported file. Upload a PDF, JPG, PNG or WEBP.');
+/** Validate one uploaded document by its contents. Returns the metadata for the database row (nothing is written). */
+function checkDocument(file) {
+  const kind = sniff(file && file.buffer);
+  if (!kind) throw bad('"' + safeDisplayName(file && file.originalname) + '" is not a supported file. Upload a PDF, JPG, PNG or WEBP.');
   const ext = path.extname(String(file.originalname || '')).toLowerCase().replace('.', '');
   const allowedExt = { pdf: ['pdf'], jpg: ['jpg', 'jpeg'], png: ['png'], webp: ['webp'] }[kind.ext];
   if (ext && allowedExt.indexOf(ext) === -1) {
     throw bad('"' + safeDisplayName(file.originalname) + '" has a file extension that does not match its contents.');
   }
-  const storedName = crypto.randomBytes(16).toString('hex') + '.' + kind.ext;
-  fs.writeFileSync(path.join(dir('documents'), storedName), file.buffer, { mode: 0o600 });
   return {
-    storedName: storedName,
+    storedName: crypto.randomBytes(16).toString('hex') + '.' + kind.ext,
     originalName: safeDisplayName(file.originalname),
     mime: kind.mime,
     size: file.buffer.length,
@@ -73,17 +74,47 @@ function saveDocument(file) {
   };
 }
 
-const STORED_RX = /^[a-f0-9]{32}\.(pdf|jpg|png|webp|xlsx|csv)$/;
+/** Validate + persist one uploaded document (async: the store may be a remote bucket). Returns the row metadata. */
+async function saveDocument(file) {
+  const meta = checkDocument(file);
+  await storage.put('documents', meta.storedName, file.buffer, meta.mime);
+  return meta;
+}
 
+/**
+ * Store the file BEFORE the database transaction, run fn(saved) (which opens the transaction), and remove the
+ * file again if fn fails — so a transaction never waits on a file upload and a failed request leaves no orphan.
+ * No file → fn(null).
+ */
+async function withDocument(file, fn) {
+  if (!file) return fn(null);
+  const saved = await saveDocument(file);
+  try { return await fn(saved); } catch (e) { await removeDocument(saved.storedName); throw e; }
+}
+
+const STORED_RX = storage.NAME_RX;
+
+/** Local path of a stored document (local provider only) — null for anything that is not a stored name. */
 function documentPath(storedName) {
   if (!STORED_RX.test(String(storedName))) return null;
   const p = path.join(dir('documents'), storedName);
   return fs.existsSync(p) ? p : null;
 }
 
-function removeDocument(storedName) {
-  const p = documentPath(storedName);
-  if (p) { try { fs.unlinkSync(p); } catch (e) { /* best effort */ } }
+/**
+ * Send a stored document with the given headers; before() (an audit entry) runs once the file is known to
+ * exist. Resolves false — nothing written — when the name is invalid or the file is missing, so the caller
+ * answers 404 as usual.
+ */
+async function sendDocument(res, storedName, headers, before) {
+  if (!STORED_RX.test(String(storedName))) return false;
+  return storage.send(res, 'documents', storedName, headers, before);
+}
+
+/** Best effort: never throws (used while cleaning up after another error). */
+async function removeDocument(storedName) {
+  if (!STORED_RX.test(String(storedName))) return;
+  try { await storage.remove('documents', storedName); } catch (e) { console.error('[uploads] could not remove ' + storedName + ':', e.message); }
 }
 
 function saveImportFile(file) {
@@ -103,6 +134,6 @@ function importPath(storedName) {
 }
 
 module.exports = {
-  DOC_FIELDS, documentUpload, importUpload, sniff, isXlsx, saveDocument, documentPath, removeDocument,
-  saveImportFile, importPath, safeDisplayName, dir,
+  DOC_FIELDS, documentUpload, importUpload, sniff, isXlsx, checkDocument, saveDocument, withDocument, documentPath, sendDocument,
+  removeDocument, saveImportFile, importPath, safeDisplayName, dir,
 };

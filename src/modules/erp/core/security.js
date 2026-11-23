@@ -85,18 +85,32 @@ function verifyTotp(secretB32, code, now) {
   return false;
 }
 
-// MFA secrets are stored encrypted (AES-256-GCM, key derived from the token secret).
-function key() { return crypto.createHash('sha256').update('erp-mfa:' + config.tokenSecret()).digest(); }
+// Data encrypted at rest (2FA secrets, bank account numbers) — AES-256-GCM.
+//   v2 (current): key = ENCRYPTION_KEY, independent of every signing secret, so ERP_JWT_SECRET can be
+//                 rotated without losing data. ENCRYPTION_KEY must never change once data exists.
+//   v1 (older):   key derived from ERP_JWT_SECRET; still read, and written only while ENCRYPTION_KEY is unset.
+function legacyKey() { return crypto.createHash('sha256').update('erp-mfa:' + config.tokenSecret()).digest(); }
+function dataKey() {
+  const raw = String(process.env.ENCRYPTION_KEY || '').trim();
+  if (!raw) return null;
+  if (/^[0-9a-f]{64}$/i.test(raw)) return Buffer.from(raw, 'hex');
+  const b = Buffer.from(raw, 'base64');
+  if (b.length === 32 && /^[A-Za-z0-9+/_-]+=*$/.test(raw)) return b;
+  return crypto.createHash('sha256').update('soh-data-key:' + raw).digest();   // any long random string
+}
 function encrypt(text) {
-  const iv = crypto.randomBytes(12), c = crypto.createCipheriv('aes-256-gcm', key(), iv);
+  const k = dataKey(), ver = k ? 'v2' : 'v1';
+  const iv = crypto.randomBytes(12), c = crypto.createCipheriv('aes-256-gcm', k || legacyKey(), iv);
   const enc = Buffer.concat([c.update(String(text), 'utf8'), c.final()]);
-  return 'v1:' + iv.toString('base64') + ':' + c.getAuthTag().toString('base64') + ':' + enc.toString('base64');
+  return ver + ':' + iv.toString('base64') + ':' + c.getAuthTag().toString('base64') + ':' + enc.toString('base64');
 }
 function decrypt(blob) {
   const p = String(blob || '').split(':');
-  if (p[0] !== 'v1' || p.length !== 4) return null;
+  if ((p[0] !== 'v1' && p[0] !== 'v2') || p.length !== 4) return null;
+  const k = p[0] === 'v2' ? dataKey() : legacyKey();
+  if (!k) return null;
   try {
-    const d = crypto.createDecipheriv('aes-256-gcm', key(), Buffer.from(p[1], 'base64'));
+    const d = crypto.createDecipheriv('aes-256-gcm', k, Buffer.from(p[1], 'base64'));
     d.setAuthTag(Buffer.from(p[2], 'base64'));
     return Buffer.concat([d.update(Buffer.from(p[3], 'base64')), d.final()]).toString('utf8');
   } catch (e) { return null; }

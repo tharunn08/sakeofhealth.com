@@ -138,6 +138,12 @@ async function main() {
     const cfg = require('../src/modules/b2b/config.js');
     manifest.privateFiles = copyTree(cfg.privateDir(), path.join(dir, 'private-files'));
     console.log('✓ Private documents: ' + manifest.privateFiles.files + ' files');
+    const storage = require('../src/platform/storage.js');
+    manifest.storage = storage.info();
+    if (storage.provider() === 's3') {
+      manifest.storage.note = 'Documents uploaded since the switch to the bucket are NOT in this backup: keep versioning (or a lifecycle copy) switched on for the bucket.';
+      console.log('! Documents in the bucket (' + (manifest.storage.bucket || '?') + ') are not copied by this backup — keep bucket versioning on.');
+    }
   } else {
     console.log('· B2B database not configured — skipped.');
   }

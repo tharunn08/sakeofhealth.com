@@ -483,6 +483,9 @@ async function get(orderId, scope) {
     hist.forEach(function (h) { if (h.actor_type === 'admin') h.actor_label = 'Admin'; });
     pays.forEach(function (p) { delete p.recorded_by; });
   }
+  for (const fn of DETAIL_EXTENDERS) {
+    try { await fn(out, scope); } catch (e) { console.error('[ORDERS] order detail extension failed:', e.code || e.message); }
+  }
   return out;
 }
 
@@ -521,6 +524,7 @@ const STATUS_COPY = {
   delivered: ['delivered', 'Your order has been delivered. Thank you for your business.'],
   partially_delivered: ['partially delivered', 'Part of your order has been delivered. A credit note has been raised for the items not delivered.'],
   cancelled: ['cancelled', 'Your order has been cancelled.'],
+  returned: ['could not be delivered', 'We could not deliver your order, so the goods have gone back to the warehouse. Please contact us to arrange delivery again.'],
   rejected: ['not approved', 'Your order could not be approved.'],
   refunded: ['refunded', 'The amount paid for this order has been refunded.'],
 };
@@ -598,6 +602,15 @@ async function transition(orderId, toStatus, scope, actor, opts) {
         if (unpaid > 0) await payments.release(tx, { debtorId: order.buyer_account_id, creditorId: order.seller_account_id || 0, amount: unpaid, orderId: order.id, note: 'Order ' + toStatus, actor: actor });
       }
     }
+    if (toStatus === 'returned' && (order.status === 'dispatched' || order.status === 'out_for_delivery')) {
+      if (note.length < 3) throw bad('Please say why the order could not be delivered');
+      await inventory.returnUndelivered(tx, order, actor, opts.condition === 'damaged' ? 'damaged' : 'good', 'not delivered: ' + note);
+      sets.push('stock_reserved = 0', 'cancel_reason = ?'); params.push(note);
+      if (order.payment_method === 'credit') {
+        const unpaid = money.toPaise(order.grand_total) - money.toPaise(order.amount_paid);
+        if (unpaid > 0) await payments.release(tx, { debtorId: order.buyer_account_id, creditorId: order.seller_account_id || 0, amount: unpaid, orderId: order.id, note: 'Order returned undelivered', actor: actor });
+      }
+    }
     if (toStatus === 'refunded') {
       const refunded = await payments.refundOrder(tx, order, actor, note || 'Refund');
       if (refunded <= 0) throw bad('Nothing has been paid on this order, so there is nothing to refund');
@@ -625,7 +638,7 @@ async function transition(orderId, toStatus, scope, actor, opts) {
     const copy = STATUS_COPY[toStatus];
     if (copy) {
       const lines = [copy[1]];
-      if (note && (toStatus === 'cancelled' || toStatus === 'rejected')) lines.push('Reason: ' + note);
+      if (note && (toStatus === 'cancelled' || toStatus === 'rejected' || toStatus === 'returned')) lines.push('Reason: ' + note);
       if (extra.invoice && (toStatus === 'dispatched' || toStatus === 'delivered')) lines.push('Invoice ' + extra.invoice.invoice_no + ' is available in your portal.');
       await notifications.notifyAccount(tx, order.buyer_account_id, { title: 'Order ' + order.order_no + ' ' + copy[0], lines: lines,
         link: '/b2b/orders/' + orderId, refType: 'order', refId: orderId });
@@ -638,9 +651,20 @@ async function transition(orderId, toStatus, scope, actor, opts) {
       await notifications.notifyAccount(tx, order.seller_account_id, { title: 'Order ' + order.order_no + ' was cancelled by the retailer', lines: [note || ''],
         link: '/b2b/retailer-orders/' + orderId, refType: 'order', refId: orderId });
     }
-    return { status: finalStatus, invoiceNo: extra.invoice ? extra.invoice.invoice_no : null, creditNote: extra.creditNote || null, refunded: extra.refunded || null };
+    return { status: finalStatus, from: order.status, invoiceNo: extra.invoice ? extra.invoice.invoice_no : null, creditNote: extra.creditNote || null, refunded: extra.refunded || null };
+  }).then(function (result) {
+    // after the commit: let other modules (delivery) follow the change; their failure never undoes it
+    if (!result.unchanged) TRANSITION_HOOKS.forEach(function (fn) {
+      Promise.resolve().then(function () { return fn(orderId, result.from, result.status, actor); }).catch(function (e) { console.error('[ORDERS] after-transition hook failed:', e.code || e.message); });
+    });
+    return result;
   });
 }
+
+/* Other modules may follow order changes and add to the order view (the delivery module does both). */
+const TRANSITION_HOOKS = [], DETAIL_EXTENDERS = [];
+function onTransition(fn) { TRANSITION_HOOKS.push(fn); }
+function extendDetail(fn) { DETAIL_EXTENDERS.push(fn); }
 
 /* ═════════════════ Admin tools ═════════════════ */
 
@@ -877,5 +901,5 @@ async function printData(orderIds, scope) {
 module.exports = {
   PAYMENT_METHODS, sellerFor, quote, getCart, setCartItem, addManyToCart, clearCart, placeOrder,
   list, get, transition, setHold, adjustQuantities, reassignSeller, setInternalNote, generateInvoice, reorder, printData,
-  settleCreditNote, lockOrder, orderItems, history, scopeWhere, insertFreeLines, reservationLines,
+  settleCreditNote, lockOrder, orderItems, history, scopeWhere, insertFreeLines, reservationLines, onTransition, extendDetail,
 };

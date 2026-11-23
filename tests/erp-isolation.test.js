@@ -7,7 +7,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const crypto = require('crypto');
-const { startServer } = require('./helpers/server.js');
+const { startServer, prodEnv } = require('./helpers/server.js');
 
 const DOWN_DB = { DB_HOST: '127.0.0.1', DB_PORT: '1', DB_USER: 'nobody', DB_PASSWORD: 'secret-pw-should-never-leak', DB_NAME: 'nothing' };
 
@@ -64,7 +64,9 @@ test('ERP enabled, database down: shop works, ERP answers 503 without internals,
 });
 
 test('ERP in production without a strong secret: refuses with 503, shop works', async () => {
-  const s = await startServer(Object.assign({ NODE_ENV: 'production', B2B_ENABLED: 'true', ERP_ENABLED: 'true', B2B_JWT_SECRET: 'test-b2b-secret-not-for-production-123', ERP_JWT_SECRET: 'short' }, DOWN_DB));
+  // CONFIG_STRICT=false: start despite the weak secret (refused at start-up otherwise — tests/env-config.test.js)
+  // to prove the ERP itself still refuses (defence in depth).
+  const s = await startServer(prodEnv(Object.assign({ CONFIG_STRICT: 'false', B2B_ENABLED: 'true', ERP_ENABLED: 'true', B2B_JWT_SECRET: 'test-b2b-secret-not-for-production-123', ERP_JWT_SECRET: 'short' }, DOWN_DB)));
   try {
     assert.equal((await s.get('/')).status, 200);
     const r = await s.post('/api/erp/core/login', { email: 'a@b.c', password: 'whatever-password' });

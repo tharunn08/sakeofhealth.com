@@ -1,0 +1,130 @@
+TAP version 13
+# Subtest: health endpoint (legacy /health) still answers
+ok 1 - health endpoint (legacy /health) still answers
+  ---
+  duration_ms: 166.787818
+  type: 'test'
+  ...
+# Subtest: storefront pages are served
+ok 2 - storefront pages are served
+  ---
+  duration_ms: 80.00421
+  type: 'test'
+  ...
+# Subtest: config.js exposes the same storefront settings
+ok 3 - config.js exposes the same storefront settings
+  ---
+  duration_ms: 4.517118
+  type: 'test'
+  ...
+# Subtest: products list and detail
+ok 4 - products list and detail
+  ---
+  duration_ms: 7.175464
+  type: 'test'
+  ...
+# Subtest: customer signup, login, me
+ok 5 - customer signup, login, me
+  ---
+  duration_ms: 178.898639
+  type: 'test'
+  ...
+# Subtest: coupons: public list and validation
+ok 6 - coupons: public list and validation
+  ---
+  duration_ms: 9.61195
+  type: 'test'
+  ...
+# Subtest: checkout: gateway order (mock) + verify
+ok 7 - checkout: gateway order (mock) + verify
+  ---
+  duration_ms: 11.750017
+  type: 'test'
+  ...
+# Subtest: order placement re-prices server-side and ignores tampered prices
+ok 8 - order placement re-prices server-side and ignores tampered prices
+  ---
+  duration_ms: 25.440884
+  type: 'test'
+  ...
+# Subtest: order tracking needs order id AND phone
+ok 9 - order tracking needs order id AND phone
+  ---
+  duration_ms: 5.413601
+  type: 'test'
+  ...
+# Subtest: customer sees own order history
+ok 10 - customer sees own order history
+  ---
+  duration_ms: 3.4403
+  type: 'test'
+  ...
+# Subtest: reviews: submit (pending) and public list only shows approved
+ok 11 - reviews: submit (pending) and public list only shows approved
+  ---
+  duration_ms: 5.279313
+  type: 'test'
+  ...
+# Subtest: admin: login and auth guard
+ok 12 - admin: login and auth guard
+  ---
+  duration_ms: 7.980495
+  type: 'test'
+  ...
+# Subtest: admin: dashboard, orders list/detail, status pipeline
+ok 13 - admin: dashboard, orders list/detail, status pipeline
+  ---
+  duration_ms: 30.207425
+  type: 'test'
+  ...
+# Subtest: admin: deliveries board and customers
+ok 14 - admin: deliveries board and customers
+  ---
+  duration_ms: 4.47658
+  type: 'test'
+  ...
+# Subtest: admin: products CRUD
+ok 15 - admin: products CRUD
+  ---
+  duration_ms: 14.400063
+  type: 'test'
+  ...
+# Subtest: admin: coupons, reviews, staff, analytics, settings, reports
+ok 16 - admin: coupons, reviews, staff, analytics, settings, reports
+  ---
+  duration_ms: 66.514803
+  type: 'test'
+  ...
+# Subtest: staff role restrictions (delivery agent cannot manage staff; works from own delivery board)
+ok 17 - staff role restrictions (delivery agent cannot manage staff; works from own delivery board)
+  ---
+  duration_ms: 49.398168
+  type: 'test'
+  ...
+# Subtest: unknown API routes return JSON 404; unknown pages fall back to the storefront
+ok 18 - unknown API routes return JSON 404; unknown pages fall back to the storefront
+  ---
+  duration_ms: 7.802552
+  type: 'test'
+  ...
+# Subtest: unknown pages keep their styling; missing files are not answered with HTML
+ok 19 - unknown pages keep their styling; missing files are not answered with HTML
+  ---
+  duration_ms: 13.66528
+  type: 'test'
+  ...
+# Subtest: mark delivered completes the order
+ok 20 - mark delivered completes the order
+  ---
+  duration_ms: 6.10568
+  type: 'test'
+  ...
+1..20
+# tests 20
+# suites 0
+# pass 20
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3789.65571

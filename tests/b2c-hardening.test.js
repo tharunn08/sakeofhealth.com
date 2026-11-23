@@ -10,7 +10,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
-const { startServer, bearer, ROOT } = require('./helpers/server.js');
+const { startServer, bearer, ROOT, prodEnv } = require('./helpers/server.js');
 
 const ip = () => '10.7.' + Math.floor(Math.random() * 250) + '.' + Math.floor(Math.random() * 250);
 function spread(srv) {
@@ -30,13 +30,19 @@ test.after(() => {
 });
 
 /* ── 0.5.8 seeding (BUG-008) ── */
-test('BUG-008: a production server with an empty data folder seeds nothing and creates no staff', async (t) => {
-  const s = await startServer({ NODE_ENV: 'production', AUTO_SEED: 'true' });
+// Changed deliberately (owner's request, Nov 2026): the four real products must always be in the shop, so a
+// production server with an empty data folder now gets exactly those four (src/catalogue/core-products.json,
+// the product pages' names and prices) — still no demo catalogue, no demo coupons and no staff.
+test('BUG-008: a production server with an empty data folder seeds no demo data and no staff (only the four real products)', async (t) => {
+  const s = await startServer(prodEnv({ AUTO_SEED: 'true' }));
   t.after(() => s.stop());
   const staff = fs.existsSync(path.join(s.dataDir, 'staff.json')) ? JSON.parse(fs.readFileSync(path.join(s.dataDir, 'staff.json'), 'utf8')) : [];
   assert.strictEqual(staff.length, 0, 'no staff accounts');
   const products = (await s.get('/api/shop/products')).data.products;
-  assert.strictEqual(products.length, 0, 'no demo catalogue in production');
+  assert.deepStrictEqual(products.map(p => p.slug).sort(), ['curcumin', 'iron', 'multivitamin', 'probiotic'], 'only the four real products, no demo catalogue');
+  assert.ok(products.every(p => /^soh-core-/.test(p.id)), 'the real products, not the demo seed');
+  const coupons = fs.existsSync(path.join(s.dataDir, 'coupons.json')) ? JSON.parse(fs.readFileSync(path.join(s.dataDir, 'coupons.json'), 'utf8')) : [];
+  assert.strictEqual(coupons.length, 0, 'no demo coupons');
   assert.match(s.log(), /empty|not seeding|refus/i, 'the log says why the shop is empty');
   const li = await s.post('/api/admin/login', { email: 'manager@sakeofhealth.com', password: 'manager@1234' });
   assert.notStrictEqual(li.status, 200, 'published demo password does not work');
@@ -58,7 +64,7 @@ test('BUG-008: in production, active demo staff left over from an old seed are r
     { id: 'st3', name: 'Old Rider', email: 'ravi@sakeofhealth.com', role: 'delivery', passwordHash: 'z', active: false, createdBy: 'seed' },
     { id: 'st4', name: 'Support Desk', email: 'support@sakeofhealth.com', role: 'staff', passwordHash: 'w', active: true, createdBy: 'seed', passwordChangedAt: '2026-01-01T00:00:00Z' },
   ]));
-  const s = await startServer({ NODE_ENV: 'production', DATA_DIR: dir });
+  const s = await startServer(prodEnv({ DATA_DIR: dir }));
   t.after(() => s.stop());
   const log = s.log();
   assert.match(log, /manager@sakeofhealth\.com/, 'active seeded account named');

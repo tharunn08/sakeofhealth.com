@@ -71,7 +71,7 @@
 
   /* ═════════ Order detail ═════════ */
 
-  var ACTION_LABEL = { approved: 'Approve order', rejected: 'Reject', cancelled: 'Cancel order', assigned: 'Assign', accepted: 'Accept', processing: 'Start processing', packed: 'Mark packed',
+  var ACTION_LABEL = { returned: 'Could not deliver — take back', approved: 'Approve order', rejected: 'Reject', cancelled: 'Cancel order', assigned: 'Assign', accepted: 'Accept', processing: 'Start processing', packed: 'Mark packed',
     dispatched: 'Dispatch', out_for_delivery: 'Out for delivery', delivered: 'Mark delivered', refunded: 'Record refund' };
 
   async function open(id) {
@@ -86,7 +86,7 @@
     var canAdjust = o.status === 'pending_admin_approval' && B.can('b2b.orders.approve');
     var next = d.nextStatuses.filter(function (s) { return !(o.status === 'assigned' && s === 'approved'); });
     var actions = next.map(function (s) {
-      var danger = s === 'cancelled' || s === 'rejected';
+      var danger = s === 'cancelled' || s === 'rejected' || s === 'returned';
       return '<button class="btn btn-' + (danger ? 'danger-ghost' : (s === next[0] ? 'primary' : 'ghost')) + ' btn-sm" data-go="' + s + '">' + esc(ACTION_LABEL[s] || B.label(s)) + '</button>'; }).join('');
     var margin = o.cost_total != null ? Number(o.taxable_total) - Number(o.cost_total) : null;
 
@@ -174,6 +174,10 @@
       b.addEventListener('click', function () {
         var to = b.dataset.go;
         if (to === 'delivered') return deliverModal(d, reload);
+        if (to === 'returned') {
+          return B.askReason(b.textContent + ' — ' + o.order_no, 'Nothing was delivered: the goods go back to available stock and any credit is released. The buyer is notified. Use Mark delivered if part of it was accepted.',
+            { danger: true, submit: 'Take the goods back' }, function (reason) { return post('/status', { status: to, note: reason }, 'Order returned to the warehouse'); });
+        }
         if (to === 'cancelled' || to === 'rejected' || to === 'refunded') {
           return B.askReason(b.textContent + ' — ' + o.order_no, to === 'refunded' ? 'Records that ' + B.money(o.amount_paid) + ' has been paid back to the buyer.' : 'Reserved stock and credit are released. The buyer is notified.',
             { danger: true, submit: b.textContent, optional: to === 'refunded' }, function (reason) { return post('/status', { status: to, note: reason }, 'Order ' + B.label(to).toLowerCase()); });

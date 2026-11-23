@@ -27,7 +27,7 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 
 const ROOT = path.join(__dirname, '..');
-const SUITES = ['b2b-platform', 'erp-foundation', 'erp-catalog', 'erp-procurement', 'erp-operations', 'erp-integrations', 'erp-federation.mysql', 'identity-seed.mysql', 'notifications-reliability.mysql', 'inventory-ledger.mysql', 'notifications-center.mysql', 'notifications-consent.mysql', 'notifications-workflow.mysql', 'operations-channels.mysql'];
+const SUITES = ['b2b-platform', 'erp-foundation', 'erp-catalog', 'erp-procurement', 'erp-operations', 'erp-integrations', 'erp-federation.mysql', 'identity-seed.mysql', 'notifications-reliability.mysql', 'inventory-ledger.mysql', 'notifications-center.mysql', 'notifications-consent.mysql', 'notifications-workflow.mysql', 'operations-channels.mysql', 'manufacturing-delivery.mysql', 'suppliers-salesmen-delivery.mysql', 'jobs-cron.mysql'];
 
 /** Reasons not to run, before connecting. Pure (tested without a database). */
 function preflight(env, migrationFiles) {

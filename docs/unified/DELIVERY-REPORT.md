@@ -1,4 +1,145 @@
-# Delivery report — unified platform (operations channels), 2026-11-17
+# Delivery report — unified platform
+
+## Update 2026-11-18 (2) — permanent products, suppliers & manufacturers, salesmen, delivery, admin menu
+
+**Requests:**
+1. The four online products must stay in Admin → Online Products and on the shop after every redeploy or migration.
+2. Manufacturers and suppliers need their own sign-in, and all their information in the admin panel.
+3. The admin menu jumped back to the top on every click.
+4. There was no salesman dashboard and no Salesmen section in the admin panel.
+5. The delivery section had not been updated.
+6. Check everything for small errors, from the shop to the trade portal to the supplier portal.
+
+| # | What was built | Where |
+|---|---|---|
+| 1 | **Permanent products.** At every start the server checks the product list: an empty list is restored from the latest snapshot of *your* products (with your edits), or — when there is none — the four products with the product pages' names and prices. A missing core product is put back; nothing that exists is overwritten; an unreadable file is kept aside, never overwritten. A completely empty data folder is first restored from the latest daily backup (orders, customers… too). Snapshots on every change and daily backups live outside the site folder. Core products cannot be deleted in Admin (409 — untick *Active* to hide one). The product pages' cart IDs (`iron`, `probiotic`…) now always price at checkout, which ends the "item no longer available" error. | `src/services/catalogueGuard.js`, `src/catalogue/core-products.json`; settings `CATALOGUE_DIR`, `BACKUP_DIR` in `.env.example` |
+| 2 | **Manufacturers & Suppliers.** New admin screen (Procurement & Suppliers): list with status counts, search by name, GSTIN, code, e-mail or mobile, and filters by status and type; the full record in tabs — Overview (identity, terms, what they supply, trade totals, edit with an audit reason, capability decisions, suspend), Sign-ins (add a person with a role, new temporary password, turn on/off), Addresses (registered, factory, warehouse, billing), Bank accounts (masked; second-person verification), Documents & checks (view, accept/reject, verification stages), Products & prices (approve against our product with a search picker; accept/reject prices). **Add manufacturer / supplier** with the owner's sign-in: either a temporary password shown once (they must choose their own at `/login`) or a one-time activation link. | `erp-web/admin/people.js`; API in `src/modules/erp/routes/vendors.js`, `vendors/service.js` |
+| 2 | **Their sign-in.** Manufacturers and suppliers sign in at `/login` (or `/vendor-portal/`). Registration now asks for trade name, PAN, FSSAI and validity, what they supply, several types (manufacturer, contract manufacturer, distributor, supplier) and the registered address. In the portal: their addresses, bank accounts (verified by us before any payment), their team's sign-ins with roles, and a request for another type. `/login` links to registration for manufacturers/suppliers and retailers/distributors. | `erp-web/vendor/app.js`, `platform-web/login.html`, `routes/vendor-portal.js` |
+| 3 | **Admin menu keeps its place.** The menu's scroll position is saved when you click and restored on the next page; the open page's link is always brought into view. | `frontend/admin/admin.js` (protected file, minimal change) |
+| 4 | **Salesmen (admin).** New screen under Sales & Orders: today's orders, value and visits, month against target, cash in hand (flagged over the limit), last seen; each salesman's orders, visits, cash to hand over (confirm received), beats with shops, targets, positions on a map, and settings (territory, warehouse, cash limit, code, switch off — refused while cash is not handed over). Add a salesman from business staff; set targets with pickers. The Sales Desk now uses salesman names and pickers instead of ids. | `erp-web/admin/people.js`, `src/modules/erp/sales/team.js`, `routes/sales.js` |
+| 4 | **Salesman dashboard (field app).** "My day": orders, visits and collections today, month sales and visits against target, cash in hand vs limit (warning above it), today's beat with shops visited ✓, recent orders. Works offline from the last copy. | `erp-web/sales/app.js`, `GET /api/sales/dashboard` |
+| 5 | **Delivery group** in the sidebar: Delivery Dashboard (online-shop deliveries and trade shipments together: waiting, late, out for delivery, delivered and failed today, each driver's workload), Shop Deliveries, Trade Deliveries, Delivery Staff (trade drivers with workload; shop riders). Existing addresses are unchanged, so bookmarks and the delivery role's home page still work. | `src/platform/registry.js`, `people.js`, `GET /api/erp/deliveries/summary` |
+| 6 | **Small errors found and fixed:** the invitation link pointed to `/vendor/` (it is `/vendor-portal/`); invited vendors got no capabilities; bank-account maker-checker compared any audit row of the vendor (also vendor users with the same number) — now matched to that account and to staff only; an already verified account could be verified again; a new vendor action jumped the detail back to its first tab. | `vendors/service.js`, `people.js` |
+
+**Changes to protected shop files (all three requested; manifest re-pinned with the reason in `scripts/b2c-manifest.json` → `repins`):**
+* `src/server.js` — calls the catalogue guard after the demo seed and before listening; the production "empty catalogue" message points to it.
+* `src/routes/admin.js` — `DELETE /api/admin/products/:id` refuses the four core products.
+* `frontend/admin/admin.js` — the menu keeps its scroll position.
+
+Nothing else in the shop changed. The demo seed (`src/seed.js`, development only) is unchanged; the real prices come from `core-products.json`.
+
+**One deliberate test change:** `tests/b2c-hardening.test.js` (BUG-008) said a production server with an empty folder shows no products. It now checks that such a server shows exactly the four real products, and still no demo catalogue, no demo coupons and no staff. That follows your instruction.
+
+**Tests and checks:**
+
+| Check | Result |
+|---|---|
+| B2C guard, build check, syntax check | PASS |
+| Database-free tests (includes the new `catalogue-guard.test.js` (8) and `suppliers-salesmen-delivery.test.js` (14)) | PASS — see `docs/unified/evidence/` |
+| Shop regression (20) | PASS |
+| Browser check `people_ui.py` (desktop and mobile) | PASS. Covers: the four products on an empty production server and checkout from the product pages' cart; the menu keeps its position; the Delivery group; suppliers (list, record, reset password, add sign-in, address, bank verify, product and price approval, add with login); salesmen (list, detail, cash handover, settings, beats, add); the delivery dashboard and staff; portal registration, team and bank; the `/login` links; the field-app dashboard. |
+| Earlier browser checks re-run: `smoke_all`, `mfg_ui`, `erp_shell`, `shell_flow`, `checkout_flow`, `ops_ui` | PASS |
+| `suppliers-salesmen-delivery.mysql.test.js` (5) and the other 15 MySQL 8 suites | **NOT RUN** — no MySQL 8 server here. Run them with `RUN-ALL-TESTS.cmd --mysql`. |
+
+**For your live Hostinger site:**
+1. Deploy this build.
+2. The first start puts the four products back automatically. The log shows `[CATALOGUE] … restored 4 product(s) from the core products`.
+3. Check their prices and stock in Admin → Online Products.
+4. If your old `products.json` turns up later, do not copy it over the live file. Instead:
+   1. Stop the app.
+   2. Copy the file into `CATALOGUE_DIR` as `products-YYYYMMDD-HHMMSS.json`, with today's date and time.
+   3. Replace the live `products.json` with `[]`.
+   4. Start the app. It restores that snapshot and puts back any core product it lacks.
+5. Set `DATA_DIR`, `CATALOGUE_DIR` and `BACKUP_DIR` to folders outside the site folder (see `.env.example`).
+
+Deploying is your decision; nothing was deployed from here.
+
+## Update 2026-11-18 — manufacturers, manufacturing and delivery
+
+**Request:** you reported that the manufacturer and delivery sections had not been built against your requirements. That was correct:
+
+* manufacturers existed only as a general vendor record with a portal;
+* there was no manufacturing workflow;
+* trade orders had statuses but no shipments, challans, proof of delivery or delivery screens.
+
+This update (migration 020, commit `c5f7a7a`, plus this report) builds them on the existing records and the one ledger.
+
+### Requirement checklist (platform audit §5, Phase 1 §4, complete-platform brief C and G)
+
+**Status key:**
+* **Built (new)** — added in this update.
+* **Built (existing)** — already in the platform, reused.
+* **Partly** — some parts built; the rest is named in the row.
+
+| Requirement | Status | Where |
+|---|---|---|
+| Manufacturers visible and manageable in the central admin | Built (new) | Manufacturing & Quality → Manufacturers |
+| Manufacturer account type; manufacturer vs supplier vs contract manufacturer clearly defined | Built | New `contract_manufacturer` capability; defined in ARCHITECTURE §7 |
+| Legal name, contact, GSTIN, PAN, FSSAI (with expiry) | Built (new) | Manufacturer detail |
+| Manufacturing facility details and capacity | Built (new) | Facilities (maker's or ours) |
+| Product categories, products manufactured, approved / pending | Built (new) | Manufacturer detail; approval itself is in Manufacturers & Suppliers (existing) |
+| Batch records, manufacturing and expiry dates, rejected batches | Built (new) | Batch records, QC results |
+| Quality certificates, Certificates of Analysis | Built (new) | Vendor documents (existing); CoA per batch (new); required before release |
+| Purchase orders, delivery status, performance and supply history | Built (new) | Manufacturer detail. Performance is computed from POs, receipts, QC and dispatch notices |
+| Manufacturer workspace: profile management | Built (new) | Supplier portal. Legal identity stays locked |
+| Workspace: document uploads | Built (existing) | Supplier portal |
+| Workspace: product and price submissions | Built (new UI) | Supplier portal; approval required |
+| Workspace: PO acceptance | Built (existing) | Supplier portal |
+| Workspace: production updates, batch creation, quality documentation | Built (new) | Supplier portal |
+| Workspace: ASN creation | Built (existing), now gated by QC | Supplier portal |
+| Workspace: delivery tracking | Built (new) | Supplier portal |
+| Workspace: purchase return acknowledgement | Built (existing) | Supplier portal |
+| Workspace: payment and invoice visibility | Built (new) | Supplier portal |
+| Submitted products and prices need approval before activation | Built (existing) | Unchanged |
+| Manufacturing orders | Built (new) | Contract and in-house |
+| Production planning | Partly | Planned dates, capacity and due or late flags. There is no automatic capacity scheduling or MRP |
+| Raw materials, bills of materials | Built (new) | `item_kind`; versioned BOMs, second-person activation |
+| Batch creation, batch tracking, traceability | Built | New batches; existing lots and recall trace |
+| Quality control, product release, rejected batches, quarantine | Built (new) | Batch Quality & Release |
+| Production receipt into the ledger | Built (new) | In-house: output to quarantine, then to available on release. Contract: through GRN |
+| Recall management | Built (existing) | Recalls |
+| Delivery challans | Built (new) | Issued at dispatch, printable for staff, distributor and buyer |
+| Order dispatch and delivery movements; delivery notifications; order tracking | Built | Through the existing order flow. New: shipment timeline, failed-attempt notice, portal shipment card |
+| Delivery management for staff and drivers | Built (new) | Trade Deliveries screen; "My deliveries" in the field app, offline-capable; proof of delivery |
+| Undeliverable goods | Built (new) | Back to the warehouse (order "returned", stock back, credit released) |
+| Manufacturer delivery delays | Built (new) | Late dispatch notices flagged; alerted once when the threshold is decided |
+
+### Found and fixed while building
+
+* **Three online-shop stock decisions could never be set.** They were `inventory.b2c_stock_mode`, `inventory.b2c_warehouse_id` and `inventory.b2c_hold_minutes`; their types were not recognised by the settings validator. This came from my earlier delivery. The MySQL suite would have caught it, but it has not run yet. A new test checks that every decision in the catalogue accepts its own proposed value.
+* **The field app could have stopped entirely** if the new deliveries list failed, for example on a server where migration 020 is not applied yet. That list is now optional.
+* **The three new tabbed screens did not open their first tab.** The browser check caught this.
+
+### Test results for this update (clean clone of `c5f7a7a`)
+
+| Check | Result |
+|---|---|
+| B2C guard | OK (108 files unchanged) |
+| Build check | Passed: 191 JS files, 18 migrations (001–012, 015–020) |
+| Syntax check | 0 errors in 250 files |
+| DB-free tests | 296 tests, 293 pass, **0 fail**, 3 skipped (the same expected skips) |
+| Shop regression | 20 / 20 pass |
+| New `manufacturing-delivery.test.js` | 21 / 21 pass |
+| Red run of the new tests | All 21 fail on the previous commit `3ade6ce` |
+| Mutation checks | 12 deliberate defects, all caught |
+| Browser checks | All pass: new admin screens (desktop and mobile), manufacturer workspace, retailer portal shipment and challan, field-app deliveries offline → online, plus every earlier check |
+| MySQL 8 suites | **15 suites (new: `manufacturing-delivery.mysql`, 8 tests): NOT RUN**. No MySQL server is available here (`evidence/clean2/mysql-runner-attempt.log`) |
+
+Evidence for this update is in `evidence/clean2/` and `evidence/screens-mfg/`.
+
+### Still open
+
+* **The MySQL 8 suites**, including the new manufacturing and delivery suite. Run them with `RUN-ALL-TESTS.cmd --mysql`.
+* **Four new business decisions** (Administration → Business Decisions):
+    * `manufacturing.own_manufacturer_vendor_id`, needed before in-house output can be recorded;
+    * `delivery.eway_bill_required_above`;
+    * `delivery.max_attempts`;
+    * `delivery.delay_alert_hours`.
+* **Automatic production scheduling (MRP) and retailer-held stock** are not built. Both need your rules first.
+
+---
+
+## Earlier delivery — operations channels, 2026-11-17
 
 Commits on top of `199e6fb` (N5):
 

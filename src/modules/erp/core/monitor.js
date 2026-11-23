@@ -39,6 +39,15 @@ async function summary() {
   out.lastBackup = backup ? { at: backup.finished_at, status: backup.status } : { status: 'none recorded by the ERP worker' };
   const migs = await db.query('SELECT version, name, applied_at FROM b2b_schema_migrations ORDER BY version');
   out.migrations = migs.map(function (m) { return m.name; });
+  // Background runs (JOBS_MODE=cron: Hostinger Cron Jobs → scripts/cron/run-jobs.js records each run)
+  const mode = require('../../../platform/jobs-config.js').mode();
+  const cronRun = await db.queryOne("SELECT status, finished_at, last_error FROM b2b_jobs WHERE job_type = 'cron.run' ORDER BY id DESC LIMIT 1");
+  const age = cronRun && cronRun.finished_at ? (Date.now() - new Date(cronRun.finished_at).getTime()) / 60000 : null;
+  out.backgroundJobs = { mode: mode, lastCronRun: cronRun ? { at: cronRun.finished_at, status: cronRun.status, problem: cronRun.last_error || null } : null };
+  if (mode === 'cron' && (age == null || age > 30)) {
+    out.backgroundJobs.warning = cronRun ? 'No cron run for ' + Math.round(age) + ' minutes — check the Hostinger Cron Job (docs/unified/BACKGROUND-JOBS.md).'
+      : 'No cron run recorded yet — set up the Hostinger Cron Job (docs/unified/BACKGROUND-JOBS.md). Until then no background job runs.';
+  }
   const rec = await db.queryOne("SELECT finished_at, status, result_json FROM b2b_jobs WHERE job_type = 'inventory.reconcile' ORDER BY id DESC LIMIT 1");
   out.inventoryReconciliation = rec ? { at: rec.finished_at, status: rec.status, result: rec.result_json ? JSON.parse(rec.result_json) : null } : 'not run yet (daily job, or GET /api/erp/inventory/reconciliation)';
   return out;

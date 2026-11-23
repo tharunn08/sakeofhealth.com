@@ -23,6 +23,9 @@ function validate(key, value) {
   if (/^integer 0-100/.test(t)) { if (!isInt(value) || value < 0 || value > 100) throw fail('Expected a whole number 0–100'); return value; }
   if (t === 'integer 4|6|8') { if ([4, 6, 8].indexOf(value) === -1) throw fail('Expected 4, 6 or 8'); return value; }
   if (t === 'integer') { if (!isInt(value) || value < 1 || value > 50) throw fail('Expected a whole number 1–50'); return value; }
+  const range = /^integer (\d+)-(\d+)/.exec(t);
+  if (range) { const lo = Number(range[1]), hi = Number(range[2]); if (!isInt(value) || value < lo || value > hi) throw fail('Expected a whole number ' + lo + '–' + hi); return value; }
+  if (/^id\b/.test(t)) { if (!isInt(value) || value < 1) throw fail('Expected the number (id) of an existing record'); return value; }
   if (t === 'number') { if (typeof value !== 'number' || !isFinite(value) || value < 0) throw fail('Expected a number ≥ 0'); return value; }
   if (t === 'boolean') { if (typeof value !== 'boolean') throw fail('Expected true or false'); return value; }
   if (/^enum:/.test(t)) { const opts = t.slice(5).split('|').map(function (s) { return s.trim(); }); if (opts.indexOf(value) === -1) throw fail('Expected one of ' + opts.join(', ')); return value; }
