@@ -97,7 +97,10 @@ async function signIn(input, sources) {
       mustChangePassword: !!((staff.ok && staff.mustChangePassword) || (erp && erp.mustChangePassword)),
     });
   }
-  if (erp && erp.isSalesman) workspaces.push({ type: 'sales', label: 'Field sales app', home: '/sales-app/', token: erp.token, mustChangePassword: !!erp.mustChangePassword });
+  // The field app on the phone: salesmen, delivery staff and event staff.
+  if (erp && (erp.isSalesman || erp.isFieldStaff)) {
+    workspaces.push({ type: 'sales', label: erp.isSalesman ? 'Field sales app' : 'Delivery & event app', home: '/sales-app/', token: erp.token, mustChangePassword: !!erp.mustChangePassword });
+  }
   if (res.business && res.business.ok) {
     const b = res.business.value;
     workspaces.push({ type: 'business', label: 'Business portal (' + (b.user && b.user.role) + ')', home: '/b2b/dashboard', token: b.token, user: b.user, mustChangePassword: !!b.mustChangePassword });

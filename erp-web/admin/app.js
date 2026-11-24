@@ -172,6 +172,43 @@
             .catch(function (e) { out.replaceChildren(msg('err', e.message)); });
         } } })]), out]));
     }).catch(function () { /* the people list below shows its own errors */ });
+    // A salesman, delivery person or event staff member in one step.
+    if (has('core.staff.create') && has('core.roles.edit')) {
+      var fs = el('div'); main.insertBefore(fs, box);
+      var kind = el('select', { 'aria-label': 'Job' }, [['salesman', 'Salesman'], ['delivery', 'Delivery staff'], ['event', 'Event staff']]
+        .filter(function (o) { return o[0] !== 'salesman' || has('core.staff.edit'); }).map(function (o) { return el('option', { value: o[0], text: o[1] }); }));
+      var g = { name: el('input', { autocomplete: 'off' }), email: el('input', { type: 'email', autocomplete: 'off' }), mobile: el('input', { inputmode: 'numeric', maxlength: '10' }),
+        password: el('input', { type: 'password', autocomplete: 'new-password', minlength: '12' }), confirmPassword: el('input', { type: 'password', autocomplete: 'new-password', minlength: '12' }),
+        employeeCode: el('input', {}), terr: el('select', { 'aria-label': 'Home territory' }, [el('option', { value: '', text: 'None' })]),
+        wh: el('select', { 'aria-label': 'Ships from warehouse' }, [el('option', { value: '', text: 'Default' })]), cash: el('input', { inputmode: 'decimal', value: '20000' }) };
+      var salesRow = el('div', { class: 'row' }, [el('label', {}, ['Employee code', g.employeeCode]), el('label', {}, ['Home territory', g.terr]), el('label', {}, ['Ships from warehouse', g.wh]), el('label', {}, ['Cash limit (₹)', g.cash])]);
+      var lookups = has('core.staff.edit') ? rawApi('GET', '/api/erp/sales/salesmen/lookups').catch(function () { return null; }) : Promise.resolve(null);
+      lookups.then(function (l) {
+        if (!l) return;
+        l.territories.forEach(function (x) { g.terr.appendChild(el('option', { value: String(x.id), text: x.name + ' (' + x.level + ')' })); });
+        l.warehouses.forEach(function (x) { g.wh.appendChild(el('option', { value: String(x.id), text: x.code + ' — ' + x.name })); });
+      });
+      var fout = el('div');
+      kind.addEventListener('change', function () { salesRow.hidden = kind.value !== 'salesman'; });
+      salesRow.hidden = kind.value !== 'salesman';
+      fs.appendChild(el('section', { class: 'panel' }, [el('h2', { text: 'Add a salesman, delivery person or event staff' }),
+        el('p', { class: 'note', text: 'Creates the account, asks for the role (another Super Admin approves it under Administration → Approvals) and, for a salesman, the salesman record. ' +
+          'Once approved they sign in at sakeofhealth.com/login and open the Field app on their phone. The temporary password must be 12+ characters; they choose their own at first sign-in.' }),
+        el('div', { class: 'row' }, [el('label', {}, ['Job', kind]), el('label', {}, ['Name', g.name]), el('label', {}, ['E-mail', g.email]), el('label', {}, ['Mobile', g.mobile])]),
+        el('div', { class: 'row' }, [el('label', {}, ['Temporary password (12+ characters)', g.password]), el('label', {}, ['Repeat password', g.confirmPassword])]),
+        salesRow,
+        el('div', { class: 'row' }, [el('button', { class: 'btn primary', type: 'button', text: 'Add', on: { click: function () {
+          if (g.password.value !== g.confirmPassword.value) { fout.replaceChildren(msg('err', 'The two passwords do not match.')); return; }
+          if (g.password.value.length < 12) { fout.replaceChildren(msg('err', 'The password must be at least 12 characters.')); return; }
+          var body = { kind: kind.value, name: g.name.value, email: g.email.value, mobile: g.mobile.value || undefined, password: g.password.value, confirmPassword: g.confirmPassword.value };
+          if (kind.value === 'salesman') Object.assign(body, { employeeCode: g.employeeCode.value, homeTerritoryId: Number(g.terr.value) || null, defaultWarehouseId: Number(g.wh.value) || null, cashLimit: g.cash.value });
+          api('POST', '/field-staff', body).then(function (r) {
+            g.password.value = ''; g.confirmPassword.value = '';
+            fout.replaceChildren(msg('ok', 'Added ' + body.email + '. The role is waiting for approval (request #' + r.approval.approvalId + '): another Super Admin approves it under Administration → Approvals.'));
+            setTimeout(function () { show('staff'); }, 4000);
+          }).catch(function (e) { fout.replaceChildren(msg('err', e.message)); });
+        } } })]), fout]));
+    }
     Promise.all([api('GET', '/staff'), has('core.roles.view') ? api('GET', '/roles') : Promise.resolve({ items: [] })]).then(function (res) {
       var roles = res[1].items;
       box.appendChild(el('section', { class: 'panel' }, [el('h2', { text: 'People' }), table(['Name', 'E-mail', 'Roles', 'Status', 'MFA', 'Last login', ''], res[0].items.map(function (s) {
