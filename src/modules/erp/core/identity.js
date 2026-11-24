@@ -13,6 +13,7 @@ const config = require('../config.js');
 const audit = require('./audit.js');
 const monitor = require('./monitor.js');
 const mustChange = require('../../../db/mustChange.js');
+const mfaPolicy = require('./mfa-policy.js');
 
 function fail(status, message, code) { return Object.assign(new Error(message), { status: status, expose: true, code: code }); }
 
@@ -40,7 +41,9 @@ async function login(email, password, totp, ctx, opts) {
   }
   const okPassword = security.verifyPassword(password, s.password_hash);
   let okTotp = true;
-  if (okPassword && Number(s.mfa_enabled) === 1 && config.mfaRequired()) {
+  // The code is checked only while two-step sign-in is switched on (mfa-policy.js).
+  const codeChecked = okPassword && Number(s.mfa_enabled) === 1 && await mfaPolicy.required();
+  if (codeChecked) {
     const secret = security.decrypt(s.mfa_secret_enc);
     okTotp = !!secret && security.verifyTotp(secret, totp);
     if (!totp) throw fail(401, 'Enter the 6-digit code from your authenticator app', 'mfa_required');
@@ -61,7 +64,7 @@ async function login(email, password, totp, ctx, opts) {
   await audit.write(null, { type: 'staff', id: s.id, label: s.email, role: 'login', ip: ctx.ip, sessionId: sessionId, userAgent: ctx.userAgent },
     { module: 'core', action: 'staff.login', entity: 'staff', entityId: s.id });
   // The session claims MFA only when the code was actually checked at this sign-in.
-  return { token: security.sign({ sid: Number(s.id), tv: Number(s.token_version), mfa: Number(s.mfa_enabled) === 1 && config.mfaRequired(), ses: sessionId }), staff: { id: Number(s.id), name: s.name, email: s.email },
+  return { token: security.sign({ sid: Number(s.id), tv: Number(s.token_version), mfa: !!codeChecked, ses: sessionId }), staff: { id: Number(s.id), name: s.name, email: s.email },
     mustChangePassword: Number(s.must_change_password) === 1 };
 }
 
@@ -116,8 +119,12 @@ function can(permission, opts) {
     const p = req.erp;
     if (!p) return res.status(401).json({ error: 'Please log in to continue' });
     if (!p.permissions.has(permission)) return res.status(403).json({ error: 'You do not have permission to do that', required: permission });
-    if (config.mfaRequired() && (opts.mfa || needsMfa(permission)) && !p.mfa) return res.status(403).json({ error: 'This action needs two-factor sign-in. Turn on MFA and log in again.', code: 'mfa_required' });
-    next();
+    if (!(opts.mfa || needsMfa(permission)) || p.mfa) return next();
+    // Sensitive permission without a code-checked session: refused only while the switch is on.
+    mfaPolicy.required().then(function (on) {
+      if (on) return res.status(403).json({ error: 'This action needs two-factor sign-in. Turn on MFA and log in again.', code: 'mfa_required' });
+      next();
+    }, next);
   };
 }
 

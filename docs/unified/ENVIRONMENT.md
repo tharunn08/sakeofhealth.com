@@ -145,7 +145,7 @@ Templates: `.env.example` (all), `.env.development.example` (local), `.env.produ
 | `ERP_ENABLED` | optional | bool | `false` | Turns on the business platform (needs B2B_ENABLED=true too). |
 | `ERP_JWT_SECRET` | required when B2B_ENABLED=true and ERP_ENABLED=true | secret (secret), 32+ chars (48+ in production) | — | Signs business-staff sessions, unsubscribe and invoice links; 48+ characters in production, different from every other secret. |
 | `ENCRYPTION_KEY` | optional | secret (secret), 32+ chars | — | Encrypts 2FA secrets and bank account numbers (AES-256-GCM). Set it before the first bank account or 2FA is saved and NEVER change or lose it — data encrypted with it cannot be read without it. Keep a copy in your password manager. Without it the older key derived from ERP_JWT_SECRET is used (then ERP_JWT_SECRET must never change). |
-| `ERP_MFA_REQUIRED` | optional | bool | `true` | Two-factor sign-in for business staff. false switches it off for everyone: no code at sign-in, and approvals and sensitive actions work without it. Weaker security; owner decision. |
+| `ERP_MFA_REQUIRED` | optional | bool | `empty: use the in-app switch` | Server override for two-step sign-in of business staff. Leave EMPTY to use the switch in Administration → My Password & 2FA (never switched = off). true or false forces it on or off and locks that switch; set false to get back in after losing an authenticator. |
 | `ERP_SESSION_HOURS` | optional | int | `8` | Business-staff session length. |
 | `ERP_IDLE_MINUTES` | optional | int | `60` | Signed out after this many idle minutes. |
 | `ERP_WORKER_INTERVAL_MS` | optional | int | `30000` | In-process job timer (JOBS_MODE=inprocess only). |

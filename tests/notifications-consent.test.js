@@ -13,6 +13,7 @@ const path = require('path');
 
 process.env.DATA_DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'soh-n3-'));
 process.env.ERP_JWT_SECRET = 'n3-test-secret-0123456789abcdefghijklmnop';
+process.env.ERP_MFA_REQUIRED = 'true';   // these checks expect two-step sign-in switched on
 const ROOT = path.join(__dirname, '..');
 const read = function (f) { return fs.readFileSync(path.join(ROOT, f), 'utf8'); };
 const consent = require('../src/modules/erp/notifications/consent.js');

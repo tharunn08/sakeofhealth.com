@@ -60,13 +60,16 @@ async function request(tx, actor, o) {
 
 function parse(row) { try { return JSON.parse(row.payload_json || '{}'); } catch (e) { return {}; } }
 
-/** The pure checks, separated so they can be unit-tested without a database. */
-function checkDecider(principal, req, steps, payload) {
+/**
+ * The pure checks, separated so they can be unit-tested without a database.
+ * mfaRequired: whether two-step sign-in is switched on (mfa-policy.js); omitted = on.
+ */
+function checkDecider(principal, req, steps, payload, mfaRequired) {
   if (req.status !== 'pending') throw fail(409, 'This request is no longer pending', 'not_pending');
   if (Number(req.requested_by) === Number(principal.id)) throw fail(403, 'You cannot approve your own request', 'maker_cannot_check');
   if (steps.some(function (s) { return Number(s.approver_id) === Number(principal.id); })) throw fail(403, 'You have already decided a step of this request', 'already_decided');
   if (!principal.permissions.has(payload.approverPermission)) throw fail(403, 'You are not an approver for this request', 'not_approver');
-  if (!principal.mfa && require('../config.js').mfaRequired()) throw fail(403, 'Approving needs two-factor sign-in', 'mfa_required');
+  if (!principal.mfa && mfaRequired !== false) throw fail(403, 'Approving needs two-factor sign-in', 'mfa_required');
 }
 
 async function decide(tx, principal, actor, id, decision, comment) {
@@ -75,7 +78,7 @@ async function decide(tx, principal, actor, id, decision, comment) {
   if (!req) throw fail(404, 'Not found');
   const steps = await tx.query('SELECT approver_id FROM b2b_approval_steps WHERE request_id = ?', [id]);
   const payload = parse(req);
-  checkDecider(principal, req, steps, payload);
+  checkDecider(principal, req, steps, payload, await require('./mfa-policy.js').required());
   const stepNo = Number(req.steps_done) + 1;
   await tx.query('INSERT INTO b2b_approval_steps (request_id, step_no, decision, approver_id, comment) VALUES (?, ?, ?, ?, ?)',
     [id, stepNo, decision, principal.id, comment ? String(comment).slice(0, 500) : null]);

@@ -210,21 +210,67 @@
       el('button', { class: 'btn', type: 'button', text: 'Change', on: { click: function () {
         api('POST', '/me/password', { currentPassword: cur.value, newPassword: nw.value }).then(function () { logout(); }).catch(function (e) { out.replaceChildren(msg('err', e.message)); });
       } } })])]));
-    var mfaBox = el('section', { class: 'panel' }, [el('h2', { text: 'Two-factor sign-in' })]);
-    main.appendChild(mfaBox);
-    if (state.me.mfaRequired === false) { mfaBox.appendChild(el('p', { class: 'note', text: 'Two-factor sign-in is switched off for this site (ERP_MFA_REQUIRED=false). Nobody is asked for a code, and no action needs one.' })); return; }
-    if (state.me.mfa) { mfaBox.appendChild(msg('ok', 'On for this session.')); return; }
-    mfaBox.appendChild(el('p', { class: 'note', text: 'Needed for approvals and other sensitive actions.' }));
-    mfaBox.appendChild(el('button', { class: 'btn primary', type: 'button', text: 'Set up', on: { click: function () {
-      api('POST', '/me/mfa/setup').then(function (r) {
-        var code = el('input', { inputmode: 'numeric', maxlength: '6', 'aria-label': 'Code from the app' });
-        mfaBox.appendChild(el('p', { text: 'Add this key to an authenticator app (Google Authenticator, Microsoft Authenticator…):' }));
-        mfaBox.appendChild(el('pre', { text: r.secret + '\n' + r.otpauth }));
-        mfaBox.appendChild(el('div', { class: 'row' }, [el('label', {}, ['6-digit code', code]), el('button', { class: 'btn primary', type: 'button', text: 'Turn on', on: { click: function () {
-          api('POST', '/me/mfa/enable', { code: code.value }).then(function () { logout(); }).catch(function (e) { mfaBox.appendChild(msg('err', e.message)); });
+    var mfaBox = el('section', { class: 'panel' }, [el('h2', { text: 'My two-step sign-in' })]);
+    var siteBox = el('section', { class: 'panel' }, [el('h2', { text: 'Two-step sign-in for everyone' })]);
+    main.appendChild(mfaBox); main.appendChild(siteBox);
+    api('GET', '/security/mfa').then(function (st) { drawOwn(st); drawSite(st); })
+      .catch(function (e) { siteBox.appendChild(msg('err', e.message)); });
+
+    // Own authenticator: set up once; asked for at sign-in only while the site switch is on.
+    function drawOwn(st) {
+      if (state.me.mfa) { mfaBox.appendChild(msg('ok', 'On: you signed in with your 6-digit code.')); return; }
+      if (st.ownAuthenticator) {
+        mfaBox.appendChild(el('p', { class: 'note', text: st.required
+          ? 'Your authenticator is set up. Sign out and sign in again with your 6-digit code to approve or change sensitive settings.'
+          : 'Your authenticator is set up. It is not asked for while two-step sign-in is switched off for everyone.' }));
+        return;
+      }
+      mfaBox.appendChild(el('p', { class: 'note', text: 'Set up an authenticator app on your phone. It is needed before two-step sign-in can be switched on for everyone.' }));
+      mfaBox.appendChild(el('button', { class: 'btn primary', type: 'button', text: 'Set up', on: { click: function () {
+        api('POST', '/me/mfa/setup').then(function (r) {
+          var code = el('input', { inputmode: 'numeric', maxlength: '6', 'aria-label': 'Code from the app' });
+          mfaBox.appendChild(el('p', { text: 'Add this key to an authenticator app (Google Authenticator, Microsoft Authenticator…):' }));
+          mfaBox.appendChild(el('pre', { text: r.secret + '\n' + r.otpauth }));
+          mfaBox.appendChild(el('div', { class: 'row' }, [el('label', {}, ['6-digit code', code]), el('button', { class: 'btn primary', type: 'button', text: 'Turn on', on: { click: function () {
+            api('POST', '/me/mfa/enable', { code: code.value }).then(function () { logout(); }).catch(function (e) { mfaBox.appendChild(msg('err', e.message)); });
+          } } })]));
+        }).catch(function (e) { mfaBox.appendChild(msg('err', e.message)); });
+      } } }));
+    }
+
+    // The site-wide switch (Super Admin). Every change is written to the audit log.
+    function drawSite(st) {
+      siteBox.replaceChildren(el('h2', { text: 'Two-step sign-in for everyone' }));
+      siteBox.appendChild(el('p', { text: st.required
+        ? 'ON — staff who set up an authenticator must enter the 6-digit code at sign-in, and approvals and sensitive actions need it.'
+        : 'OFF — nobody is asked for a code at sign-in, and no action needs one.' }));
+      var src = { server: 'Fixed by the server setting ERP_MFA_REQUIRED in Hostinger. Remove that setting there to use this switch.',
+        'default': 'It has never been switched, so it is off.',
+        'fail-safe': 'The settings could not be read, so it is on for safety.' }[st.source];
+      if (st.source === 'switch') src = 'Last changed' + (st.changedBy ? ' by ' + st.changedBy : '') + (st.changedAt ? ' on ' + fmt(st.changedAt) : '') + '.';
+      if (src) siteBox.appendChild(el('p', { class: 'note', text: src }));
+      if (!st.canChange) return;
+      var turnOn = !st.required;
+      if (turnOn && !st.ownAuthenticator) {
+        siteBox.appendChild(el('p', { class: 'note', text: 'To switch it on, first set up your own authenticator above, so you can still sign in and switch it off later.' }));
+        return;
+      }
+      if (!turnOn && !st.sessionHasCode) {
+        siteBox.appendChild(el('p', { class: 'note', text: 'To switch it off, sign out and sign in again with your 6-digit code.' }));
+        return;
+      }
+      var why = el('input', { 'aria-label': 'Reason', placeholder: 'Reason (optional)' }), out = el('div');
+      siteBox.appendChild(el('div', { class: 'row' }, [why, el('button', { class: turnOn ? 'btn primary' : 'btn danger', type: 'button',
+        text: turnOn ? 'Switch on for everyone' : 'Switch off for everyone', on: { click: function () {
+          api('PUT', '/security/mfa', { required: turnOn, reason: why.value }).then(function () {
+            return api('GET', '/security/mfa').then(function (st2) {
+              drawSite(st2);
+              siteBox.appendChild(msg('ok', turnOn ? 'Switched on. Sign out and sign in again with your code before approving anything.' : 'Switched off. Nobody is asked for a code now.'));
+            });
+          }).catch(function (e) { out.replaceChildren(msg('err', e.message)); });
         } } })]));
-      }).catch(function (e) { mfaBox.appendChild(msg('err', e.message)); });
-    } } }));
+      siteBox.appendChild(out);
+    }
   }
 
   function show(id) {

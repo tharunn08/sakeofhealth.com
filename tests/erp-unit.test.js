@@ -93,66 +93,140 @@ test('maker-checker rules', () => {
   assert.throws(() => approvals.checkDecider(p, { status: 'approved', requested_by: 4 }, [], pay), /no longer pending/);
 });
 
-test('ERP_MFA_REQUIRED=false switches two-factor off everywhere; every other approval rule still holds', (t) => {
-  const saved = process.env.ERP_MFA_REQUIRED;
-  t.after(() => { if (saved === undefined) delete process.env.ERP_MFA_REQUIRED; else process.env.ERP_MFA_REQUIRED = saved; });
-  const p = { id: 5, permissions: new Set(['core.approvals.unconfigured', 'core.approvals.decide']), mfa: false };
-  const req = { status: 'pending', requested_by: 4 };
-  const pay = { approverPermission: 'core.approvals.unconfigured' };
-  function guard(principal) {
-    const out = { status: 200, nextCalled: false };
-    identity.can('core.approvals.decide')({ erp: principal }, { status: function (s) { out.status = s; return { json: function (b) { out.body = b; } }; } }, function () { out.nextCalled = true; });
-    return out;
-  }
-  for (const v of [undefined, '', 'true', 'TRUE', 'yes']) {
-    if (v === undefined) delete process.env.ERP_MFA_REQUIRED; else process.env.ERP_MFA_REQUIRED = v;
-    assert.equal(config.mfaRequired(), true, 'required for ' + v);
-    assert.throws(() => approvals.checkDecider(p, req, [], pay), /two-factor/);
-    const g = guard(p);
-    assert.equal(g.status, 403); assert.equal(g.body.code, 'mfa_required'); assert.equal(g.nextCalled, false);
-  }
-  for (const v of ['false', 'FALSE', ' false ']) {
-    process.env.ERP_MFA_REQUIRED = v;
-    assert.equal(config.mfaRequired(), false, 'off for ' + JSON.stringify(v));
-    assert.doesNotThrow(() => approvals.checkDecider(p, req, [], pay));
-    assert.equal(guard(p).nextCalled, true);
-    // still refused: own request, missing permission
-    assert.throws(() => approvals.checkDecider(p, { status: 'pending', requested_by: 5 }, [], pay), /own request/);
-    assert.throws(() => approvals.checkDecider(Object.assign({}, p, { permissions: new Set() }), req, [], pay), /not an approver/);
-    const noPerm = guard(Object.assign({}, p, { permissions: new Set() }));
-    assert.equal(noPerm.status, 403); assert.equal(noPerm.nextCalled, false);
-  }
-});
-
-test('ERP sign-in with an enrolled authenticator: code asked while required, not asked when ERP_MFA_REQUIRED=false', async (t) => {
+// Two-step sign-in switch (core/mfa-policy.js). The database and audit log are replaced by stand-ins.
+function mfaHarness(t) {
   const db = require('../src/db/connection.js');
   const monitor = require('../src/modules/erp/core/monitor.js');
-  const saved = { env: process.env.ERP_MFA_REQUIRED, queryOne: db.queryOne, query: db.query, write: audit.write, event: monitor.event };
+  const policy = require('../src/modules/erp/core/mfa-policy.js');
+  const saved = { env: process.env.ERP_MFA_REQUIRED, isConfigured: db.isConfigured, queryOne: db.queryOne, query: db.query, write: audit.write, event: monitor.event };
+  const h = { db: db, policy: policy, row: undefined, fail: false, writes: [], audits: [] };
+  db.isConfigured = function () { return true; };
+  db.queryOne = async function (sql, args) {
+    if (/FROM b2b_settings/.test(sql)) { if (h.fail) throw new Error('db down'); return h.row ? Object.assign({}, h.row) : null; }
+    return h.staff ? Object.assign({}, h.staff) : null;
+  };
+  db.query = async function (sql, args) { h.writes.push({ sql: sql, args: args }); return { affectedRows: 1 }; };
+  audit.write = async function (tx, actor, e) { h.audits.push(e); return 'hash'; };
+  monitor.event = async function () { return {}; };
+  delete process.env.ERP_MFA_REQUIRED; policy.reset();
   t.after(() => {
     if (saved.env === undefined) delete process.env.ERP_MFA_REQUIRED; else process.env.ERP_MFA_REQUIRED = saved.env;
-    db.queryOne = saved.queryOne; db.query = saved.query; audit.write = saved.write; monitor.event = saved.event;
+    db.isConfigured = saved.isConfigured; db.queryOne = saved.queryOne; db.query = saved.query; audit.write = saved.write; monitor.event = saved.event;
+    policy.reset();
   });
+  h.setRow = function (v) { h.row = v === undefined ? undefined : { setting_value: JSON.stringify(v), updated_by: 'owner@test', updated_at: new Date() }; policy.reset(); };
+  return h;
+}
+
+test('two-step sign-in switch: server override, then the in-app switch, never switched = off, unreadable = on', async (t) => {
+  const h = mfaHarness(t);
+  const { policy } = h;
+  assert.deepEqual(await policy.status(), { required: false, source: 'default' }, 'never switched → off');
+  h.setRow(true); assert.equal((await policy.status()).required, true);
+  assert.equal((await policy.status()).source, 'switch');
+  h.setRow(false); assert.equal(await policy.required(), false);
+  h.setRow(true); h.fail = true; policy.reset();
+  assert.deepEqual(await policy.status(), { required: true, source: 'fail-safe' }, 'settings unreadable → on');
+  h.fail = false;
+  for (const [v, want] of [['true', true], ['TRUE', true], [' false ', false], ['false', false]]) {
+    process.env.ERP_MFA_REQUIRED = v; h.setRow(!want);
+    assert.deepEqual(await policy.status(), { required: want, source: 'server' }, 'override ' + JSON.stringify(v) + ' beats the switch');
+  }
+  process.env.ERP_MFA_REQUIRED = 'maybe'; h.setRow(true);
+  assert.equal((await policy.status()).source, 'switch', 'anything but true/false is ignored');
+  delete process.env.ERP_MFA_REQUIRED;
+  h.db.isConfigured = function () { return false; }; policy.reset();
+  assert.deepEqual(await policy.status(), { required: true, source: 'fail-safe' }, 'no database → on');
+});
+
+test('two-step sign-in switch: approvals and sensitive permissions follow it; maker-checker and permissions never change', async (t) => {
+  const h = mfaHarness(t);
+  const p = { id: 5, permissions: new Set(['core.approvals.unconfigured', 'core.approvals.decide', 'core.staff.view']), mfa: false };
+  const req = { status: 'pending', requested_by: 4 };
+  const pay = { approverPermission: 'core.approvals.unconfigured' };
+  function guard(principal, perm) {
+    return new Promise(function (resolve) {
+      const out = { status: 200, nextCalled: false };
+      identity.can(perm || 'core.approvals.decide')({ erp: principal },
+        { status: function (s) { out.status = s; return { json: function (b) { out.body = b; resolve(out); } }; } },
+        function (e) { out.nextCalled = !e; out.err = e; resolve(out); });
+    });
+  }
+  // switched on
+  h.setRow(true);
+  assert.throws(() => approvals.checkDecider(p, req, [], pay, true), /two-factor/);
+  assert.throws(() => approvals.checkDecider(p, req, [], pay), /two-factor/, 'omitted = on');
+  let g = await guard(p);
+  assert.equal(g.status, 403); assert.equal(g.body.code, 'mfa_required'); assert.equal(g.nextCalled, false);
+  assert.equal((await guard(Object.assign({}, p, { mfa: true }))).nextCalled, true, 'a code-checked session passes');
+  assert.equal((await guard(p, 'core.staff.view')).nextCalled, true, 'non-sensitive permission never needs a code');
+  // switched off
+  h.setRow(false);
+  assert.doesNotThrow(() => approvals.checkDecider(p, req, [], pay, false));
+  assert.equal((await guard(p)).nextCalled, true);
+  assert.throws(() => approvals.checkDecider(p, { status: 'pending', requested_by: 5 }, [], pay, false), /own request/);
+  assert.throws(() => approvals.checkDecider(Object.assign({}, p, { permissions: new Set() }), req, [], pay, false), /not an approver/);
+  g = await guard(Object.assign({}, p, { permissions: new Set() }));
+  assert.equal(g.status, 403); assert.equal(g.nextCalled, false);
+});
+
+test('two-step sign-in switch: sign-in asks for the code only while on; the session claims MFA only when a code was checked', async (t) => {
+  const h = mfaHarness(t);
   const secret = security.newTotpSecret();
-  const row = { id: 7, name: 'T', email: 'mfa@test.local', status: 'active', password_hash: security.hashPassword('correct-horse-battery'),
+  h.staff = { id: 7, name: 'T', email: 'mfa@test.local', status: 'active', password_hash: security.hashPassword('correct-horse-battery'),
     mfa_enabled: 1, mfa_secret_enc: security.encrypt(secret), token_version: 3, must_change_password: 0, failed_logins: 0, locked_until: null };
-  const writes = [];
-  db.queryOne = async function () { return Object.assign({}, row); };
-  db.query = async function (sql) { writes.push(sql); return { affectedRows: 1 }; };
-  audit.write = async function () { return {}; };
-  monitor.event = async function () { return {}; };
   const ctx = { ip: '127.0.0.1', userAgent: 'test' };
   const code = security.totpAt(secret, Math.floor(Date.now() / 30000));
 
-  delete process.env.ERP_MFA_REQUIRED;
-  await assert.rejects(identity.login(row.email, 'correct-horse-battery', '', ctx), (e) => e.code === 'mfa_required');
-  const withCode = await identity.login(row.email, 'correct-horse-battery', code, ctx);
-  assert.equal(security.verify(withCode.token).mfa, true, 'code checked → session has MFA');
+  h.setRow(true);
+  await assert.rejects(identity.login(h.staff.email, 'correct-horse-battery', '', ctx), (e) => e.code === 'mfa_required');
+  const withCode = await identity.login(h.staff.email, 'correct-horse-battery', code, ctx);
+  assert.equal(security.verify(withCode.token).mfa, true);
 
-  process.env.ERP_MFA_REQUIRED = 'false';
-  const noCode = await identity.login(row.email, 'correct-horse-battery', '', ctx);
+  h.setRow(false);
+  const noCode = await identity.login(h.staff.email, 'correct-horse-battery', '', ctx);
   assert.equal(security.verify(noCode.token).mfa, false, 'no code checked → session never claims MFA');
-  await assert.rejects(identity.login(row.email, 'wrong-password-123', '', ctx), (e) => e.code === 'bad_credentials');
-  assert.ok(writes.some((s) => /failed_logins = failed_logins \+ 1/.test(s)), 'a wrong password is still counted');
+  h.setRow(undefined);
+  assert.ok(await identity.login(h.staff.email, 'correct-horse-battery', '', ctx), 'never switched → no code asked');
+  h.writes.length = 0;
+  await assert.rejects(identity.login(h.staff.email, 'wrong-password-123', '', ctx), (e) => e.code === 'bad_credentials');
+  assert.ok(h.writes.some((w) => /failed_logins = failed_logins \+ 1/.test(w.sql)), 'a wrong password is still counted');
+});
+
+test('two-step sign-in switch: a Super Admin turns it on (own authenticator first) and off; audited; server override locks it', async (t) => {
+  const h = mfaHarness(t);
+  const { policy } = h;
+  const after = [];
+  const tx = { queryOne: h.db.queryOne, query: h.db.query, afterCommit: function (fn) { after.push(fn); } };
+  const actor = { type: 'staff', id: 9, label: 'owner@test' };
+  h.setRow(undefined);
+  h.staff = { mfa_enabled: 0 };
+  await assert.rejects(policy.set(tx, actor, { id: 9 }, true, 'x'), (e) => e.code === 'own_mfa_first');
+  await assert.rejects(policy.set(tx, actor, { id: 9 }, 'yes', 'x'), (e) => e.status === 400);
+  h.staff = { mfa_enabled: 1 };
+  assert.deepEqual(await policy.set(tx, actor, { id: 9 }, true, 'audit season'), { required: true });
+  const up = h.writes.find((w) => /INSERT INTO b2b_settings/.test(w.sql));
+  assert.deepEqual(up.args, [policy.KEY, 'true', 'owner@test']);
+  assert.equal(h.audits[0].action, 'security.mfa_switched_on'); assert.equal(h.audits[0].reason, 'audit season');
+  after.forEach((fn) => fn());
+  assert.deepEqual(await policy.status().then((s) => [s.required, s.source]), [true, 'switch'], 'visible at once after commit');
+  h.staff = { mfa_enabled: 0 };
+  assert.deepEqual(await policy.set(tx, actor, { id: 9 }, false, ''), { required: false }, 'switching off needs no authenticator check');
+  assert.equal(h.audits[1].action, 'security.mfa_switched_off');
+  process.env.ERP_MFA_REQUIRED = 'false';
+  await assert.rejects(policy.set(tx, actor, { id: 9 }, true, 'x'), (e) => e.code === 'fixed_by_server');
+});
+
+test('two-step sign-in switch: routes and screen are wired (switch needs core.settings.edit; nothing else reads the old env-only check)', () => {
+  const core = fs.readFileSync(path.join(ROOT, 'src/modules/erp/routes/core.js'), 'utf8');
+  assert.match(core, /r\.put\('\/security\/mfa', can\('core\.settings\.edit'\)/);
+  assert.match(core, /r\.get\('\/security\/mfa'/);
+  assert.equal(identity.needsMfa('core.settings.edit'), true, 'switching it off while on needs a code-checked session');
+  const app = fs.readFileSync(path.join(ROOT, 'erp-web/admin/app.js'), 'utf8');
+  assert.match(app, /'\/security\/mfa'/);
+  for (const f of ['src/modules/erp/core/identity.js', 'src/modules/erp/core/approvals.js', 'src/platform/passwords.js', 'src/modules/erp/config.js', 'src/modules/erp/routes/core.js']) {
+    assert.doesNotMatch(fs.readFileSync(path.join(ROOT, f), 'utf8'), /mfaRequired\(\)/, f);
+  }
 });
 
 test('business settings: no defaults, strict validation', () => {
