@@ -178,4 +178,38 @@ async function revokeGrant(tx, actor, staffId, grantId, reason) {
   return { ok: true };
 }
 
-module.exports = { list, create, update, changeOwnPassword, mfaSetup, mfaEnable, roles, createRole, requestRolePermissions, requestGrant, revokeGrant };
+/**
+ * The second Super Admin, from the admin panel — the same rule as scripts/erp-create-admin.js:
+ * allowed only while fewer than two active Super Admins exist, so a business with one owner can get
+ * the second person every approval needs (nobody approves their own request). After that, people
+ * get roles the normal way (request + approval). Only a Super Admin may do it; it is audited, and
+ * the new person must choose their own password at first sign-in.
+ */
+async function superAdminCount(q) {
+  const r = await q.queryOne("SELECT COUNT(DISTINCT sr.staff_id) AS n FROM b2b_staff_roles sr JOIN b2b_roles r ON r.id = sr.role_id " +
+    "JOIN b2b_staff s ON s.id = sr.staff_id WHERE r.code = 'super_admin' AND sr.revoked_at IS NULL AND s.status = 'active'");
+  return Number(r && r.n) || 0;
+}
+async function addSecondSuperAdmin(tx, actor, principal, b) {
+  b = b || {};
+  if (!principal || principal.roles.indexOf('super_admin') === -1) throw fail(403, 'Only a Super Admin can add the second Super Admin');
+  const role = await tx.queryOne("SELECT id FROM b2b_roles WHERE code = 'super_admin' AND is_active = 1 FOR UPDATE");
+  if (!role) throw fail(409, 'The Super Admin role is missing');
+  if (await superAdminCount(tx) >= 2) throw fail(409, 'Two Super Admins already exist. Give roles from Business Staff & Roles instead (request and approval).', 'two_exist');
+  const name = String(b.name || '').trim().slice(0, 120), email = String(b.email || '').trim().toLowerCase();
+  if (!name) throw fail(400, 'Name is required');
+  if (!EMAIL.test(email)) throw fail(400, 'A valid e-mail is required');
+  if (String(b.password || '') !== String(b.confirmPassword || '')) throw fail(400, 'The two passwords do not match');
+  const hash = security.hashPassword(b.password);               // 12+ characters
+  let r;
+  try {
+    r = await tx.query('INSERT INTO b2b_staff (name, email, password_hash, created_by, must_change_password) VALUES (?, ?, ?, ?, 1)', [name, email, hash, actor.id]);
+  } catch (e) { if (e.code === 'ER_DUP_ENTRY') throw fail(409, 'A staff member with this e-mail already exists'); throw e; }
+  await tx.query("INSERT INTO b2b_staff_roles (staff_id, role_id, scope_type, granted_by) VALUES (?, ?, 'all', ?)", [r.insertId, role.id, actor.id]);
+  await audit.write(tx, actor, { module: 'core', action: 'staff.second_super_admin', entity: 'staff', entityId: r.insertId,
+    new: { name: name, email: email, role: 'super_admin' }, reason: b.reason ? String(b.reason).slice(0, 500) : null });
+  return { id: r.insertId, email: email, mustChangePassword: true };
+}
+
+module.exports = { list, create, update, changeOwnPassword, mfaSetup, mfaEnable, roles, createRole, requestRolePermissions, requestGrant, revokeGrant,
+  superAdminCount, addSecondSuperAdmin };

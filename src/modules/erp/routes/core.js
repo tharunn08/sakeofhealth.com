@@ -60,6 +60,14 @@ r.post('/me/mfa/enable', h(async function (req, res) {
 
 // ── staff and roles ──
 r.get('/staff', can('core.staff.view'), h(async function (req, res) { res.json(await staff.list(req.query)); }));
+// The second Super Admin (only while fewer than two exist): see staff.addSecondSuperAdmin.
+r.get('/staff-super-admins', can('core.staff.view'), h(async function (req, res) {
+  const n = await staff.superAdminCount(db);
+  res.json({ count: n, canAddSecond: n < 2 && req.erp.roles.indexOf('super_admin') !== -1 && req.erp.permissions.has('core.staff.create') });
+}));
+r.post('/staff-super-admins', can('core.staff.create'), h(async function (req, res) {
+  res.status(201).json(await tx(req, function (t, a) { return staff.addSecondSuperAdmin(t, a, req.erp, req.body); }));
+}));
 r.post('/staff', can('core.staff.create'), h(async function (req, res) {
   res.status(201).json(await tx(req, function (t, a) { return staff.create(t, a, req.body); }));
 }));

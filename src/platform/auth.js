@@ -44,6 +44,25 @@ function outcome(e) {
  *   supplier(email, password, {countFailure}) → Promise<{token, user, vendorStatus, mustChangePassword}>
  *   (MySQL sources throw {status, code, expose} on failure)
  */
+/**
+ * The admin panel opened without the business (ERP) part: say why, so the business pages are never
+ * missing without a reason. A wrong password is mentioned only when the shop password was accepted
+ * and this e-mail really has a business account (a stranger learns nothing).
+ */
+async function erpNotice(email, staff, r, sources) {
+  if (!r || r.ok || r.kind === 'needCode' || !staff.ok) return null;
+  const lead = 'Signed in, but the business (ERP) pages were not opened: ';
+  if (r.kind === 'locked') return lead + (r.message || 'the business account is locked after too many failed attempts.');
+  if (r.kind === 'disabled') return lead + 'the business account is disabled.';
+  if (r.kind === 'unavailable') return lead + 'the business database could not be reached. Try again in a few minutes.';
+  if (r.kind === 'wrong' && typeof sources.erpHasAccount === 'function') {
+    let has = false;
+    try { has = await sources.erpHasAccount(email); } catch (e) { has = false; }
+    if (has) return lead + 'your business account uses a different password. Sign in with that password to open the business pages.';
+  }
+  return null;
+}
+
 async function signIn(input, sources) {
   const email = String((input && input.email) || '').trim().toLowerCase();
   const password = String((input && input.password) || '');
@@ -95,6 +114,8 @@ async function signIn(input, sources) {
     if (workspaces.some(w => w.mustChangePassword)) body.mustChangePassword = true;
     if (kinds('needCode').includes('erp') && !erp) body.erpNeedsCode = true;
     if (kinds('unavailable').length) body.erpUnavailable = true;
+    const notice = await erpNotice(email, staff, res.erp, sources);
+    if (notice && !body.erpNeedsCode) body.erpNotice = notice;
     return { status: 200, body };
   }
   if (kinds('needCode').length) return { status: 401, body: { error: 'Enter the 6-digit code from your authenticator app.', code: 'mfa_required' } };
