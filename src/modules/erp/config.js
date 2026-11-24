@@ -44,12 +44,7 @@ module.exports = {
   enabled, tokenSecret, hasStrongSecret,
   sessionHours: function () { return Math.min(24, Math.max(1, Number(process.env.ERP_SESSION_HOURS || 8))); },
   idleMinutes: function () { return Math.max(5, Number(process.env.ERP_IDLE_MINUTES || 60)); },
-  /**
-   * Two-step sign-in (TOTP). true (default): sign-in asks enrolled staff for the 6-digit code, and
-   * approvals and sensitive actions need it. ERP_MFA_REQUIRED=false switches it off for everyone:
-   * no code is asked at sign-in and no action requires it. The owner's decision; it weakens security.
-   */
-  mfaRequired: function () { return String(process.env.ERP_MFA_REQUIRED || 'true').trim().toLowerCase() !== 'false'; },
+  // Two-step sign-in on/off: core/mfa-policy.js (in-app switch; ERP_MFA_REQUIRED is the server override).
   maxFailedLogins: function () { return 5; },
   lockMinutes: function () { return 15; },
   workerIntervalMs: function () { return Math.max(5000, Number(process.env.ERP_WORKER_INTERVAL_MS || 30000)); },

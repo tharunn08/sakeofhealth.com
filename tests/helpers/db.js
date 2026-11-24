@@ -14,6 +14,10 @@ const TEST_DB = {
   DB_NAME: process.env.TEST_DB_NAME || 'sakeofhealth_test',
 };
 
+// The MySQL suites were written with two-step sign-in switched on; keep it on for them (and for the
+// servers they start) unless a suite sets it itself. The in-app switch is tested in erp-unit.test.js.
+if (process.env.ERP_MFA_REQUIRED === undefined) process.env.ERP_MFA_REQUIRED = 'true';
+
 function useTestDatabase() {
   Object.assign(process.env, TEST_DB, { NODE_ENV: 'test' });
 }

@@ -16,6 +16,7 @@ const staff = require('../core/staff.js');
 const settings = require('../core/settings.js');
 const monitor = require('../core/monitor.js');
 const jobs = require('../core/jobs.js');
+const mfaPolicy = require('../core/mfa-policy.js');
 
 const r = express.Router();
 const can = identity.can;
@@ -34,13 +35,23 @@ r.use(identity.requireStaff);
 
 // ── self ──
 // Own record and own credentials: any signed-in staff member, even before a role is granted.
-r.get('/me', function (req, res) {
+r.get('/me', h(async function (req, res) {
   const p = req.erp;
   res.json({ id: p.id, name: p.name, email: p.email, roles: p.roles, permissions: Array.from(p.permissions).sort(), scopes: p.scopes, mfa: p.mfa,
-    mfaRequired: require('../config.js').mfaRequired() });
-});
+    mfaRequired: await mfaPolicy.required() });
+}));
 r.post('/me/password', h(async function (req, res) {
   res.json(await tx(req, function (t, a) { return staff.changeOwnPassword(t, req.erp, a, req.body.currentPassword, req.body.newPassword); }));
+}));
+// ── two-step sign-in switch for the whole site (Super Admin) ──
+r.get('/security/mfa', h(async function (req, res) {
+  const st = await mfaPolicy.status();
+  const own = await db.queryOne('SELECT mfa_enabled FROM b2b_staff WHERE id = ?', [req.erp.id]);
+  res.json(Object.assign({}, st, { canChange: req.erp.permissions.has('core.settings.edit') && st.source !== 'server',
+    ownAuthenticator: !!(own && Number(own.mfa_enabled) === 1), sessionHasCode: !!req.erp.mfa }));
+}));
+r.put('/security/mfa', can('core.settings.edit'), h(async function (req, res) {
+  res.json(await tx(req, function (t, a) { return mfaPolicy.set(t, a, req.erp, req.body.required, req.body.reason); }));
 }));
 r.post('/me/mfa/setup', h(async function (req, res) { res.json(await staff.mfaSetup(req.erp)); }));
 r.post('/me/mfa/enable', h(async function (req, res) {
