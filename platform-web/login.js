@@ -123,6 +123,14 @@
         return;
       }
       if (data.mustChangePassword) { pending = data.workspaces || []; resetButton(); askNewPassword(); return; }
+      if (data.erpNotice) {
+        // The shop part opened but the business part did not: say why before going on.
+        pending = data.workspaces || [];
+        resetButton();
+        show(data.erpNotice, 'warn');
+        skipBtn.hidden = false;
+        return;
+      }
       proceed(data.workspaces || []);
     } catch (err) {
       show(err.message, 'error');

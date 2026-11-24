@@ -52,6 +52,7 @@ function pageHtml(page) {
     '</head>\n<body>\n<script>window.SOH_PAGE=' + JSON.stringify(meta).replace(/</g, '\\u003c') + ';</script>\n' +
     '<script src="/config.js"></script>\n<script src="/admin/admin.js"></script>\n' +
     page.scripts.map(src => '<script src="' + src + '"></script>\n').join('') +
+    '<script src="/platform/session-check.js"></script>\n' +
     '</body>\n</html>\n';
 }
 
@@ -66,7 +67,7 @@ function mount(app, opts) {
     noStore(res);
     res.sendFile(path.join(WEB, 'login.html'));
   });
-  ['login.js', 'erp-host.js', 'erp-embed.css', 'shell.css'].forEach(function (f) {
+  ['login.js', 'erp-host.js', 'erp-embed.css', 'shell.css', 'session-check.js'].forEach(function (f) {
     app.get('/platform/' + f, function (req, res) {
       res.setHeader('Cache-Control', 'no-cache');
       res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -100,6 +101,10 @@ function mount(app, opts) {
         return r;
       };
       src.supplier = function (email, password, opts) { return require('../modules/erp/vendors/service.js').login(email, password, ip, opts); };
+      // Asked only after the shop password was accepted (auth.js erpNotice).
+      src.erpHasAccount = async function (email) {
+        return !!(await require('../db/connection.js').queryOne("SELECT id FROM b2b_staff WHERE email = ? AND status = 'active'", [email]));
+      };
     }
     if (b2bEnabled()) {
       src.business = function (email, password, opts) {
@@ -171,7 +176,15 @@ function mount(app, opts) {
       }
       const nav = registry.navFor(staff ? staff.role : null, b2bEnabled(), erp);
       const user = staff ? { name: staff.name, email: staff.email, role: staff.role } : { name: erpUser.name, email: erpUser.email, role: null };
-      res.json(Object.assign({ user, erp: erpStatus, erpUser }, nav));
+      // A shop session without the business part, for someone who HAS a business account (e.g. the
+      // 6-digit code was skipped at sign-in): the shell tells them to sign in again to open it.
+      let erpSignInNeeded = false;
+      if (staff && erpStatus !== 'ok' && erp.enabled && staff.email) {
+        try {
+          erpSignInNeeded = !!(await require('../db/connection.js').queryOne("SELECT id FROM b2b_staff WHERE email = ? AND status = 'active'", [String(staff.email).toLowerCase()]));
+        } catch (e) { erpSignInNeeded = false; }
+      }
+      res.json(Object.assign({ user, erp: erpStatus, erpUser, erpSignInNeeded }, nav));
     } catch (e) { next(e); }
   });
 

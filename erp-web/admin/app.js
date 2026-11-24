@@ -149,7 +149,29 @@
 
   function staffView(main) {
     main.appendChild(el('h1', { text: 'Staff & roles' }));
+    var second = el('div'); main.appendChild(second);
     var box = el('div'); main.appendChild(box);
+    // The second Super Admin: offered only while fewer than two exist (approvals need two people).
+    api('GET', '/staff-super-admins').then(function (sa) {
+      if (!sa.canAddSecond) return;
+      var f = { name: el('input', { autocomplete: 'off' }), email: el('input', { type: 'email', autocomplete: 'off' }),
+        password: el('input', { type: 'password', autocomplete: 'new-password', minlength: '12' }),
+        confirmPassword: el('input', { type: 'password', autocomplete: 'new-password', minlength: '12' }), reason: el('input', { placeholder: 'Optional' }) };
+      var out = el('div');
+      second.appendChild(el('section', { class: 'panel' }, [el('h2', { text: 'Add the second Super Admin' }),
+        el('p', { class: 'note', text: 'You are the only Super Admin, and nobody can approve their own request. Add a second Super Admin here, a person you trust; ' +
+          'after that, people get roles the normal way (request, then approval). Their password must be at least 12 characters; they choose their own at first sign-in. ' +
+          'This is recorded in the audit log.' }),
+        el('div', { class: 'row' }, [el('label', {}, ['Name', f.name]), el('label', {}, ['E-mail', f.email])]),
+        el('div', { class: 'row' }, [el('label', {}, ['Temporary password (12+ characters)', f.password]), el('label', {}, ['Repeat password', f.confirmPassword])]),
+        el('div', { class: 'row' }, [el('label', {}, ['Reason', f.reason]), el('button', { class: 'btn primary', type: 'button', text: 'Add Super Admin', on: { click: function () {
+          if (f.password.value !== f.confirmPassword.value) { out.replaceChildren(msg('err', 'The two passwords do not match.')); return; }
+          if (f.password.value.length < 12) { out.replaceChildren(msg('err', 'The password must be at least 12 characters.')); return; }
+          api('POST', '/staff-super-admins', { name: f.name.value, email: f.email.value, password: f.password.value, confirmPassword: f.confirmPassword.value, reason: f.reason.value })
+            .then(function (r) { f.password.value = ''; f.confirmPassword.value = ''; out.replaceChildren(msg('ok', 'Super Admin added: ' + r.email + '. They sign in at /login and choose their own password.')); setTimeout(function () { show('staff'); }, 2500); })
+            .catch(function (e) { out.replaceChildren(msg('err', e.message)); });
+        } } })]), out]));
+    }).catch(function () { /* the people list below shows its own errors */ });
     Promise.all([api('GET', '/staff'), has('core.roles.view') ? api('GET', '/roles') : Promise.resolve({ items: [] })]).then(function (res) {
       var roles = res[1].items;
       box.appendChild(el('section', { class: 'panel' }, [el('h2', { text: 'People' }), table(['Name', 'E-mail', 'Roles', 'Status', 'MFA', 'Last login', ''], res[0].items.map(function (s) {
