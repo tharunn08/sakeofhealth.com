@@ -66,7 +66,7 @@ function checkDecider(principal, req, steps, payload) {
   if (Number(req.requested_by) === Number(principal.id)) throw fail(403, 'You cannot approve your own request', 'maker_cannot_check');
   if (steps.some(function (s) { return Number(s.approver_id) === Number(principal.id); })) throw fail(403, 'You have already decided a step of this request', 'already_decided');
   if (!principal.permissions.has(payload.approverPermission)) throw fail(403, 'You are not an approver for this request', 'not_approver');
-  if (!principal.mfa) throw fail(403, 'Approving needs two-factor sign-in', 'mfa_required');
+  if (!principal.mfa && require('../config.js').mfaRequired()) throw fail(403, 'Approving needs two-factor sign-in', 'mfa_required');
 }
 
 async function decide(tx, principal, actor, id, decision, comment) {

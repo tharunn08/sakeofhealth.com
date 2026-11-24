@@ -40,7 +40,7 @@ async function login(email, password, totp, ctx, opts) {
   }
   const okPassword = security.verifyPassword(password, s.password_hash);
   let okTotp = true;
-  if (okPassword && Number(s.mfa_enabled) === 1) {
+  if (okPassword && Number(s.mfa_enabled) === 1 && config.mfaRequired()) {
     const secret = security.decrypt(s.mfa_secret_enc);
     okTotp = !!secret && security.verifyTotp(secret, totp);
     if (!totp) throw fail(401, 'Enter the 6-digit code from your authenticator app', 'mfa_required');
@@ -60,7 +60,8 @@ async function login(email, password, totp, ctx, opts) {
   const sessionId = crypto.randomBytes(12).toString('hex');
   await audit.write(null, { type: 'staff', id: s.id, label: s.email, role: 'login', ip: ctx.ip, sessionId: sessionId, userAgent: ctx.userAgent },
     { module: 'core', action: 'staff.login', entity: 'staff', entityId: s.id });
-  return { token: security.sign({ sid: Number(s.id), tv: Number(s.token_version), mfa: Number(s.mfa_enabled) === 1, ses: sessionId }), staff: { id: Number(s.id), name: s.name, email: s.email },
+  // The session claims MFA only when the code was actually checked at this sign-in.
+  return { token: security.sign({ sid: Number(s.id), tv: Number(s.token_version), mfa: Number(s.mfa_enabled) === 1 && config.mfaRequired(), ses: sessionId }), staff: { id: Number(s.id), name: s.name, email: s.email },
     mustChangePassword: Number(s.must_change_password) === 1 };
 }
 
@@ -108,14 +109,14 @@ function requireStaff(req, res, next) {
   }).catch(next);
 }
 
-/** Express middleware: permission (and MFA when the permission is sensitive). */
+/** Express middleware: permission (and MFA when the permission is sensitive and MFA is switched on). */
 function can(permission, opts) {
   opts = opts || {};
   return function (req, res, next) {
     const p = req.erp;
     if (!p) return res.status(401).json({ error: 'Please log in to continue' });
     if (!p.permissions.has(permission)) return res.status(403).json({ error: 'You do not have permission to do that', required: permission });
-    if ((opts.mfa || needsMfa(permission)) && !p.mfa) return res.status(403).json({ error: 'This action needs two-factor sign-in. Turn on MFA and log in again.', code: 'mfa_required' });
+    if (config.mfaRequired() && (opts.mfa || needsMfa(permission)) && !p.mfa) return res.status(403).json({ error: 'This action needs two-factor sign-in. Turn on MFA and log in again.', code: 'mfa_required' });
     next();
   };
 }
