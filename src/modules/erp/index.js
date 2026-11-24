@@ -52,6 +52,7 @@ function mount(app) {
   api.use('/manufacturing', require('./routes/manufacturing.js'));
   api.use('/deliveries', require('./routes/deliveries.js'));
   api.use('/network', require('./routes/network.js'));
+  api.use('/insights', require('./routes/insights.js'));   // Smart Insights (read only)
   api.use('/sales', require('./routes/sales.js').office);
   api.use('/sales', require('./routes/sales.js').desk);
   api.use('/', require('./routes/returns-finance.js'));   // /returns, /recalls, /finance
