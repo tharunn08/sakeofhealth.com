@@ -36,7 +36,8 @@ r.use(identity.requireStaff);
 // Own record and own credentials: any signed-in staff member, even before a role is granted.
 r.get('/me', function (req, res) {
   const p = req.erp;
-  res.json({ id: p.id, name: p.name, email: p.email, roles: p.roles, permissions: Array.from(p.permissions).sort(), scopes: p.scopes, mfa: p.mfa });
+  res.json({ id: p.id, name: p.name, email: p.email, roles: p.roles, permissions: Array.from(p.permissions).sort(), scopes: p.scopes, mfa: p.mfa,
+    mfaRequired: require('../config.js').mfaRequired() });
 });
 r.post('/me/password', h(async function (req, res) {
   res.json(await tx(req, function (t, a) { return staff.changeOwnPassword(t, req.erp, a, req.body.currentPassword, req.body.newPassword); }));

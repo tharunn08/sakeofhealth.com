@@ -212,6 +212,7 @@
       } } })])]));
     var mfaBox = el('section', { class: 'panel' }, [el('h2', { text: 'Two-factor sign-in' })]);
     main.appendChild(mfaBox);
+    if (state.me.mfaRequired === false) { mfaBox.appendChild(el('p', { class: 'note', text: 'Two-factor sign-in is switched off for this site (ERP_MFA_REQUIRED=false). Nobody is asked for a code, and no action needs one.' })); return; }
     if (state.me.mfa) { mfaBox.appendChild(msg('ok', 'On for this session.')); return; }
     mfaBox.appendChild(el('p', { class: 'note', text: 'Needed for approvals and other sensitive actions.' }));
     mfaBox.appendChild(el('button', { class: 'btn primary', type: 'button', text: 'Set up', on: { click: function () {
