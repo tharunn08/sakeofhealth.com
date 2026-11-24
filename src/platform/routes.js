@@ -98,6 +98,12 @@ function mount(app, opts) {
         try {   // salesmen also get the field-sales app (table from migration 010)
           r.isSalesman = !!(await require('../db/connection.js').queryOne('SELECT id FROM b2b_salesmen WHERE staff_id = ? AND is_active = 1', [r.staff.id]));
         } catch (e) { r.isSalesman = false; }
+        try {   // so do delivery staff (their deliveries) and event staff (their counters)
+          r.isFieldStaff = !!(await require('../db/connection.js').queryOne(
+            'SELECT 1 AS ok FROM b2b_staff_roles sr JOIN b2b_roles ro ON ro.id = sr.role_id AND ro.is_active = 1 ' +
+            'JOIN b2b_role_permissions rp ON rp.role_id = ro.id WHERE sr.staff_id = ? AND sr.revoked_at IS NULL ' +
+            "AND rp.permission_code IN ('deliveries.update', 'events.sell') LIMIT 1", [r.staff.id]));
+        } catch (e) { r.isFieldStaff = false; }
         return r;
       };
       src.supplier = function (email, password, opts) { return require('../modules/erp/vendors/service.js').login(email, password, ip, opts); };

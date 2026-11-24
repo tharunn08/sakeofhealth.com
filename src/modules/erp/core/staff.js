@@ -211,5 +211,33 @@ async function addSecondSuperAdmin(tx, actor, principal, b) {
   return { id: r.insertId, email: email, mustChangePassword: true };
 }
 
+/**
+ * A salesman, delivery person or event staff member in one step: the account (temporary password,
+ * changed at first sign-in), the role request (approved by a second person, as every role is) and,
+ * for a salesman, the salesman record the field app needs. Nothing about the approval rule changes:
+ * until the role is approved the person can sign in but sees nothing.
+ */
+const FIELD_ROLES = { salesman: 'salesman', delivery: 'delivery_staff', event: 'event_staff' };
+async function addFieldStaff(tx, actor, principal, b) {
+  b = b || {};
+  const kind = String(b.kind || '');
+  const code = FIELD_ROLES[kind];
+  if (!code) throw fail(400, 'Choose salesman, delivery or event staff');
+  const needs = ['core.staff.create', 'core.roles.edit'].concat(kind === 'salesman' ? ['core.staff.edit'] : []);
+  needs.forEach(function (p) { if (!principal.permissions.has(p)) throw fail(403, 'You need the ' + p + ' permission for this'); });
+  if (String(b.password || '') !== String(b.confirmPassword || '')) throw fail(400, 'The two passwords do not match');
+  const role = await tx.queryOne('SELECT id, name FROM b2b_roles WHERE code = ? AND is_active = 1', [code]);
+  if (!role) throw fail(409, 'The ' + code + ' role is missing');
+  const made = await create(tx, actor, { name: b.name, email: b.email, mobile: b.mobile, password: b.password });
+  await tx.query('UPDATE b2b_staff SET must_change_password = 1 WHERE id = ?', [made.id]);
+  const approval = await requestGrant(tx, actor, made.id, { roleId: role.id, reason: b.reason || ('New ' + role.name) });
+  let salesman = null;
+  if (kind === 'salesman') {
+    salesman = await require('../sales/service.js').addSalesman(tx, actor, { staffId: made.id, employeeCode: b.employeeCode,
+      homeTerritoryId: b.homeTerritoryId, defaultWarehouseId: b.defaultWarehouseId, cashLimit: b.cashLimit == null || b.cashLimit === '' ? 20000 : b.cashLimit });
+  }
+  return { id: made.id, role: code, approval: approval, salesman: salesman, mustChangePassword: true };
+}
+
 module.exports = { list, create, update, changeOwnPassword, mfaSetup, mfaEnable, roles, createRole, requestRolePermissions, requestGrant, revokeGrant,
-  superAdminCount, addSecondSuperAdmin };
+  superAdminCount, addSecondSuperAdmin, addFieldStaff, FIELD_ROLES };

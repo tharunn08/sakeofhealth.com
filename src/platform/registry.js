@@ -22,6 +22,7 @@
 
 const GROUPS = [
   { id: 'overview', label: 'Overview' },
+  { id: 'business', label: 'ERP' },
   { id: 'sales', label: 'Sales & Orders' },
   { id: 'delivery', label: 'Delivery' },
   { id: 'accounts', label: 'Business Accounts' },
@@ -47,7 +48,7 @@ const B2B = (id, group, slug, label, icon, script, perms, extra) => Object.assig
 const ERP = (view, group, slug, label, icon, perm, extra) => Object.assign({
   id: 'erp-' + view, view, group, path: '/admin/' + group + '/' + slug, label, icon, module: 'erp', perm,
   base: '/admin/erp/', css: ['/platform/erp-embed.css'],
-  scripts: ['/admin/erp/app.js', '/admin/erp/modules.js', '/admin/erp/operations.js', '/admin/erp/production.js', '/admin/erp/people.js', '/admin/erp/insights.js', '/platform/erp-host.js'],
+  scripts: ['/admin/erp/app.js', '/admin/erp/modules.js', '/admin/erp/operations.js', '/admin/erp/production.js', '/admin/erp/people.js', '/admin/erp/insights.js', '/admin/erp/home.js', '/platform/erp-host.js'],
 }, extra || {});
 
 const PAGES = [
@@ -84,6 +85,7 @@ const PAGES = [
   /* ERP screens (32) — same screen code as /admin/erp, now inside this shell */
   ERP('overview', 'overview', 'system', 'System Health', 'analytics', 'core.monitoring.view'),
   ERP('insights', 'overview', 'insights', 'Smart Insights', 'analytics', 'reports.export'),
+  ERP('erphome', 'business', 'erp', 'ERP Home', 'dashboard', 'core.self.view'),
   ERP('salesdesk', 'sales', 'desk', 'Sales Desk', 'orders', 'sales.reports.view'),
   ERP('salesmen', 'sales', 'salesmen', 'Salesmen', 'staff', 'sales.reports.view'),
   // Delivery: dashboard, shop deliveries, trade deliveries, staff. The two delivery lists keep their
