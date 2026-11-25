@@ -30,9 +30,9 @@ test.before(() => { reg = require('../src/platform/registry.js'); });
 /* ── Registry ── */
 test('all 32 ERP screens (18 + Notifications + shop stock, events, locations, offline sync, all customers + manufacturers, manufacturing orders, batch quality, bills of materials, trade deliveries + salesmen, delivery dashboard, delivery staff) are in the one registry with exactly the permission the ERP code requires', () => {
   const views = erpViewsFromSource();
-  assert.strictEqual(views.length, 36, 'the ERP declares 36 screens (32 + Smart Insights + ERP Home + AI Assistant + Logos & Bills)');
+  assert.strictEqual(views.length, 37, 'the ERP declares 37 screens (32 + Smart Insights + ERP Home + AI Assistant + Logos & Bills + My Work)');
   const erpPages = reg.PAGES.filter(p => p.module === 'erp');
-  assert.strictEqual(erpPages.length, 36);
+  assert.strictEqual(erpPages.length, 37);
   erpPages.forEach(p => assert.ok(p.scripts.includes('/admin/erp/people.js'), p.id + ' loads the suppliers, salesmen and delivery screens'));
   erpPages.forEach(p => assert.ok(p.scripts.includes('/admin/erp/operations.js'), p.id + ' loads the operations screens'));
   erpPages.forEach(p => assert.ok(p.scripts.includes('/admin/erp/production.js'), p.id + ' loads the manufacturing and delivery screens'));

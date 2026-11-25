@@ -43,3 +43,8 @@ fieldset>legend{font-weight:700;padding:0 6px}
 fieldset>label{flex:1 1 220px}
 label.chk{display:inline-flex;align-items:center;gap:6px;flex:1 1 100%}
 code.secret{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:15px;padding:2px 8px;border-radius:6px;background:#f1f1f1;user-select:all;word-break:break-all}
+.brandbar{display:flex;align-items:center;gap:10px;padding:10px 20px;background:#fff;border-bottom:1px solid #e3e7ea}
+.brandbar img{width:28px;height:32px;object-fit:contain}
+.brandbar b{font-size:15px}
+.brandbar span{color:#5b6b5e;font-size:13px}
+.brandbar ~ #app .login{margin-top:8vh}

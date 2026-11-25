@@ -7,6 +7,9 @@
 
   // [view id, label, permission, menu place, what it is for]
   var AREAS = [
+    ['Your day', [
+      ['mywork', 'My Work', 'core.self.view', 'ERP', 'Your approvals, money owed, field cash, deliveries, production and stock, live.'],
+    ]],
     ['Selling', [
       ['salesdesk', 'Sales Desk', 'sales.reports.view', 'Sales & Orders', 'Orders taken by salesmen and the office, codes sent to retailers, cash waiting for confirmation.'],
       ['salesmen', 'Salesmen', 'sales.reports.view', 'Sales & Orders', 'Your field sales team: beats, retailers, monthly targets, visits and collections.'],

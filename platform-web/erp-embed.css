@@ -58,3 +58,8 @@
 /* one-time passwords and links shown once (Manufacturers & Suppliers) */
 .erp-embed code.secret{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:15px;padding:2px 8px;border-radius:6px;background:var(--line-2);user-select:all;word-break:break-all;}
 .erp-embed label.chk{display:inline-flex;align-items:center;gap:6px;font-weight:500;}
+.erp-embed .table-tools{display:flex;gap:6px;align-items:center;justify-content:flex-end;margin:0 0 4px;font-size:12.5px}
+.erp-embed .table-search{margin-right:auto;max-width:260px;height:34px}
+.erp-embed dl.kv{display:grid;grid-template-columns:max-content 1fr;gap:4px 16px;margin:8px 0 0}
+.erp-embed dl.kv dt{color:var(--muted,#5b6b5e)}
+.erp-embed dl.kv dd{margin:0;font-weight:600}
