@@ -12,6 +12,7 @@ const audit = require('../core/audit.js');
 const svc = require('../sales/service.js');
 const officeSvc = require('../sales/office.js');
 const team = require('../sales/team.js');
+const field = require('../sales/field.js');
 
 const can = identity.can;
 const id = function (v) { const n = posId(v); if (!n) throw Object.assign(new Error('Not found'), { status: 404, expose: true }); return n; };
@@ -25,6 +26,11 @@ app.get('/me', can('sales.self.view'), h(async function (req, res) { res.json(aw
 app.get('/dashboard', can('sales.self.view'), h(async function (req, res) { res.json(await team.dashboard(req.salesman)); }));
 app.get('/retailers', can('sales.retailers.view'), h(async function (req, res) { res.json(await svc.retailers(req.erp, req.salesman, req.query)); }));
 app.post('/retailers', can('sales.retailers.create'), h(async function (req, res) { res.status(201).json(await tx(req, function (t, a) { return svc.registerRetailer(t, a, req.erp, req.salesman, B(req)); })); }));
+app.get('/retailers/:id', can('sales.retailers.view'), h(async function (req, res) { res.json(await field.retailer(req.erp, req.salesman, id(req.params.id))); }));
+app.get('/orders', can('sales.self.view'), h(async function (req, res) { res.json(await field.myOrders(req.erp, req.salesman, req.query)); }));
+app.get('/orders/:id', can('sales.self.view'), h(async function (req, res) { res.json(await field.myOrder(req.erp, req.salesman, id(req.params.id))); }));
+app.get('/visits', can('sales.self.view'), h(async function (req, res) { res.json(await field.myVisits(req.erp, req.salesman, req.query)); }));
+app.get('/collections', can('sales.self.view'), h(async function (req, res) { res.json(await field.myCollections(req.erp, req.salesman)); }));
 app.get('/catalogue', can('sales.catalogue.view'), h(async function (req, res) { res.json(await svc.catalogue(req.erp, req.salesman, req.query)); }));
 app.post('/orders', can('sales.orders.create'), h(async function (req, res) { res.status(201).json(await tx(req, function (t, a) { return svc.createOrder(t, a, req.erp, req.salesman, B(req)); })); }));
 app.post('/orders/:id/otp/resend', can('sales.orders.create'), otpLimit, h(async function (req, res) { res.json(await tx(req, function (t, a) { return svc.resend(t, a, req.erp, req.salesman, id(req.params.id)); })); }));

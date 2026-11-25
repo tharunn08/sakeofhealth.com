@@ -389,7 +389,7 @@ async function returnToWarehouse(actor, by, id, b) {
 
 // ─────────────────────────── reading ───────────────────────────
 
-const SHIP_SELECT = 'SELECT s.*, o.order_no, o.status AS order_status, o.grand_total, o.ship_name, o.ship_contact, o.ship_phone, o.ship_line1, o.ship_line2, o.ship_city, o.ship_state, o.ship_pincode, o.ship_lat, o.ship_lng, ' +
+const SHIP_SELECT = 'SELECT s.*, o.order_no, o.status AS order_status, o.grand_total, o.amount_paid, o.payment_method, o.payment_status, o.total_qty, o.item_count, o.ship_name, o.ship_contact, o.ship_phone, o.ship_line1, o.ship_line2, o.ship_city, o.ship_state, o.ship_pincode, o.ship_lat, o.ship_lng, ' +
   'o.buyer_account_id, a.business_name AS buyer_name, a.shop_name AS buyer_shop, st.name AS staff_name, w.code AS warehouse_code, dc.challan_no ' +
   'FROM b2b_shipments s JOIN b2b_orders o ON o.id = s.order_id JOIN b2b_accounts a ON a.id = o.buyer_account_id LEFT JOIN b2b_staff st ON st.id = s.delivery_staff_id ' +
   'LEFT JOIN b2b_warehouses w ON w.id = s.warehouse_id LEFT JOIN b2b_delivery_challans dc ON dc.shipment_id = s.id';
@@ -406,6 +406,9 @@ function shipOut(s, forBuyer) {
   if (!forBuyer) Object.assign(out, {
     sellerType: s.seller_type, warehouse: s.warehouse_code || null, deliveryStaffId: s.delivery_staff_id == null ? null : Number(s.delivery_staff_id), deliveryStaff: s.staff_name || null,
     buyer: s.buyer_shop || s.buyer_name, value: s.grand_total == null ? null : Number(s.grand_total), receiverPhone: s.pod_phone, podNote: s.pod_note,
+    // what the buyer still owes on the order (for the driver: whether payment is expected at the door; the office records any money received)
+    payment: s.grand_total == null ? null : { method: s.payment_method || null, status: s.payment_status || null, paid: Number(s.amount_paid || 0), due: Math.max(0, Math.round((Number(s.grand_total) - Number(s.amount_paid || 0)) * 100) / 100) },
+    units: s.total_qty == null ? null : Number(s.total_qty), lines: s.item_count == null ? null : Number(s.item_count),
     address: { name: s.ship_name, contact: s.ship_contact, phone: s.ship_phone, line1: s.ship_line1, line2: s.ship_line2, city: s.ship_city, state: s.ship_state, pincode: s.ship_pincode,
       lat: s.ship_lat == null ? null : Number(s.ship_lat), lng: s.ship_lng == null ? null : Number(s.ship_lng) },
     missing: s.status === 'ready' ? readiness(s) : [],
@@ -418,12 +421,18 @@ async function list(by, q) {
   const where = [], params = [];
   if (by.sellerAccountId != null) { where.push("s.seller_type = 'distributor' AND s.seller_account_id = ?"); params.push(by.sellerAccountId); }
   else if (!(by.staff.permissions.has('deliveries.view') || by.staff.permissions.has('deliveries.manage'))) { where.push('s.delivery_staff_id = ?'); params.push(by.staff.id); }
+  const done = q.status === 'done';
   if (q.status === 'open') where.push("s.status IN ('ready','dispatched','out_for_delivery','attempt_failed')");
-  else if (q.status) { where.push('s.status = ?'); params.push(String(q.status)); }
+  else if (done) {
+    // finished shipments of the last N days (default 30): the driver's history
+    where.push("s.status IN ('delivered','partially_delivered','returned','cancelled') AND COALESCE(s.delivered_at, s.returned_at, s.updated_at) >= UTC_TIMESTAMP() - INTERVAL " + db.int(q.days, 30, 1, 365) + ' DAY');
+  } else if (q.status) { where.push('s.status = ?'); params.push(String(q.status)); }
   if (q.late === '1' || q.late === true) where.push("s.status IN ('dispatched','out_for_delivery','attempt_failed') AND s.expected_at < UTC_TIMESTAMP()");
   if (posId(q.staffId)) { where.push('s.delivery_staff_id = ?'); params.push(posId(q.staffId)); }
   if (q.q) { const t = v.text(q.q, 60); where.push('(s.shipment_no = ? OR o.order_no = ? OR s.tracking_no = ? OR s.lr_no = ? OR s.vehicle_no = ? OR dc.challan_no = ?)'); params.push(t, t, t, t, t.toUpperCase().replace(/[\s-]/g, ''), t); }
-  const rows = await db.query(SHIP_SELECT + (where.length ? ' WHERE ' + where.join(' AND ') : '') + " ORDER BY FIELD(s.status, 'attempt_failed','out_for_delivery','dispatched','ready') DESC, s.expected_at IS NULL, s.expected_at, s.id DESC LIMIT 300", params);
+  const order = done ? ' ORDER BY COALESCE(s.delivered_at, s.returned_at, s.updated_at) DESC, s.id DESC LIMIT 300'
+    : " ORDER BY FIELD(s.status, 'attempt_failed','out_for_delivery','dispatched','ready') DESC, s.expected_at IS NULL, s.expected_at, s.id DESC LIMIT 300";
+  const rows = await db.query(SHIP_SELECT + (where.length ? ' WHERE ' + where.join(' AND ') : '') + order, params);
   const out = { items: rows.map(function (s) { return shipOut(s, false); }) };
   if (canManage(by)) {
     // packed orders that still need a shipment
