@@ -22,10 +22,24 @@ const DIR = path.join(__dirname, 'migrations');
 const TABLE = 'b2b_schema_migrations';
 const LOCK = 'soh_b2b_migrate';
 
+/**
+ * Decision D5 (25 Nov 2026): versions 013 and 014 are retired and never applied. The two files that once
+ * carried those numbers (013/014_erp_governance.js) were byte-identical wrappers that re-ran migration 004
+ * under new numbers; 004 is applied everywhere it is needed and neither number was ever recorded (production
+ * u935782097_sohplatform: 001–012, 015–020; the old sakeofhealth.in database: 001–003). A file numbered 013 or
+ * 014 placed in the folder is skipped with a warning; the next new migration takes 021.
+ */
+const RETIRED = { '013': 'retired by decision D5 (a copy of 004)', '014': 'retired by decision D5 (a copy of 004)' };
+
+function allFiles() {
+  return fs.readdirSync(DIR).filter(function (f) { return /^\d{3}_[a-z0-9_]+\.(sql|js)$/.test(f); }).sort();
+}
 function listFiles() {
-  return fs.readdirSync(DIR)
-    .filter(function (f) { return /^\d{3}_[a-z0-9_]+\.(sql|js)$/.test(f); })
-    .sort();
+  return allFiles().filter(function (f) { return !RETIRED[f.slice(0, 3)]; });
+}
+/** Files in the folder under a retired number (never applied). */
+function retiredFiles() {
+  return allFiles().filter(function (f) { return !!RETIRED[f.slice(0, 3)]; }).map(function (f) { return { file: f, why: RETIRED[f.slice(0, 3)] }; });
 }
 
 function checksum(file) {
@@ -77,7 +91,7 @@ async function status() {
       };
     });
     return {
-      migrations: files,
+      migrations: files, retired: retiredFiles(),
       pending: files.filter(function (f) { return !f.applied; }).length,
       upToDate: files.every(function (f) { return f.applied; }),
     };
@@ -96,6 +110,7 @@ async function up(log) {
       const done = {};
       applied.forEach(function (r) { done[r.version] = true; });
 
+      retiredFiles().forEach(function (r) { log('⚠ skipped ' + r.file + ': ' + r.why + '. Remove the file.'); });
       for (const file of listFiles()) {
         const version = file.slice(0, 3);
         if (done[version]) continue;
@@ -148,4 +163,4 @@ async function verify() {
   return { ok: !missing.length && !notInnoDb.length && st.upToDate, missing: missing, notInnoDb: notInnoDb, pending: st.pending };
 }
 
-module.exports = { up, status, verify, listFiles, splitSql, EXPECTED_TABLES };
+module.exports = { up, status, verify, listFiles, retiredFiles, RETIRED, splitSql, EXPECTED_TABLES };

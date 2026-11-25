@@ -275,7 +275,8 @@ and SHA-256 pin as 004–019; nothing is dropped or rewritten.
 
 `019_operations_channels` (new tables listed above, plus one index on reservations). Pinned by
 SHA-256 like 004–018; only allowed operations (create table / add index, no drops). 016–018 were
-re-reviewed and are unchanged. 013/014 remain undecided (D5) and are not part of the delivery.
+re-reviewed and are unchanged. 013/014 are retired (D5, 25 Nov 2026): copies of 004 that no database
+recorded; `src/db/migrate.js` skips any file with those numbers.
 Rollback: restore the pre-migration backup (`docs/BACKUP-RESTORE.md`); 019 only adds empty
 tables, so dropping them restores the previous schema — the runbook (`docs/erp/MIGRATION-RUNBOOK.md`)
 applies unchanged.

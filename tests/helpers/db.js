@@ -23,15 +23,14 @@ function useTestDatabase() {
 }
 
 async function resetDatabase() {
-  // D5 guard: migrate.up() applies EVERY file in src/db/migrations. Migrations
-  // 013/014 must not run anywhere until the D5 decision is approved, so refuse
-  // before touching any database while they are present (run the MySQL suites
-  // from a clean checkout instead).
+  // D5 (decided 25 Nov 2026): versions 013/014 are retired copies of 004. The
+  // migration runner skips them; the test suites also refuse to start while such
+  // files sit in the folder, so a checkout that still has them is noticed.
   const dir = require('path').join(__dirname, '..', '..', 'src', 'db', 'migrations');
   const held = require('fs').readdirSync(dir).filter(function (f) { return /^01[34]_/.test(f); });
   if (held.length) {
-    throw new Error('D5 pending: migrations ' + held.join(', ') + ' are present and would be applied. ' +
-      'Run the MySQL test suites from a clean checkout without them until the D5 decision is approved.');
+    throw new Error('Migrations ' + held.join(', ') + ' are retired by decision D5 (copies of 004) and must not be in src/db/migrations. ' +
+      'Remove them (or use a clean checkout), then run the MySQL test suites.');
   }
   if (!/_test$/i.test(TEST_DB.DB_NAME)) {
     throw new Error('Refusing to reset "' + TEST_DB.DB_NAME + '": the MySQL test suites only use a dedicated database whose name ends in _test.');
