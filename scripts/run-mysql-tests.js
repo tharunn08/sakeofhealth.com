@@ -5,7 +5,7 @@
  * The suites WIPE and rebuild the project tables in that database.
  *
  * Refuses before connecting when:
- *  - migrations 013/014 are present in this checkout (they would be applied — D5);
+ *  - files numbered 013/014 are present in this checkout (retired copies of 004 — decision D5);
  *  - TEST_DB_NAME does not end in _test (only a dedicated test database; _dev/_local are refused);
  *  - TEST_DB_USER is missing or is root;
  *  - NODE_ENV is production.
@@ -33,7 +33,7 @@ const SUITES = ['b2b-platform', 'erp-foundation', 'erp-catalog', 'erp-procuremen
 function preflight(env, migrationFiles) {
   const why = [];
   const held = migrationFiles.filter(f => /^01[34]_/.test(f));
-  if (held.length) why.push('migrations ' + held.join(', ') + ' are present in this checkout and would be applied (D5 pending). Use a fresh copy from the ZIP.');
+  if (held.length) why.push('Migrations ' + held.join(', ') + ' are retired by decision D5 (copies of 004) and must not be in this checkout. Remove them or use a clean checkout.');
   const name = env.TEST_DB_NAME || '';
   if (!/^[A-Za-z0-9_]+_test$/.test(name)) why.push('TEST_DB_NAME "' + name + '" must be set to a dedicated test database whose name ends in _test (e.g. sakeofhealth_test). _dev and _local databases are refused — the suites wipe this database.');
   const user = env.TEST_DB_USER || '';

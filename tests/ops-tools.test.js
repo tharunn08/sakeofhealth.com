@@ -215,12 +215,12 @@ test('runner: the suites never see inherited DB_* settings — only TEST_DB_*', 
 test('runner, in a checkout that has 013/014: stops before connecting', { skip: HAS_013 ? false : 'clean checkout' }, () => {
   const r = spawnSync(process.execPath, ['scripts/run-mysql-tests.js'], { cwd: ROOT, env: Object.assign({}, process.env, ok, { TEST_DB_HOST: '127.0.0.1', TEST_DB_PORT: '1' }), encoding: 'utf8' });
   assert.strictEqual(r.status, 2);
-  assert.match(r.stderr, /D5 pending/);
+  assert.match(r.stderr, /retired by decision D5/);
 });
 
 test('test helper: refuses a database not named *_test, before connecting', async () => {
   const r = spawnSync(process.execPath, ['-e', "require('./tests/helpers/db.js').resetDatabase().then(()=>process.exit(0), e => { console.error(e.message); process.exit(7); })"],
     { cwd: ROOT, env: Object.assign({}, process.env, { TEST_DB_NAME: 'sakeofhealth_dev', TEST_DB_PORT: '1', DATA_DIR: fs.mkdtempSync(path.join(os.tmpdir(), 'h-')) }), encoding: 'utf8' });
   assert.strictEqual(r.status, 7);
-  assert.match(r.stderr, HAS_013 ? /D5 pending/ : /only use a dedicated database whose name ends in _test/);
+  assert.match(r.stderr, HAS_013 ? /retired by decision D5/ : /only use a dedicated database whose name ends in _test/);
 });

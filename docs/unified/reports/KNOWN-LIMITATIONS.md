@@ -5,7 +5,7 @@
 1. **Not validated against MySQL 8.**
    - The 172 MySQL tests have not run. That covers the trade portal, the business platform, the new job queue and uploads through the business routes.
    - The release gate blocks a release until they pass. Run them in CI or with `node scripts/release-gate.js`.
-2. **Migrations 013 and 014 are held back** (decision D5). They are not in this package and must not be applied until you decide.
+2. **Migrations 013 and 014 are retired** (decision D5, 25 Nov 2026). They were two identical copies of migration 004 under new numbers. Neither was ever recorded in any database (production `u935782097_sohplatform`: 001–012 and 015–020; the old sakeofhealth.in database: 001–003). The migration runner now skips any file numbered 013 or 014 with a warning, so they can never run; the next new migration is 021. The two files on the owner's computer can be deleted.
 3. **The shop's JSON data store slows down with volume.** It is comfortable up to about 10,000 orders; at 30,000 orders placing an order takes about 0.8 s. See `PERFORMANCE-REPORT.md`, which lists three options; all need your approval, because they change protected shop files.
 4. **The admin customer list is not paged.** It is 8 MB at 18,000 customers.
 5. **One company, not several.** Data is isolated between business accounts (distributors, retailers, suppliers). There is no hosting of several companies.
@@ -62,4 +62,4 @@ Generate them with `node scripts/generate-secrets.js`.
 2. The read-only **reconciliation against your database**: `node scripts/reconcile-catalogue.js --price-list <file> --database`.
 3. **SKU, HSN and GST** of the four protected products.
 4. Decisions on **HSN codes**, the **ghee MRPs** and the **five held price-list rows** (`docs/reconciliation/README.md`).
-5. The **D5 decision** on migrations 013/014.
+5. ~~The D5 decision on migrations 013/014~~ — decided 25 Nov 2026: retired (see item 2 above).
