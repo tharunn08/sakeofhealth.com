@@ -1,7 +1,28 @@
 /* Admin panel: say so when the business (ERP) pages are missing from this session.
    A shop/trade session can open without its business part (the 6-digit code was skipped, or the
    business sign-in failed). The menu then simply lacks the ERP pages; this banner explains it and
-   offers a fresh sign-in. Loaded after /admin/admin.js on every shell page; changes nothing else. */
+   offers a fresh sign-in. Loaded after /admin/admin.js on every shell page.
+   It also shows the shop's logo in the sidebar corner instead of the letter "S". */
+(function () {
+  'use strict';
+  if (typeof document.querySelector !== 'function' || typeof MutationObserver === 'undefined') return;
+  function logo() {
+    var box = document.querySelector('.sb-logo');
+    if (!box || box.querySelector('img')) return !!box;
+    box.textContent = '';
+    box.style.background = '#fff';
+    box.style.boxShadow = 'inset 0 0 0 1px rgba(0,0,0,.08)';
+    var img = document.createElement('img');
+    img.src = '/assets/images/logo-mark.svg'; img.alt = 'Sake of Health';
+    img.style.cssText = 'width:26px;height:26px;object-fit:contain;display:block';
+    box.appendChild(img);
+    return true;
+  }
+  if (logo()) return;
+  var mo = new MutationObserver(function () { if (logo()) mo.disconnect(); });
+  mo.observe(document.documentElement, { childList: true, subtree: true });
+  setTimeout(function () { mo.disconnect(); }, 15000);
+})();
 (function () {
   'use strict';
   var A = window.Admin;

@@ -20,7 +20,7 @@ const ROOT = path.join(__dirname, '..');
 
 /** The ERP screens as the ERP code itself declares them: [id, label, permission]. */
 function erpViewsFromSource() {
-  const src = ['app.js', 'modules.js', 'operations.js', 'production.js', 'people.js', 'insights.js', 'home.js'].map(f => fs.readFileSync(path.join(ROOT, 'erp-web/admin', f), 'utf8')).join('\n');
+  const src = ['app.js', 'modules.js', 'operations.js', 'production.js', 'people.js', 'insights.js', 'home.js', 'enterprise.js'].map(f => fs.readFileSync(path.join(ROOT, 'erp-web/admin', f), 'utf8')).join('\n');
   return [...src.matchAll(/\{ id: '([a-z]+)', label: '([^']+)', perm: '([a-z0-9._]+)', render:/g)].map(m => ({ id: m[1], label: m[2], perm: m[3] }));
 }
 
@@ -30,9 +30,9 @@ test.before(() => { reg = require('../src/platform/registry.js'); });
 /* ── Registry ── */
 test('all 32 ERP screens (18 + Notifications + shop stock, events, locations, offline sync, all customers + manufacturers, manufacturing orders, batch quality, bills of materials, trade deliveries + salesmen, delivery dashboard, delivery staff) are in the one registry with exactly the permission the ERP code requires', () => {
   const views = erpViewsFromSource();
-  assert.strictEqual(views.length, 34, 'the ERP declares 34 screens (32 + Smart Insights + ERP Home)');
+  assert.strictEqual(views.length, 36, 'the ERP declares 36 screens (32 + Smart Insights + ERP Home + AI Assistant + Logos & Bills)');
   const erpPages = reg.PAGES.filter(p => p.module === 'erp');
-  assert.strictEqual(erpPages.length, 34);
+  assert.strictEqual(erpPages.length, 36);
   erpPages.forEach(p => assert.ok(p.scripts.includes('/admin/erp/people.js'), p.id + ' loads the suppliers, salesmen and delivery screens'));
   erpPages.forEach(p => assert.ok(p.scripts.includes('/admin/erp/operations.js'), p.id + ' loads the operations screens'));
   erpPages.forEach(p => assert.ok(p.scripts.includes('/admin/erp/production.js'), p.id + ' loads the manufacturing and delivery screens'));

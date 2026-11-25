@@ -171,6 +171,16 @@ Templates: `.env.example` (all), `.env.development.example` (local), `.env.produ
 | `JOB_BATCH_SIZE` | optional | int | `50` | Most jobs one cron run claims. |
 | `JOB_TIME_BUDGET_SECONDS` | optional | int | `240` | A cron run stops claiming new jobs after this many seconds (Hostinger stops a cron job after 30 minutes and an HTTP request after 120 s; the HTTP trigger caps it at 90 s). |
 
+## AI assistant (off until set and switched on)
+
+| Variable | Needed | Type | Default | What it does |
+| --- | --- | --- | --- | --- |
+| `AI_PROVIDER` | optional | enum | `empty: assistant off` | Language-model provider for the AI assistant. Only anthropic (Claude) is built in. Leave empty to keep the assistant off. |
+| `AI_API_KEY` | required when AI_PROVIDER is set | secret (secret) | — | API key from the provider's console. Billed per use by the provider; set a monthly spending limit there. |
+| `AI_MODEL` | optional | string | `claude-haiku-5-5` | Model name; the default is the low-cost one. |
+| `AI_DAILY_LIMIT_PER_USER` | optional | int | `30` | Questions per person per day. |
+| `AI_DAILY_LIMIT_TOTAL` | optional | int | `300` | Questions per day for the whole business. |
+
 ## Used only by developer tools
 
 | Variable | Used by |

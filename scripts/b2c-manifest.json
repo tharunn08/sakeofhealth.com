@@ -25,7 +25,7 @@
     "frontend/admin/page-settings.js": "9d519063f0169ec684e3b0256afdd483dc2f6958ce7c64a0afed6c549aff5a72",
     "frontend/admin/page-staff.js": "625bdc78abf71d62eaeecdf0e1e00b818f11bb7b9bdedbdf68af75bb0c40f6fa",
     "frontend/admin/print.css": "83046076bafbb5fee977c9bc3e503a362d0bbb8ce17e1d61bcabcc5c7be5c101",
-    "frontend/admin/print.html": "fceb153f37c815fb06734b45d42d54cbdf0c9b4964403901651764361fae5809",
+    "frontend/admin/print.html": "030ad2b059218d4a8a5c29c25eac3421f0b73c16a89dfb25d006312d162d5537",
     "frontend/admin/print.js": "7393094fd8ba34d80515ff3a77ea103e484a978b2d1172ae5a4aed30ef0c0457",
     "frontend/admin/products.html": "c8ba80e3cc83603b7670f6934ff7418033c5432b9595ec3794bc649dd6328e0d",
     "frontend/admin/reports.html": "b1949d213b528e5254eb44e16ba1edac0aee105afe03ffdbe1f2af29e1893bfd",
@@ -360,6 +360,18 @@
           "from": "77bade0b2a2deda4df24d382f3dc6c0cb9ff7f645f5f7746bd7ee3729529728b",
           "to": "693893a308e28f72480b9dc09ac36ccbdcdb5634b9159b7c7cb6d258cd600d7d",
           "reason": "Owner's request 2026-11-19: scripts (setup, check:env, secrets, env:templates, verify:products, restore:shop, reset, dev) and engines node >=20.6 (the cron script uses --env-file); no dependency added or changed"
+        }
+      ]
+    },
+    {
+      "date": "2026-11-25",
+      "by": "Owner request 25 Nov 2026: logo on bills, chosen in Admin → Logos & Bills",
+      "changes": [
+        {
+          "file": "frontend/admin/print.html",
+          "from": "fceb153f37c815fb06734b45d42d54cbdf0c9b4964403901651764361fae5809",
+          "to": "030ad2b059218d4a8a5c29c25eac3421f0b73c16a89dfb25d006312d162d5537",
+          "reason": "One added line loads /platform/bill-logo.js, which places the chosen logo on each printed bill header. Display only: no order, payment, checkout, shipping or stock logic touched."
         }
       ]
     }

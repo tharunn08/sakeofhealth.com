@@ -27,9 +27,9 @@ r.get('/sales/:id', can('events.view'), h(async function (req, res) { res.json(a
 r.get('/sales/:id/invoice', can('events.view'), h(async function (req, res) {
   const sale = await svc.getSale(req.erp, id(req.params.id));
   const seller = await require('../../b2b/invoices/service.js').sellerCard('company', null);
-  res.setHeader('Content-Security-Policy', "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'");
+  res.setHeader('Content-Security-Policy', "default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'");
   if (req.query.download === '1') res.setHeader('Content-Disposition', 'attachment; filename="invoice-' + sale.invoiceNo.replace(/[^A-Za-z0-9-]/g, '-') + '.html"');
-  res.type('html').send(invoice.render(sale, seller));
+  res.type('html').send(invoice.render(sale, seller, await require('../../../platform/branding.js').billLogo()));
 }));
 r.post('/sales/:id/payments', can('events.sell'), h(async function (req, res) { res.json(await tx(req, function (t, a) { return svc.addPayment(t, a, req.erp, id(req.params.id), B(req)); })); }));
 r.post('/sales/:id/returns', can('events.sell'), h(async function (req, res) { res.json(await tx(req, function (t, a) { return svc.returnItems(t, a, req.erp, id(req.params.id), B(req)); })); }));

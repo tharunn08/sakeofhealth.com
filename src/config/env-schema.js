@@ -34,6 +34,7 @@ const GROUPS = [
   ['erp', 'Back office (business platform)'],
   ['storage', 'File storage (uploads, invoices, documents)'],
   ['jobs', 'Scheduled jobs (Hostinger Cron Jobs)'],
+  ['ai', 'AI assistant (off until set and switched on)'],
 ];
 
 const VARS = [
@@ -193,6 +194,14 @@ const VARS = [
   { name: 'JOB_BATCH_SIZE', group: 'jobs', need: 'optional', type: 'int', min: 1, max: 1000, default: '50', dev: '50', prod: '50', doc: 'Most jobs one cron run claims.' },
   { name: 'JOB_TIME_BUDGET_SECONDS', group: 'jobs', need: 'optional', type: 'int', min: 10, max: 1500, default: '240', dev: '240', prod: '240',
     doc: 'A cron run stops claiming new jobs after this many seconds (Hostinger stops a cron job after 30 minutes and an HTTP request after 120 s; the HTTP trigger caps it at 90 s).' },
+  // ── AI assistant (src/modules/erp/assistant/service.js): paid per use; nothing is sent until both keys are set AND it is switched on in the admin panel ──
+  { name: 'AI_PROVIDER', group: 'ai', need: 'optional', type: 'enum', values: ['anthropic'], default: 'empty: assistant off', dev: '', prod: '',
+    doc: 'Language-model provider for the AI assistant. Only anthropic (Claude) is built in. Leave empty to keep the assistant off.' },
+  { name: 'AI_API_KEY', group: 'ai', need: 'when', when: set('AI_PROVIDER'), whenText: 'AI_PROVIDER is set', type: 'secret', secret: true, dev: '', prod: '',
+    doc: 'API key from the provider\'s console. Billed per use by the provider; set a monthly spending limit there.' },
+  { name: 'AI_MODEL', group: 'ai', need: 'optional', type: 'string', default: 'claude-haiku-5-5', dev: '', prod: '', doc: 'Model name; the default is the low-cost one.' },
+  { name: 'AI_DAILY_LIMIT_PER_USER', group: 'ai', need: 'optional', type: 'int', min: 1, max: 500, default: '30', dev: '', prod: '', doc: 'Questions per person per day.' },
+  { name: 'AI_DAILY_LIMIT_TOTAL', group: 'ai', need: 'optional', type: 'int', min: 1, max: 5000, default: '300', dev: '', prod: '', doc: 'Questions per day for the whole business.' },
 ];
 
 /** Variables read only by developer tools and tests — documented, never needed by the application. */

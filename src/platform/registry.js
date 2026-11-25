@@ -48,7 +48,7 @@ const B2B = (id, group, slug, label, icon, script, perms, extra) => Object.assig
 const ERP = (view, group, slug, label, icon, perm, extra) => Object.assign({
   id: 'erp-' + view, view, group, path: '/admin/' + group + '/' + slug, label, icon, module: 'erp', perm,
   base: '/admin/erp/', css: ['/platform/erp-embed.css'],
-  scripts: ['/admin/erp/app.js', '/admin/erp/modules.js', '/admin/erp/operations.js', '/admin/erp/production.js', '/admin/erp/people.js', '/admin/erp/insights.js', '/admin/erp/home.js', '/platform/erp-host.js'],
+  scripts: ['/admin/erp/app.js', '/admin/erp/modules.js', '/admin/erp/operations.js', '/admin/erp/production.js', '/admin/erp/people.js', '/admin/erp/insights.js', '/admin/erp/home.js', '/admin/erp/enterprise.js', '/platform/erp-host.js'],
 }, extra || {});
 
 const PAGES = [
@@ -85,6 +85,7 @@ const PAGES = [
   /* ERP screens (32) — same screen code as /admin/erp, now inside this shell */
   ERP('overview', 'overview', 'system', 'System Health', 'analytics', 'core.monitoring.view'),
   ERP('insights', 'overview', 'insights', 'Smart Insights', 'analytics', 'reports.export'),
+  ERP('assistant', 'overview', 'assistant', 'AI Assistant', 'analytics', 'reports.export'),
   ERP('erphome', 'business', 'erp', 'ERP Home', 'dashboard', 'core.self.view'),
   ERP('salesdesk', 'sales', 'desk', 'Sales Desk', 'orders', 'sales.reports.view'),
   ERP('salesmen', 'sales', 'salesmen', 'Salesmen', 'staff', 'sales.reports.view'),
@@ -118,6 +119,7 @@ const PAGES = [
   ERP('decisions', 'administration', 'decisions', 'Business Decisions', 'settings', 'core.settings.view'),
   ERP('staff', 'administration', 'business-staff', 'Business Staff & Roles', 'staff', 'core.staff.view'),
   ERP('audit', 'administration', 'audit', 'Audit Log', 'reports', 'core.audit.view'),
+  ERP('branding', 'administration', 'logos', 'Logos & Bills', 'settings', 'core.settings.view'),
   ERP('account', 'administration', 'my-security', 'My Password & 2FA', 'settings', 'core.self.view'),
 ];
 
