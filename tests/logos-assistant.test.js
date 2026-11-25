@@ -102,8 +102,8 @@ test('printed bills: the logo goes into each bill header as the print page build
     assert.match(fs.readFileSync(path.join(ROOT, f), 'utf8'), /<script src="\/admin\/print\.js\?v=1"><\/script>\n<script src="\/platform\/bill-logo\.js"><\/script>/, f);
   }
   const m = require('../scripts/b2c-manifest.json');
-  const rep = m.repins[m.repins.length - 1];
-  assert.equal(rep.changes[0].file, 'frontend/admin/print.html'); assert.match(rep.changes[0].reason, /Display only/);
+  const change = m.repins.flatMap((r) => r.changes || []).find((c) => c.file === 'frontend/admin/print.html');
+  assert.ok(change, 'the print page change is recorded'); assert.match(change.reason, /Display only/);
   assert.doesNotMatch(fs.readFileSync(path.join(ROOT, 'frontend/admin/print.js'), 'utf8'), /bill-logo/, 'the bill code itself is unchanged');
 });
 

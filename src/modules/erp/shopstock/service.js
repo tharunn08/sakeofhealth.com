@@ -79,11 +79,14 @@ async function sellable(tx, cfg, productId, exceptRef, lock) {
   const st = await tx.queryOne('SELECT qty_available FROM b2b_stock WHERE warehouse_id = ? AND product_id = ?' + (lock ? ' FOR UPDATE' : ''), [cfg.warehouseId, productId]);
   const avail = st ? Number(st.qty_available) : 0;
   const mode = liveMode(cfg);
+  // With the stock row locked, these must be locking reads too: a plain read would use the transaction's earlier
+  // snapshot and miss holds other checkouts committed while this one waited (8 buyers, 7 units → oversold).
+  const latest = lock ? ' LOCK IN SHARE MODE' : '';
   const held = await tx.queryOne("SELECT COALESCE(SUM(qty), 0) AS n FROM b2b_stock_reservations WHERE channel = 'b2c' AND mode = ? AND product_id = ? AND status = 'held' " +
-    'AND (expires_at IS NULL OR expires_at > UTC_TIMESTAMP()) AND source_ref <> ?', [mode, productId, exceptRef || '']);
+    'AND (expires_at IS NULL OR expires_at > UTC_TIMESTAMP()) AND source_ref <> ?' + latest, [mode, productId, exceptRef || '']);
   let shadowTaken = 0;
   if (mode === 'shadow') {
-    const t = await tx.queryOne("SELECT COALESCE(SUM(qty), 0) AS n FROM b2b_b2c_order_stock WHERE mode = 'shadow' AND product_id = ? AND stage IN ('allocated','sold')", [productId]);
+    const t = await tx.queryOne("SELECT COALESCE(SUM(qty), 0) AS n FROM b2b_b2c_order_stock WHERE mode = 'shadow' AND product_id = ? AND stage IN ('allocated','sold')" + latest, [productId]);
     shadowTaken = Number(t.n);
   }
   return avail - Number(held.n) - shadowTaken;
