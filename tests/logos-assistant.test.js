@@ -52,7 +52,7 @@ test('logo library: PNG/JPG/WEBP only (never SVG), 1 MB, a name; stored outside 
   assert.deepEqual(s.audits.map((e) => e.action), ['branding.logo_added', 'branding.logo_added']);
   const st = await branding.state(tx);
   assert.equal(st.billLogo, 'shop', 'nothing chosen yet → the shop logo prints');
-  assert.equal(st.bill.url, '/assets/images/logo-mark.svg');
+  assert.equal(st.bill.url, '/assets/images/logo-mark.png');
 });
 
 test('logo library: choose the bill logo, remove it → back to the shop logo; unknown ids refused', async (t) => {
@@ -133,7 +133,7 @@ test('logo routes: public picture and choice; changes need core.settings.edit; u
   assert.match(b, /if \(!NAME_RX\.test\(name\)\) return res\.status\(404\)/, 'only library names, never a path');
   assert.equal(branding.sniff(SVG), null);
   const login = fs.readFileSync(path.join(ROOT, 'platform-web/login.html'), 'utf8');
-  assert.match(login, /<img src="\/assets\/images\/logo-mark\.svg" alt="Sake of Health"/);
+  assert.match(login, /<img src="\/assets\/images\/logo-mark\.png" alt="Sake of Health"/);
   assert.doesNotMatch(login, /<div class="login-logo">S<\/div>/);
 });
 
