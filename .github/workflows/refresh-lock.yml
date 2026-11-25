@@ -1,0 +1,35 @@
+# Rebuilds package-lock.json on GitHub (where npm can reach the registry) after a package.json change on a
+# deps-* branch. Runs only when the commit message contains [refresh-lock]; commits the new lock file back to
+# the same branch. The quality gate then runs on the next push to that branch. Never touches main.
+name: refresh-lock
+
+on:
+  push:
+    branches: ['deps-*']
+
+permissions:
+  contents: write
+
+jobs:
+  lock:
+    if: contains(github.event.head_commit.message, '[refresh-lock]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Rebuild the lock file (security updates only)
+        run: |
+          npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+          npm update axios follow-redirects body-parser qs multer --package-lock-only --ignore-scripts --no-audit --no-fund
+          npm audit --omit=dev || true
+      - name: Commit the new lock file to this branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          if git diff --cached --quiet; then echo "lock file unchanged"; exit 0; fi
+          git commit -m "Rebuild package-lock.json for the security updates"
+          git push
