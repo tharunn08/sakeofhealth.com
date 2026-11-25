@@ -85,8 +85,8 @@
     "frontend/track.html": "87fdde2ace120be2d0b8a20b235737d40b13001cd5772b0c1a2d3c9c835f479b",
     "index.js": "184e3706df9f29963b9048935a69063efab5079730bb78e33bccfbd5536f18f7",
     "main.css": "f60772e283e739433a96de236a18e1e8e173f0da64288a0f955066d0a1fe73a0",
-    "package-lock.json": "d60a257cca0f903e4d08c68c4019f774ca6f7fbd5b67ee7cb1cb4b93f315b246",
-    "package.json": "693893a308e28f72480b9dc09ac36ccbdcdb5634b9159b7c7cb6d258cd600d7d",
+    "package-lock.json": "95e46d68482555f7d92dbd3e7a20b8abefcbc71af2d0109bacb92ae43bff9305",
+    "package.json": "a011efb498127b17bd35a6e2e7b22b26d68c0aab3d2ca6596cdcc8f956339ea8",
     "src/middleware/adminAuth.js": "a84ef23f4ed5967664a5f6c049b010c61cbb7e26e38a7d1c8b19e1a90950012d",
     "src/middleware/customerAuth.js": "79d355538030a3ba6d46df77ab2dffa7fd254eb0217fc0b06d1afd2d82800ece",
     "src/middleware/idempotency.js": "8d0ee9b5835840d9411f7f1b6fca80ded30711a0604e26664a166279117b886c",
@@ -372,6 +372,24 @@
           "from": "fceb153f37c815fb06734b45d42d54cbdf0c9b4964403901651764361fae5809",
           "to": "030ad2b059218d4a8a5c29c25eac3421f0b73c16a89dfb25d006312d162d5537",
           "reason": "One added line loads /platform/bill-logo.js, which places the chosen logo on each printed bill header. Display only: no order, payment, checkout, shipping or stock logic touched."
+        }
+      ]
+    },
+    {
+      "date": "2026-11-25",
+      "by": "Owner's go-ahead 25 Nov 2026: fix all open issues",
+      "changes": [
+        {
+          "file": "package.json",
+          "from": "693893a308e28f72480b9dc09ac36ccbdcdb5634b9159b7c7cb6d258cd600d7d",
+          "to": "a011efb498127b17bd35a6e2e7b22b26d68c0aab3d2ca6596cdcc8f956339ea8",
+          "reason": "Security updates (25 Nov 2026, owner's go-ahead): nodemailer 6.10.1 → 10.6.1, multer 2.5.0, axios 1.21.1, follow-redirects 1.16.3, body-parser 1.20.9, qs 6.16.2, uuid 11.1.1 (override for exceljs). npm audit: 0 vulnerabilities. The shop's own code is unchanged; it uses nodemailer's SMTP createTransport/sendMail only, which these versions keep."
+        },
+        {
+          "file": "package-lock.json",
+          "from": "d60a257cca0f903e4d08c68c4019f774ca6f7fbd5b67ee7cb1cb4b93f315b246",
+          "to": "95e46d68482555f7d92dbd3e7a20b8abefcbc71af2d0109bacb92ae43bff9305",
+          "reason": "Security updates (25 Nov 2026, owner's go-ahead): nodemailer 6.10.1 → 10.6.1, multer 2.5.0, axios 1.21.1, follow-redirects 1.16.3, body-parser 1.20.9, qs 6.16.2, uuid 11.1.1 (override for exceljs). npm audit: 0 vulnerabilities. The shop's own code is unchanged; it uses nodemailer's SMTP createTransport/sendMail only, which these versions keep."
         }
       ]
     }
