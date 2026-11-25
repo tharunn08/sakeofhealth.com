@@ -52,7 +52,11 @@ test('the registry holds exactly the four products, identity pinned (a change mu
   const identity = reg.products.map(p => [p.id, p.slug, p.name, p.category, p.sku, p.legacyIds]);
   assert.deepEqual(identity.map(x => x[0]), ['soh-core-multivitamin', 'soh-core-iron', 'soh-core-curcumin', 'soh-core-probiotic']);
   // Pin: changing a protected identity must change this test too, on purpose.
-  assert.equal(crypto.createHash('sha256').update(JSON.stringify(identity)).digest('hex').slice(0, 16), 'd7bf787998b59c5e',
+  // 25 Nov 2026: pin moved from d7bf787998b59c5e to f4ddc0f2a4ca5a4b. The only change is the reviewed repair that added
+  // each product's original live id to legacyIds (docs/unified/PROTECTED-PRODUCTS.md, the adopt step); id, slug,
+  // name, category and sku are unchanged, and the state before it is kept in protected-products.before-repair.json.
+  assert.deepEqual(reg.products.map(p => p.legacyIds.length), [1, 1, 1, 1], 'one original id per product');
+  assert.equal(crypto.createHash('sha256').update(JSON.stringify(identity)).digest('hex').slice(0, 16), 'f4ddc0f2a4ca5a4b',
     'the protected identities changed: if this was intended, update this pin in the same reviewed change');
   reg.products.forEach(p => {
     const page = fs.readFileSync(path.join(ROOT, p.page), 'utf8');

@@ -75,6 +75,10 @@ test('1 + 5: a shop order reserves at Pay, is allocated before the order exists,
   const mv = await c.db.query("SELECT batch_id, qty, idem_key FROM b2b_stock_movements WHERE ref_type = 'b2c_order' ORDER BY id");
   assert.deepEqual(mv.map(m => Number(m.qty)), [3]);
   assert.match(mv[0].idem_key, /^b2c:gw:order_T1:\d+:alloc:\d+$/);
+  // the ledger's reference is the order line's number (the column holds numbers); the shop's key is in the reason
+  const line1 = await c.db.queryOne("SELECT id FROM b2b_b2c_order_stock WHERE gateway_order_id = 'order_T1'");
+  const mvRef = await c.db.queryOne("SELECT ref_id, reason FROM b2b_stock_movements WHERE ref_type = 'b2c_order' ORDER BY id LIMIT 1");
+  assert.equal(Number(mvRef.ref_id), Number(line1.id)); assert.match(mvRef.reason, /^shop order gw:order_T1/);
   assert.equal(Number((await c.db.queryOne('SELECT batch_no FROM b2b_batches WHERE id = ?', [mv[0].batch_id])).batch_no === 'S-OLD'), 1, 'earliest expiry first');
   // the order appears in the shop's file; the catch-up links it, then it leaves
   const orders = [{ id: 'shop-ord-1', orderId: 'SOH-1001', status: 'pending', createdAt: new Date().toISOString(), total: 360, items: [{ id: 'p-jag', qty: 3 }], payment: { gatewayOrderId: 'order_T1', paymentId: 'pay_T1' }, customer: { name: 'Ravi', email: 'ravi@trial.local', phone: '9845011111' } }];

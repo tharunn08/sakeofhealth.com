@@ -173,16 +173,18 @@ async function commit(tx, cfg, o) {
         details: 'Paid order with no stock in the ledger: enforcement would have refunded it' });
     } else if (mode === 'live') {
       picks = await fefo.pick(tx, cfg.warehouseId, l.productId, l.qty);
-      for (const p of picks) {
-        await ledger.mustMove(tx, { warehouseId: cfg.warehouseId, productId: l.productId, batchId: p.batchId, lotId: p.lotId, type: 'allocation', qty: p.qty,
-          from: 'available', to: 'allocated', refType: 'b2c_order', refId: String(o.orderKey).slice(0, 40), actor: SYSTEM,
-          idemKey: 'b2c:' + o.orderKey + ':' + l.productId + ':alloc:' + (p.batchId || 'nb') });
-      }
     }
     if (holdRow) await tx.query("UPDATE b2b_stock_reservations SET status = ?, payment_seen_at = UTC_TIMESTAMP() WHERE id = ?", [stage === 'short' ? 'short' : 'committed', holdRow.id]);
-    await tx.query('INSERT INTO b2b_b2c_order_stock (mode, shop_order_id, shop_order_no, gateway_order_id, product_id, warehouse_id, qty, stage, picks_json) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    // The order line first: its number is the stock ledger's reference (that column holds numbers; the shop's
+    // order key is text and goes in the reason).
+    const line = await tx.query('INSERT INTO b2b_b2c_order_stock (mode, shop_order_id, shop_order_no, gateway_order_id, product_id, warehouse_id, qty, stage, picks_json) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [mode, String(o.orderKey).slice(0, 64), o.shopOrderNo ? String(o.shopOrderNo).slice(0, 40) : null, o.gatewayOrderId ? String(o.gatewayOrderId).slice(0, 64) : null,
         l.productId, cfg.warehouseId, l.qty, stage, picks ? JSON.stringify(picks) : null]);
+    for (const p of (picks || [])) {
+      await ledger.mustMove(tx, { warehouseId: cfg.warehouseId, productId: l.productId, batchId: p.batchId, lotId: p.lotId, type: 'allocation', qty: p.qty,
+        from: 'available', to: 'allocated', refType: 'b2c_order', refId: Number(line.insertId), reason: ('shop order ' + o.orderKey).slice(0, 255), actor: SYSTEM,
+        idemKey: 'b2c:' + o.orderKey + ':' + l.productId + ':alloc:' + (p.batchId || 'nb') });
+    }
     if (stage !== 'short') out.committed++;
   }
   return out;
@@ -222,13 +224,13 @@ async function advance(tx, cfg, row, shopStatus) {
   const key = 'b2c:line:' + row.id;   // stable for this order line, whichever path sees it
   if (LEFT.indexOf(shopStatus) !== -1 && row.stage === 'allocated') {
     for (const p of picks) await ledger.mustMove(tx, { warehouseId: row.warehouse_id, productId: row.product_id, batchId: p.batchId, lotId: p.lotId, type: 'b2c_sale', qty: p.qty,
-      from: 'allocated', refType: 'b2c_order', refId: row.ref_id, actor: SYSTEM, idemKey: key + ':sale:' + (p.batchId || 'nb') });
+      from: 'allocated', refType: 'b2c_order', refId: Number(row.id), reason: ('shop order ' + shopRef(row)).slice(0, 255), actor: SYSTEM, idemKey: key + ':sale:' + (p.batchId || 'nb') });
     await tx.query("UPDATE b2b_b2c_order_stock SET stage = 'sold', shop_status = ? WHERE id = ?", [shopStatus, row.id]);
     return 'sold';
   }
   if (shopStatus === 'cancelled' && row.stage === 'allocated') {
     for (const p of picks) await ledger.mustMove(tx, { warehouseId: row.warehouse_id, productId: row.product_id, batchId: p.batchId, lotId: p.lotId, type: 'release', qty: p.qty,
-      from: 'allocated', to: 'available', refType: 'b2c_order', refId: row.ref_id, reason: 'shop order cancelled before it left', actor: SYSTEM, idemKey: key + ':release:' + (p.batchId || 'nb') });
+      from: 'allocated', to: 'available', refType: 'b2c_order', refId: Number(row.id), reason: ('shop order ' + shopRef(row) + ' cancelled before it left').slice(0, 255), actor: SYSTEM, idemKey: key + ':release:' + (p.batchId || 'nb') });
     await fefo.putBack(tx, picks, 'available');
     await tx.query("UPDATE b2b_b2c_order_stock SET stage = 'released', shop_status = ? WHERE id = ?", [shopStatus, row.id]);
     return 'released';
@@ -240,9 +242,12 @@ async function advance(tx, cfg, row, shopStatus) {
   return null;
 }
 
+/** How a person finds the order: the shop's order number when known, else its id or checkout key. */
+function shopRef(row) { return String(row.ref_id || row.shop_order_no || row.shop_order_id); }
+
 async function returnLine(tx, actor, row, picks, bucket, reason, keyBase) {
   for (const p of picks) await ledger.mustMove(tx, { warehouseId: row.warehouse_id, productId: row.product_id, batchId: p.batchId, lotId: p.lotId, type: 'b2c_reversal', qty: p.qty,
-    to: bucket, refType: 'b2c_order', refId: row.ref_id, reason: reason, actor: actor, idemKey: keyBase + ':' + (p.batchId || 'nb') });
+    to: bucket, refType: 'b2c_order', refId: Number(row.id), reason: ('shop order ' + shopRef(row) + ': ' + reason).slice(0, 255), actor: actor, idemKey: keyBase + ':' + (p.batchId || 'nb') });
   await fefo.putBack(tx, picks, bucket);
   await tx.query("UPDATE b2b_b2c_order_stock SET stage = 'returned' WHERE id = ?", [row.id]);
 }
