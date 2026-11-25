@@ -13,7 +13,7 @@
     box.style.background = '#fff';
     box.style.boxShadow = 'inset 0 0 0 1px rgba(0,0,0,.08)';
     var img = document.createElement('img');
-    img.src = '/assets/images/logo-mark.svg'; img.alt = 'Sake of Health';
+    img.src = '/assets/images/logo-mark.png'; img.alt = 'Sake of Health';
     img.style.cssText = 'width:26px;height:26px;object-fit:contain;display:block';
     box.appendChild(img);
     return true;

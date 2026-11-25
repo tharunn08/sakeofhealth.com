@@ -79,10 +79,10 @@ test('every ERP table gets Download CSV / Excel, a search box when long, and sor
 });
 
 test('logo in the trade portal, supplier portal, field app and business e-mails', () => {
-  assert.match(read('b2b-web/portal/app.js'), /<div class="side-brand"><img class="brand-logo" src="\/assets\/images\/logo-mark\.svg"/);
+  assert.match(read('b2b-web/portal/app.js'), /<div class="side-brand"><img class="brand-logo" src="\/assets\/images\/logo-mark\.png"/);
   assert.match(read('b2b-web/portal/app.js'), /<a class="top-brand"[^']*><img class="brand-logo sm"/);
-  for (const f of ['b2b-web/portal/login.html', 'b2b-web/portal/register.html']) assert.match(read(f), /class="wm"><img src="\/assets\/images\/logo-mark\.svg"/, f);
-  for (const f of ['erp-web/vendor/index.html', 'erp-web/sales/index.html']) assert.match(read(f), /<header class="brandbar"><img src="\/assets\/images\/logo-mark\.svg"/, f);
+  for (const f of ['b2b-web/portal/login.html', 'b2b-web/portal/register.html']) assert.match(read(f), /class="wm"><img src="\/assets\/images\/logo-mark\.png"/, f);
+  for (const f of ['erp-web/vendor/index.html', 'erp-web/sales/index.html']) assert.match(read(f), /<header class="brandbar"><img src="\/assets\/images\/logo-mark\.png"/, f);
   const saved = { p: process.env.PUBLIC_SITE_URL, s: process.env.SITE_URL };
   try {
     const notif = require('../src/modules/b2b/notifications/service.js');
@@ -144,4 +144,13 @@ test('one design system: the ERP, supplier portal and field app use the admin pa
     assert.match(css, /--bg:#f6f7f4;/, f); assert.match(css, /--line:#e4e8e0;/, f); assert.match(css, /--ink:#16261a;/, f);
     assert.doesNotMatch(css, /#1F5FBF/i, f + ': the old blue is gone');
   }
+});
+
+test('every portal, sign-in page and bill shows the home page\'s own logo (logo-mark.png), not the drawn copy', () => {
+  const walk = (d) => fs.readdirSync(path.join(ROOT, d), { withFileTypes: true }).flatMap((e) => e.isDirectory() ? walk(path.join(d, e.name)) : [path.join(d, e.name)]);
+  const files = ['platform-web', 'b2b-web', 'erp-web', 'src'].flatMap(walk).filter((f) => /\.(js|html|css)$/.test(f));
+  const old = files.filter((f) => read(f).includes('logo-mark.svg'));
+  assert.deepEqual(old, [], 'no page uses the drawn SVG');
+  assert.match(read('frontend/index.html'), /<img src="assets\/images\/logo-mark\.png" class="logo-mark"/, 'the home page logo');
+  assert.equal(require('../src/platform/branding.js').SHOP.url, '/assets/images/logo-mark.png', 'the default bill logo');
 });

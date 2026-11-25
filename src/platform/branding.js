@@ -5,7 +5,7 @@
  *              so a redeploy keeps them. PNG, JPG or WEBP only (decided by the file's first bytes),
  *              at most 1 MB each, at most 12 logos.
  *   Settings   b2b_settings: branding.logos (the list) and branding.bill_logo (the chosen id).
- *   Default    the shop's own logo (/assets/images/logo-mark.svg) until another one is chosen,
+ *   Default    the shop's own logo (/assets/images/logo-mark.png) until another one is chosen,
  *              or when the chosen one is removed or the settings cannot be read.
  *
  * Changing the library needs core.settings.edit; every change is in the audit log. Logos are
@@ -19,7 +19,7 @@ const LIST_KEY = 'branding.logos';
 const BILL_KEY = 'branding.bill_logo';
 const MAX_BYTES = 1024 * 1024;
 const MAX_LOGOS = 12;
-const SHOP = { id: 'shop', label: 'Shop logo', url: '/assets/images/logo-mark.svg', builtIn: true };
+const SHOP = { id: 'shop', label: 'Shop logo', url: '/assets/images/logo-mark.png', builtIn: true };
 const NAME_RX = /^[a-f0-9]{32}\.(png|jpg|webp)$/;
 const TTL_MS = 15000;
 let cache = null;

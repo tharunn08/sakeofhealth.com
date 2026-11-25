@@ -4,7 +4,7 @@
    If the choice cannot be read, the shop's own logo is used. */
 (function () {
   'use strict';
-  var FALLBACK = { url: '/assets/images/logo-mark.svg', label: 'Sake of Health' };
+  var FALLBACK = { url: '/assets/images/logo-mark.png', label: 'Sake of Health' };
   var logo = null;
   var style = document.createElement('style');
   style.textContent = '.bill-logo{display:block;max-height:60px;max-width:200px;object-fit:contain;margin:0 0 8px}' +
