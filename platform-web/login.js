@@ -35,6 +35,52 @@
     location.href = w.home;
   }
 
+  // ── Forgot password: e-mailed link for business staff; the token arrives after "#", never in a URL the server sees ──
+  var resetToken = null;
+  (function () {
+    var m = /^#reset=([A-Za-z0-9_\-.]{20,400})$/.exec(location.hash || '');
+    if (!m) return;
+    resetToken = m[1];
+    history.replaceState(null, '', location.pathname + location.search);   // keep it out of history and screenshots
+    document.getElementById('credentials').hidden = true;
+    document.getElementById('resetBox').hidden = false;
+  })();
+  document.getElementById('forgotLink').addEventListener('click', function (e) {
+    e.preventDefault();
+    document.getElementById('credentials').hidden = true;
+    document.getElementById('forgotBox').hidden = false;
+    document.getElementById('forgotEmail').value = document.getElementById('email').value.trim();
+    document.getElementById('forgotEmail').focus();
+  });
+  document.getElementById('forgotBtn').addEventListener('click', async function () {
+    var b = this, email = document.getElementById('forgotEmail').value.trim();
+    if (!email) { show('Enter your e-mail address.', 'error'); return; }
+    b.disabled = true;
+    try {
+      var res = await fetch('/api/platform/auth/forgot-password', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email }) });
+      var data = await res.json().catch(function () { return {}; });
+      show(res.ok ? data.message : (data.error || 'Please try again in a few minutes.'), res.ok ? 'success' : 'error');
+    } catch (err) { show('Could not reach the server. Check your connection.', 'error'); }
+    b.disabled = false;
+  });
+  document.getElementById('resetBtn').addEventListener('click', async function () {
+    var b = this, n1 = document.getElementById('resetPassword').value, n2 = document.getElementById('resetPassword2').value;
+    if (n1 !== n2) { show('The two new passwords do not match.', 'error'); return; }
+    b.disabled = true;
+    try {
+      var res = await fetch('/api/platform/auth/reset-password', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: resetToken, newPassword: n1 }) });
+      var data = await res.json().catch(function () { return {}; });
+      if (res.ok) {
+        document.getElementById('resetBox').hidden = true;
+        document.getElementById('credentials').hidden = false;
+        if (data.email) document.getElementById('email').value = data.email;
+        document.getElementById('password').value = '';
+        document.getElementById('password').focus();
+        show('Password changed. Sign in with your new password.', 'success');
+      } else { show(data.error || 'The password could not be changed.', 'error'); b.disabled = false; }
+    } catch (err) { show('Could not reach the server. Check your connection.', 'error'); b.disabled = false; }
+  });
+
   // ── Temporary password: choose a new one before any workspace opens ──
   var changeBox = document.getElementById('changeBox');
   function askNewPassword(voluntary) {

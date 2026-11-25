@@ -98,6 +98,9 @@ test('MFA: enrolment ends the session; then the code is required at login', asyn
 });
 
 test('maker-checker: grant a role needs a different approver with MFA; sessions end on grant', async () => {
+  // Every role through approval (the policy before 25 Nov 2026; still available as a setting).
+  const pol = await s.put('/api/erp/core/security/role-assignment', { mode: 'approval', reason: 'maker-checker test' }, bearer(ids.tokenA));
+  assert.equal(pol.status, 200, JSON.stringify(pol.data));
   const charlie = (await login('charlie@test.local', PW.c)).data.token;
   const auditor = await db.queryOne("SELECT id FROM b2b_roles WHERE code = 'auditor'");
   const req = await s.post('/api/erp/core/staff/' + ids.c + '/roles', { roleId: Number(auditor.id), scopeType: 'all', reason: 'New internal auditor' }, bearer(ids.tokenA));
@@ -136,6 +139,22 @@ test('disabling a person ends their session immediately; re-enabling needs appro
   const re = await s.patch('/api/erp/core/staff/' + tmpId, { status: 'active', reason: 'Came back' }, bearer(ids.tokenA));
   assert.equal(re.status, 200); assert.equal(re.data.status, 'pending');
   assert.equal((await db.queryOne('SELECT status FROM b2b_staff WHERE id = ?', [tmpId])).status, 'disabled', 'still disabled until approved');
+});
+
+test('one admin gives an ordinary role at once (direct policy); the Super Admin role still needs approval', async () => {
+  const pol = await s.put('/api/erp/core/security/role-assignment', { mode: 'direct', approvalRoles: [], reason: 'owner brief 25 Nov' }, bearer(ids.tokenA));
+  assert.equal(pol.status, 200, JSON.stringify(pol.data));
+  const did = await addStaff('Dee Direct', 'dee@test.local', 'Dee-direct-password-4', null);
+  const support = await db.queryOne("SELECT id FROM b2b_roles WHERE code = 'customer_support'");
+  const g = await s.post('/api/erp/core/staff/' + did + '/roles', { roleId: Number(support.id), scopeType: 'all' }, bearer(ids.tokenA));
+  assert.equal(g.status, 201, JSON.stringify(g.data)); assert.equal(g.data.status, 'granted');
+  const row = await db.queryOne('SELECT granted_by FROM b2b_staff_roles WHERE staff_id = ? AND role_id = ? AND revoked_at IS NULL', [did, support.id]);
+  assert.equal(Number(row.granted_by), ids.a);
+  const sa = await db.queryOne("SELECT id FROM b2b_roles WHERE code = 'super_admin'");
+  const up = await s.post('/api/erp/core/staff/' + did + '/roles', { roleId: Number(sa.id), scopeType: 'all' }, bearer(ids.tokenA));
+  assert.equal(up.status, 202, JSON.stringify(up.data)); assert.ok(up.data.approvalId);
+  const h = await s.get('/api/erp/core/staff/' + did + '/roles/history', bearer(ids.tokenA));
+  assert.equal(h.status, 200); assert.equal(h.data.items[0].role, 'customer_support');
 });
 
 test('business decisions: no value until approved by someone else; then stored with who approved', async () => {

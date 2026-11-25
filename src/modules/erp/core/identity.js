@@ -41,8 +41,8 @@ async function login(email, password, totp, ctx, opts) {
   }
   const okPassword = security.verifyPassword(password, s.password_hash);
   let okTotp = true;
-  // The code is checked only while two-step sign-in is switched on (mfa-policy.js).
-  const codeChecked = okPassword && Number(s.mfa_enabled) === 1 && await mfaPolicy.required();
+  // The code is checked only where two-step sign-in applies to this person (mfa-policy.js).
+  const codeChecked = okPassword && Number(s.mfa_enabled) === 1 && await mfaPolicy.requiredForStaff(db, s.id);
   if (codeChecked) {
     const secret = security.decrypt(s.mfa_secret_enc);
     okTotp = !!secret && security.verifyTotp(secret, totp);
@@ -121,7 +121,7 @@ function can(permission, opts) {
     if (!p.permissions.has(permission)) return res.status(403).json({ error: 'You do not have permission to do that', required: permission });
     if (!(opts.mfa || needsMfa(permission)) || p.mfa) return next();
     // Sensitive permission without a code-checked session: refused only while the switch is on.
-    mfaPolicy.required().then(function (on) {
+    mfaPolicy.required(p.roles).then(function (on) {
       if (on) return res.status(403).json({ error: 'This action needs two-factor sign-in. Turn on MFA and log in again.', code: 'mfa_required' });
       next();
     }, next);

@@ -78,7 +78,7 @@ async function decide(tx, principal, actor, id, decision, comment) {
   if (!req) throw fail(404, 'Not found');
   const steps = await tx.query('SELECT approver_id FROM b2b_approval_steps WHERE request_id = ?', [id]);
   const payload = parse(req);
-  checkDecider(principal, req, steps, payload, await require('./mfa-policy.js').required());
+  checkDecider(principal, req, steps, payload, await require('./mfa-policy.js').required(principal.roles));
   const stepNo = Number(req.steps_done) + 1;
   await tx.query('INSERT INTO b2b_approval_steps (request_id, step_no, decision, approver_id, comment) VALUES (?, ?, ?, ?, ?)',
     [id, stepNo, decision, principal.id, comment ? String(comment).slice(0, 500) : null]);

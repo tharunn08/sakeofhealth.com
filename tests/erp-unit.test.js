@@ -121,22 +121,22 @@ function mfaHarness(t) {
 test('two-step sign-in switch: server override, then the in-app switch, never switched = off, unreadable = on', async (t) => {
   const h = mfaHarness(t);
   const { policy } = h;
-  assert.deepEqual(await policy.status(), { required: false, source: 'default' }, 'never switched → off');
+  assert.deepEqual(await policy.status(), { required: false, mode: 'off', roles: [], source: 'default' }, 'never switched → off');
   h.setRow(true); assert.equal((await policy.status()).required, true);
   assert.equal((await policy.status()).source, 'switch');
   h.setRow(false); assert.equal(await policy.required(), false);
   h.setRow(true); h.fail = true; policy.reset();
-  assert.deepEqual(await policy.status(), { required: true, source: 'fail-safe' }, 'settings unreadable → on');
+  assert.deepEqual(await policy.status(), { required: true, mode: 'all', roles: [], source: 'fail-safe' }, 'settings unreadable → on');
   h.fail = false;
   for (const [v, want] of [['true', true], ['TRUE', true], [' false ', false], ['false', false]]) {
     process.env.ERP_MFA_REQUIRED = v; h.setRow(!want);
-    assert.deepEqual(await policy.status(), { required: want, source: 'server' }, 'override ' + JSON.stringify(v) + ' beats the switch');
+    assert.deepEqual(await policy.status(), { required: want, mode: want ? 'all' : 'off', roles: [], source: 'server' }, 'override ' + JSON.stringify(v) + ' beats the switch');
   }
   process.env.ERP_MFA_REQUIRED = 'maybe'; h.setRow(true);
   assert.equal((await policy.status()).source, 'switch', 'anything but true/false is ignored');
   delete process.env.ERP_MFA_REQUIRED;
   h.db.isConfigured = function () { return false; }; policy.reset();
-  assert.deepEqual(await policy.status(), { required: true, source: 'fail-safe' }, 'no database → on');
+  assert.deepEqual(await policy.status(), { required: true, mode: 'all', roles: [], source: 'fail-safe' }, 'no database → on');
 });
 
 test('two-step sign-in switch: approvals and sensitive permissions follow it; maker-checker and permissions never change', async (t) => {
@@ -204,14 +204,14 @@ test('two-step sign-in switch: a Super Admin turns it on (own authenticator firs
   await assert.rejects(policy.set(tx, actor, { id: 9 }, true, 'x'), (e) => e.code === 'own_mfa_first');
   await assert.rejects(policy.set(tx, actor, { id: 9 }, 'yes', 'x'), (e) => e.status === 400);
   h.staff = { mfa_enabled: 1 };
-  assert.deepEqual(await policy.set(tx, actor, { id: 9 }, true, 'audit season'), { required: true });
+  assert.deepEqual(await policy.set(tx, actor, { id: 9 }, true, 'audit season'), { required: true, mode: 'all', roles: [] });
   const up = h.writes.find((w) => /INSERT INTO b2b_settings/.test(w.sql));
   assert.deepEqual(up.args, [policy.KEY, 'true', 'owner@test']);
   assert.equal(h.audits[0].action, 'security.mfa_switched_on'); assert.equal(h.audits[0].reason, 'audit season');
   after.forEach((fn) => fn());
   assert.deepEqual(await policy.status().then((s) => [s.required, s.source]), [true, 'switch'], 'visible at once after commit');
   h.staff = { mfa_enabled: 0 };
-  assert.deepEqual(await policy.set(tx, actor, { id: 9 }, false, ''), { required: false }, 'switching off needs no authenticator check');
+  assert.deepEqual(await policy.set(tx, actor, { id: 9 }, false, ''), { required: false, mode: 'off', roles: [] }, 'switching off needs no authenticator check');
   assert.equal(h.audits[1].action, 'security.mfa_switched_off');
   process.env.ERP_MFA_REQUIRED = 'false';
   await assert.rejects(policy.set(tx, actor, { id: 9 }, true, 'x'), (e) => e.code === 'fixed_by_server');
