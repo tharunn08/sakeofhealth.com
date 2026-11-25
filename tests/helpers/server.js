@@ -69,6 +69,10 @@ async function startServer(extraEnv) {
       opts.body = body;
     }
     const res = await fetch(base + url, opts);
+    // On GitHub (CI), a server error prints the server's last log lines as TAP comments, so the cause is visible.
+    if (res.status >= 500 && process.env.CI) {
+      process.stdout.write(log.split('\n').slice(-40).map(function (l) { return '# server: ' + l; }).join('\n') + '\n');
+    }
     const ct = res.headers.get('content-type') || '';
     let data = null;
     if (ct.includes('application/json')) data = await res.json();

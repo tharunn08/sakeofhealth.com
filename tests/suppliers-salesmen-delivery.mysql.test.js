@@ -25,7 +25,7 @@ test.before(async () => {
   S.sales = await c.person('salesmgr', ['sales_manager']);
   S.drv = await c.person('driver1', ['delivery_staff']);
 });
-test.after(async () => { if (s) await s.stop(); });
+test.after(async () => { if (c) await c.stop(); });   // closes the database pool too, so the run ends
 
 test('staff add a manufacturer with its owner\'s sign-in; the owner must choose a password at /login, then the portal works', async () => {
   const r = await s.post('/api/erp/vendors', {
@@ -116,7 +116,9 @@ test('salesmen: list with numbers, detail, update with the cash-in-hand rule, an
   const det = await s.get('/api/erp/sales/salesmen/' + S.smId, S.sales.h);
   assert.equal(det.status, 200); assert.equal(det.data.salesman.employeeCode, 'SM-01');
   // cash that was not handed over blocks switching off
-  await c.db.query("INSERT INTO b2b_payments (receipt_no, method, amount, status, collected_by_salesman_id, received_at) VALUES ('RC-T-1', 'cash', 1500.00, 'pending', ?, UTC_TIMESTAMP())", [S.smId]);
+  const payer = Number((await c.db.query("INSERT INTO b2b_accounts (account_type, status, business_name, contact_person, mobile, address_line1, city, district_name, pincode, state_id, approved_at) " +
+    "VALUES ('retailer', 'approved', 'Cash Shop', 'Owner', '9845066666', 'x', 'Bengaluru', 'Bengaluru Urban', '560001', ?, UTC_TIMESTAMP())", [S.ka])).insertId);
+  await c.db.query("INSERT INTO b2b_payments (receipt_no, payer_account_id, method, amount, status, collected_by_salesman_id, received_at) VALUES ('RC-T-1', ?, 'cash', 1500.00, 'pending', ?, UTC_TIMESTAMP())", [payer, S.smId]);
   const off = await s.put('/api/erp/sales/salesmen/' + S.smId, { active: false }, c.maker.h);
   assert.equal(off.status, 409); assert.equal(off.data.code, 'cash_in_hand');
   assert.equal((await s.put('/api/erp/sales/salesmen/' + S.smId, { cashLimit: 8000 }, S.sales.h)).status, 403, 'sales managers cannot change salesman settings');
