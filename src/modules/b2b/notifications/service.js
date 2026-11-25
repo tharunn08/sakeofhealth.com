@@ -100,10 +100,10 @@ async function history(run, queueId, status, f) {
 let wfProbe = null;
 async function workflowSupport() {
   if (wfProbe && wfProbe.until > Date.now()) return wfProbe.value;
-  let value = { accounts: false, addresses: false };
+  let value = { accounts: false, addresses: false, types: [] };
   try {
     const r = await db.query("SELECT COLUMN_TYPE AS t FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'b2b_message_recipients' AND COLUMN_NAME = 'recipient_type'");
-    if (r.length) value = { accounts: true, addresses: /'address'/.test(String(r[0].t)) };
+    if (r.length) value = { accounts: true, addresses: /'address'/.test(String(r[0].t)), types: (String(r[0].t).match(/'([^']+)'/g) || []).map(function (x) { return x.slice(1, -1); }) };
   } catch (e) { /* no database details: keep the old behaviour */ }
   wfProbe = { value: value, until: Date.now() + (value.addresses ? 3600000 : 60000) };
   return value;
@@ -115,6 +115,8 @@ async function workflowSupport() {
 async function recordWorkflow(q, w) {
   const sup = await workflowSupport();
   if (!sup.accounts || (!sup.addresses && w.recipients.some(function (r) { return r.type === 'address'; }))) return null;
+  // A recipient kind the record table does not list yet (e.g. a super stockist account): skip the record, queue as before.
+  if (sup.types.length && w.recipients.some(function (r) { return sup.types.indexOf(r.type) === -1; })) return null;
   if (!q) return db.transaction(function (t) { return recordWorkflow(t, w); });
   const no = await require('../../erp/lib/seq.js').next(q, 'MSG');
   const m = await q.query("INSERT INTO b2b_messages (message_no, origin, category, subject, body_text, email_html, channels, audience_json, ref_type, ref_id, status, created_by_type, created_by_label, last_sent_at) " +

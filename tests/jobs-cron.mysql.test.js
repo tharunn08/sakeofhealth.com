@@ -104,7 +104,14 @@ test('JOBS_MODE=cron: a message queued in a transaction is handed over right aft
 });
 
 test('cron script against the test database: exits 0, and a second run in the same minute queues nothing new', async () => {
-  const env = Object.assign({}, process.env, TEST_DB, { NODE_ENV: 'test', B2B_ENABLED: 'true', ERP_ENABLED: 'true' });
+  // The cron run also checks the shop's protected products, so it gets its own freshly seeded, throw-away shop folder
+  // (never the account's real data folder).
+  const fs = require('fs'), os = require('os');
+  const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'soh-cron-shop-'));
+  const shop = { DATA_DIR: dataDir, CATALOGUE_DIR: path.join(dataDir, '.catalogue-test'), BACKUP_DIR: path.join(dataDir, '.backups-test') };
+  const seeded = spawnSync(process.execPath, ['-e', "require('./src/seed.js').seed({})"], { cwd: ROOT, env: Object.assign({}, process.env, shop, { NODE_ENV: 'test' }), encoding: 'utf8' });
+  assert.equal(seeded.status, 0, seeded.stdout + seeded.stderr);
+  const env = Object.assign({}, process.env, TEST_DB, shop, { NODE_ENV: 'test', B2B_ENABLED: 'true', ERP_ENABLED: 'true' });
   const r1 = spawnSync(process.execPath, ['scripts/cron/run-jobs.js', '--json'], { cwd: ROOT, env: env, encoding: 'utf8', timeout: 120000 });
   assert.equal(r1.status, 0, r1.stdout + r1.stderr);
   const r2 = spawnSync(process.execPath, ['scripts/cron/run-jobs.js', '--json'], { cwd: ROOT, env: env, encoding: 'utf8', timeout: 120000 });

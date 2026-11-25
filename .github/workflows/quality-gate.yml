@@ -61,6 +61,7 @@ jobs:
             if grep -q '^not ok' "$f" || ! grep -q '^# pass' "$f"; then
               echo "::group::$(basename "$f")"
               grep -n -A30 '^not ok' "$f" | head -400 || true
+              grep -n 'server: ' "$f" | head -80 || true
               grep -q '^# pass' "$f" || tail -60 "$f"
               echo "::endgroup::"
             fi

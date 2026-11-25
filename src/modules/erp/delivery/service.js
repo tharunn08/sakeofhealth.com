@@ -126,6 +126,12 @@ function canSee(s, by) {
   return p.permissions.has('deliveries.update') && Number(s.delivery_staff_id) === Number(p.id);
 }
 function canManage(by) { return by.sellerAccountId != null || (by.staff && by.staff.permissions.has('deliveries.manage')); }
+/**
+ * The trade order history records who changed an order as admin, business or system. An ERP staff member is
+ * recorded as admin, with their e-mail as the label (the ERP's own 'staff' type does not fit that column).
+ * viaShipment tells the after-transition hook that this shipment already records the step itself.
+ */
+function orderActor(actor) { const t = actor && actor.type; return Object.assign({}, actor, { type: t === 'business' || t === 'system' ? t : 'admin', viaShipment: true }); }
 function orderScope(by) { return by.sellerAccountId != null ? { sellerAccountId: by.sellerAccountId } : ADMIN_SCOPE; }
 
 async function addEvent(tx, shipmentId, kind, actor, f) {
@@ -247,7 +253,7 @@ async function dispatch(actor, by, id, b) {
       if (limit == null && Number(o.grand_total) > 50000) warnings.push('Worth more than ₹50,000 and no e-way bill number recorded. Generate one on the e-way bill portal if the law requires it for this movement.');
     }
     let result = { status: o.status };
-    if (o.status === 'packed') result = await orders().transition(s.order_id, 'dispatched', orderScope(by), actor, { note: 'Shipment ' + s.shipment_no });
+    if (o.status === 'packed') result = await orders().transition(s.order_id, 'dispatched', orderScope(by), orderActor(actor), { note: 'Shipment ' + s.shipment_no });
     return db.transaction(async function (tx) {
       const cur = await lockShipment(tx, id);
       if (cur.status === 'ready') {
@@ -268,7 +274,7 @@ async function outForDelivery(actor, by, id, b) {
     if (s.status === 'out_for_delivery') return { id: Number(id), status: s.status, unchanged: true };
     need(s.status === 'dispatched' || s.status === 'attempt_failed', 'The shipment must be dispatched first (it is ' + s.status + ')');
     const o = await db.queryOne('SELECT status FROM b2b_orders WHERE id = ?', [s.order_id]);
-    if (o.status === 'dispatched') await orders().transition(s.order_id, 'out_for_delivery', orderScope(by), actor, { note: 'Shipment ' + s.shipment_no + ' out for delivery' });
+    if (o.status === 'dispatched') await orders().transition(s.order_id, 'out_for_delivery', orderScope(by), orderActor(actor), { note: 'Shipment ' + s.shipment_no + ' out for delivery' });
     return db.transaction(async function (tx) {
       await lockShipment(tx, id);
       const fresh = await addEvent(tx, id, 'out_for_delivery', actor, { place: b.place, lat: b.lat, lng: b.lng, clientUuid: UUID.test(b.clientUuid || '') ? b.clientUuid : null });
@@ -345,7 +351,7 @@ async function deliver(actor, by, id, b, file) {
     const o = await db.queryOne('SELECT status FROM b2b_orders WHERE id = ?', [s.order_id]);
     let r = { status: o.status };
     if (o.status === 'dispatched' || o.status === 'out_for_delivery') {
-      r = await orders().transition(s.order_id, 'delivered', orderScope(by), actor, { note: 'Received by ' + receivedBy + (b.note ? ' · ' + v.text(b.note, 200) : ''), delivered: b.delivered || undefined });
+      r = await orders().transition(s.order_id, 'delivered', orderScope(by), orderActor(actor), { note: 'Received by ' + receivedBy + (b.note ? ' · ' + v.text(b.note, 200) : ''), delivered: b.delivered || undefined });
     }
     const final = r.status === 'partially_delivered' ? 'partially_delivered' : 'delivered';
     return db.transaction(async function (tx) {
@@ -370,7 +376,7 @@ async function returnToWarehouse(actor, by, id, b) {
     if (s.status === 'returned') return { id: Number(id), status: 'returned', unchanged: true };
     need(MOVING.indexOf(s.status) !== -1, 'Only a shipment on its way can come back (it is ' + s.status + ')');
     const o = await db.queryOne('SELECT status FROM b2b_orders WHERE id = ?', [s.order_id]);
-    if (o.status === 'dispatched' || o.status === 'out_for_delivery') await orders().transition(s.order_id, 'returned', orderScope(by), actor, { note: reason, condition: condition });
+    if (o.status === 'dispatched' || o.status === 'out_for_delivery') await orders().transition(s.order_id, 'returned', orderScope(by), orderActor(actor), { note: reason, condition: condition });
     return db.transaction(async function (tx) {
       await lockShipment(tx, id);
       await tx.query("UPDATE b2b_shipments SET status = 'returned', returned_at = UTC_TIMESTAMP() WHERE id = ?", [id]);
@@ -567,6 +573,7 @@ function attach() {
   attach.done = true;
   o.onTransition(function (orderId, from, to, actor) {
     if (['dispatched', 'out_for_delivery', 'delivered', 'partially_delivered', 'returned', 'cancelled', 'rejected'].indexOf(to) === -1) return null;
+    if (actor && actor.viaShipment) return null;   // started from the shipment, which records the step itself (no double timeline entry)
     return followOrder(orderId, actor).catch(function (e) { if (e.code === 'ER_NO_SUCH_TABLE') return null; throw e; });
   });
   o.extendDetail(extendOrderDetail);
@@ -607,7 +614,7 @@ async function summary() {
   };
 }
 
-module.exports = {
+module.exports = { orderActor,
   summary,
   MODES, clean, deliveryStaff, vehicleNo, readiness, canSee,
   create, update, dispatch, outForDelivery, location, attemptFailed, deliver, returnToWarehouse,

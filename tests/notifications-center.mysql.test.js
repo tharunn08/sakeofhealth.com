@@ -134,7 +134,7 @@ test('rate limit (D5, configurable): the 21st send in an hour by one person is r
     const r = await s.post('/api/erp/notifications/messages/' + S.m + '/resend', { requestKey: key(), recipientIds: [(await s.get('/api/erp/notifications/messages/' + S.m, S.sales.h)).data.recipients[1].id] }, S.sales.h);
     assert.equal(r.status, 201, 'send ' + (i + 1));
   }
-  const over = await s.post('/api/erp/notifications/messages/' + S.m + '/resend', { requestKey: key() }, S.sales.h);
+  const over = await s.post('/api/erp/notifications/messages/' + S.m + '/resend', { requestKey: key(), recipientIds: [(await s.get('/api/erp/notifications/messages/' + S.m, S.sales.h)).data.recipients[1].id] }, S.sales.h);
   assert.equal(over.status, 429); assert.equal(over.data.code, 'send_limit');
 });
 

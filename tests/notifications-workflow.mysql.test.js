@@ -30,8 +30,8 @@ test.before(async () => {
   s = c.s;
   admin = bearer((await s.post('/api/admin/login', { email: 'admin@test.local', password: 'Test@12345' })).data.token);
   const ka = Number((await c.db.queryOne("SELECT id FROM b2b_states WHERE gst_code = '29'")).id);
-  S.r1 = Number((await c.db.query("INSERT INTO b2b_accounts (account_type, status, business_name, contact_person, mobile, email, address_line1, city, pincode, state_id, approved_at) " +
-    "VALUES ('retailer', 'approved', 'Ganesh Stores', 'Owner', '9845011111', 'ganesh@trial.local', 'MG Road', 'Bengaluru', '560001', ?, UTC_TIMESTAMP())", [ka])).insertId);
+  S.r1 = Number((await c.db.query("INSERT INTO b2b_accounts (account_type, status, business_name, contact_person, mobile, email, address_line1, city, district_name, pincode, state_id, approved_at) " +
+    "VALUES ('retailer', 'approved', 'Ganesh Stores', 'Owner', '9845011111', 'ganesh@trial.local', 'MG Road', 'Bengaluru', 'Bengaluru Urban', '560001', ?, UTC_TIMESTAMP())", [ka])).insertId);
   await c.db.query("INSERT INTO b2b_users (account_id, name, mobile, email, password_hash, role, is_primary, status) VALUES (?, 'Owner', '9845011111', 'ganesh@trial.local', ?, 'retailer', 1, 'active')", [S.r1, b2bSecurity.hashPassword('Retailer!2345')]);
   S.sales = await c.person('salesmgr', ['sales_manager']);
 });
