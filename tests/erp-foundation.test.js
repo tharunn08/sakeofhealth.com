@@ -197,11 +197,11 @@ test('jobs: retries with back-off, then fails and raises a monitoring event; ded
   assert.equal((await jobs.enqueue(null, 'test.flaky', {}, { dedupeKey: 'flaky-1' })).duplicate, true);
   // runDue skips while another run in this process is still going (a timer may have started one): retry until it runs.
   const runNow = async function () { for (let i = 0; i < 100; i++) { const r = await jobs.runDue(10); if (!r.skipped) return r; await new Promise((ok) => setTimeout(ok, 50)); } throw new Error('runDue never ran'); };
-  await runNow();
+  const r1 = await runNow();
   await db.query('UPDATE b2b_jobs SET run_after = UTC_TIMESTAMP() - INTERVAL 1 SECOND WHERE id = ?', [j.jobId]);   // skip the back-off wait
-  await runNow();
-  const row = await db.queryOne('SELECT status, attempts, last_error FROM b2b_jobs WHERE id = ?', [j.jobId]);
-  assert.equal(row.status, 'failed'); assert.equal(Number(row.attempts), 2); assert.equal(calls, 2);
+  const r2 = await runNow();
+  const row = await db.queryOne('SELECT status, attempts, max_attempts, last_error, run_after, UTC_TIMESTAMP() AS now FROM b2b_jobs WHERE id = ?', [j.jobId]);
+  assert.equal(row.status, 'failed', JSON.stringify({ row: row, r1: r1, r2: r2, calls: calls })); assert.equal(Number(row.attempts), 2); assert.equal(calls, 2);
   assert.ok(await db.queryOne("SELECT id FROM b2b_monitor_events WHERE code = 'job_failed' AND ref_id = ?", [String(j.jobId)]));
 });
 

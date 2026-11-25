@@ -167,7 +167,8 @@ test('3 + 10: an event sale takes the event\'s stock on the same ledger, numbers
   assert.match(sale.data.invoiceNo, /^EVB\/\d{4}\/00001$/); assert.ok(sale.data.invoiceNo.length <= 16);
   assert.equal(sale.data.totals.grand, 240); assert.equal(sale.data.paymentStatus, 'paid');
   assert.equal(Number((await stockOf(S.event.warehouseId, S.p)).qty_available), 3);
-  assert.equal(await num("SELECT COUNT(*) FROM b2b_stock_movements WHERE movement_type = 'counter_sale' AND ref_id = ?", [sale.data.invoiceNo]), 1);
+  // the stock ledger's reference column holds numbers: the sale's id, with the invoice number in the reason
+  assert.equal(await num("SELECT COUNT(*) FROM b2b_stock_movements WHERE movement_type = 'counter_sale' AND ref_type = 'counter_sale' AND ref_id = ? AND reason = ?", [sale.data.id, 'Invoice ' + sale.data.invoiceNo]), 1);
   const again = await s.post('/api/erp/events/sales', { idempotencyKey: k, eventId: S.event.id, items: [{ productId: S.p, qty: 2 }] }, S.ev.h);
   assert.equal(again.data.duplicate, true); assert.equal(Number((await stockOf(S.event.warehouseId, S.p)).qty_available), 3, 'a repeat sells nothing');
   const q = await c.db.query("SELECT channel, recipient, template_name FROM b2b_notification_queue WHERE ref_type = 'counter_sale' AND ref_id = ? ORDER BY id", [String(sale.data.id)]);

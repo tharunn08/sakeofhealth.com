@@ -242,7 +242,7 @@ async function sell(tx, actor, principal, b) {
       [saleId, x.pid, x.p.sku, x.p.name, x.p.hsn_code, x.pk.batchId, x.pk.lotId, x.pk.batchNo, x.pk.expiryDate, x.qty, money(x.unit), money(x.disc), x.p.gst_rate,
         money(x.t.taxable), money(x.t.cgst), money(x.t.sgst), money(x.t.igst), money(x.net)]);
     await ledger.mustMove(tx, { warehouseId: e.warehouse_id, productId: x.pid, batchId: x.pk.batchId, lotId: x.pk.lotId, type: 'counter_sale', qty: x.qty, from: 'available',
-      refType: 'counter_sale', refId: invoiceNo, actor: actor, idemKey: 'cs:' + key + ':' + x.pid + ':' + (x.pk.batchId || 'nb') });
+      refType: 'counter_sale', refId: saleId, reason: 'Invoice ' + invoiceNo, actor: actor, idemKey: 'cs:' + key + ':' + x.pid + ':' + (x.pk.batchId || 'nb') });
   }
   let n = 0;
   for (const p of pays) {
@@ -414,7 +414,7 @@ async function returnItems(tx, actor, principal, id, b) {
     await tx.query('UPDATE b2b_counter_sale_items SET returned_qty = returned_qty + ? WHERE id = ?', [x.qty, x.l.id]);
     const bucket = CONDITIONS[x.condition];
     await ledger.mustMove(tx, { warehouseId: s.warehouse_id, productId: x.l.product_id, batchId: x.l.batch_id, lotId: x.l.lot_id, type: 'counter_return', qty: x.qty, to: bucket,
-      refType: 'counter_return', refId: no, reason: reason, actor: actor, idemKey: 'cr:' + key + ':' + x.l.id });
+      refType: 'counter_return', refId: Number(r.insertId), reason: (no + ': ' + reason).slice(0, 255), actor: actor, idemKey: 'cr:' + key + ':' + x.l.id });
     if (bucket === 'available') await fefo.putBack(tx, [{ batchId: x.l.batch_id ? Number(x.l.batch_id) : null, qty: x.qty }], 'available');
   }
   if (refundNow > 0) {
@@ -439,7 +439,7 @@ async function voidSale(tx, actor, principal, id, b) {
   const lines = await tx.query('SELECT * FROM b2b_counter_sale_items WHERE sale_id = ?', [s.id]);
   for (const l of lines) {
     await ledger.mustMove(tx, { warehouseId: s.warehouse_id, productId: l.product_id, batchId: l.batch_id, lotId: l.lot_id, type: 'counter_return', qty: Number(l.qty), to: 'available',
-      refType: 'counter_void', refId: s.invoice_no, reason: 'void: ' + reason, actor: actor, idemKey: 'cv:' + s.id + ':' + l.id });
+      refType: 'counter_void', refId: Number(s.id), reason: ('void ' + s.invoice_no + ': ' + reason).slice(0, 255), actor: actor, idemKey: 'cv:' + s.id + ':' + l.id });
     await fefo.putBack(tx, [{ batchId: l.batch_id ? Number(l.batch_id) : null, qty: Number(l.qty) }], 'available');
   }
   const paid = Number(s.amount_paid);

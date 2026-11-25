@@ -129,8 +129,9 @@ function canManage(by) { return by.sellerAccountId != null || (by.staff && by.st
 /**
  * The trade order history records who changed an order as admin, business or system. An ERP staff member is
  * recorded as admin, with their e-mail as the label (the ERP's own 'staff' type does not fit that column).
+ * viaShipment tells the after-transition hook that this shipment already records the step itself.
  */
-function orderActor(actor) { const t = actor && actor.type; return Object.assign({}, actor, { type: t === 'business' || t === 'system' ? t : 'admin' }); }
+function orderActor(actor) { const t = actor && actor.type; return Object.assign({}, actor, { type: t === 'business' || t === 'system' ? t : 'admin', viaShipment: true }); }
 function orderScope(by) { return by.sellerAccountId != null ? { sellerAccountId: by.sellerAccountId } : ADMIN_SCOPE; }
 
 async function addEvent(tx, shipmentId, kind, actor, f) {
@@ -572,6 +573,7 @@ function attach() {
   attach.done = true;
   o.onTransition(function (orderId, from, to, actor) {
     if (['dispatched', 'out_for_delivery', 'delivered', 'partially_delivered', 'returned', 'cancelled', 'rejected'].indexOf(to) === -1) return null;
+    if (actor && actor.viaShipment) return null;   // started from the shipment, which records the step itself (no double timeline entry)
     return followOrder(orderId, actor).catch(function (e) { if (e.code === 'ER_NO_SUCH_TABLE') return null; throw e; });
   });
   o.extendDetail(extendOrderDetail);
