@@ -47,10 +47,13 @@ jobs:
           cache: npm
       - name: Install (exact lockfile)
         run: npm ci
-      - name: Dependency audit (production dependencies, high and critical)
-        run: npm audit --omit=dev --audit-level=high
+      # The tests run first, so a known package advisory never hides the test results; the audit still
+      # runs on every build and still turns the gate red while any high or critical advisory is open.
       - name: Release gate (all checks + MySQL 8 suites; blocks on any failure or on suites not run)
         run: node scripts/release-gate.js
+      - name: Dependency audit (production dependencies, high and critical)
+        if: always()
+        run: npm audit --omit=dev --audit-level=high
       - name: Keep the evidence
         if: always()
         uses: actions/upload-artifact@v4
