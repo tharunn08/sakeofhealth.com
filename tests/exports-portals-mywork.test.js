@@ -134,3 +134,14 @@ test('trade settings page does not list the back office security, logo or assist
   assert.match(src, /const NOT_TRADE = \/\^\(security\|branding\|ai\)\\\.\//);
   assert.match(src, /if \(NOT_TRADE\.test\(k\)\) delete all\[k\]/);
 });
+
+test('one design system: the ERP, supplier portal and field app use the admin panel\'s colours', () => {
+  const admin = read('frontend/admin/admin.css');
+  for (const token of ['--brand:#2f5d1f', '--bg:#f6f7f4', '--line:#e4e8e0', '--ink:#16261a']) assert.ok(admin.includes(token), 'admin panel ' + token);
+  for (const f of ['erp-web/admin/app.css', 'erp-web/vendor/app.css', 'erp-web/sales/app.css']) {
+    const css = read(f);
+    assert.match(css, /--accent:#2f5d1f;/, f + ' primary colour = brand green');
+    assert.match(css, /--bg:#f6f7f4;/, f); assert.match(css, /--line:#e4e8e0;/, f); assert.match(css, /--ink:#16261a;/, f);
+    assert.doesNotMatch(css, /#1F5FBF/i, f + ': the old blue is gone');
+  }
+});

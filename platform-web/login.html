@@ -27,7 +27,7 @@
       </div>
       <div class="field" id="codeField" hidden>
         <label for="totp">Authenticator code</label>
-        <input class="input" id="totp" name="totp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="6-digit code"/>
+        <input class="input" id="totp" name="totp" autocomplete="one-time-code" maxlength="9" placeholder="6-digit code, or a backup code"/>
       </div>
       <button class="btn btn-primary btn-block btn-lg mt-20" type="submit" id="submitBtn">Sign in</button>
       <button class="btn btn-ghost btn-block mt-20" type="button" id="skipCode" hidden>Continue without business modules</button>

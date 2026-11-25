@@ -157,7 +157,7 @@
       var data = await res.json().catch(function () { return {}; });
       if (res.status === 401 && data.code === 'mfa_required') {
         resetButton();
-        askCode(totp ? 'That code was not accepted. Enter the current 6-digit code.' : 'Enter the 6-digit code from your authenticator app.', false);
+        askCode(totp ? 'That code was not accepted. Enter the current 6-digit code, or an unused backup code.' : 'Enter the 6-digit code from your authenticator app. Lost your phone? Use one of your backup codes.', false);
         return;
       }
       if (!res.ok) throw new Error(data.error || 'Sign in failed');

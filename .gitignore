@@ -30,6 +30,8 @@ uploads/
 # Keep application database migrations
 !src/db/migrations/*.sql
 !src/db/migrations/sql/*.sql
+# Keep the read-only D5 inventory query (it reads table names and counts only; no data)
+!scripts/d5/*.sql
 
 # Local tooling
 coverage/

@@ -28,7 +28,10 @@ test('pack sizes and names are normalised the way the price list and the invoice
   assert.equal(rc.similarity('Aroma Rose 10ml', 'Aroma Sandal'), 0.5);
 });
 
-test('the supplied price list and invoice: every finding, and the Excel file is not changed', async () => {
+// The invoice lines are private business data, kept out of the public repository (docs/reconciliation/ is in
+// .gitignore). These two tests run wherever that file is present, and are reported as skipped elsewhere.
+const PRIVATE = fs.existsSync(INVOICE) ? false : 'needs the private invoice lines (docs/reconciliation/, not in the public repository)';
+test('the supplied price list and invoice: every finding, and the Excel file is not changed', { skip: PRIVATE }, async () => {
   const before = sha(XLSX);
   const out = fs.mkdtempSync(path.join(os.tmpdir(), 'soh-recon-'));
   const code = await rc.main(['--price-list', XLSX, '--invoice', INVOICE, '--out', out]);
@@ -97,7 +100,7 @@ test('the database is only read: READ ONLY transaction, rolled back; production 
   assert.match(md, /\*\*Not read:\*\* NODE_ENV is production: add --i-understand-read-only/);
 });
 
-test('the invoice extraction matches the invoice\'s own totals', () => {
+test('the invoice extraction matches the invoice\'s own totals', { skip: PRIVATE }, () => {
   const inv = JSON.parse(fs.readFileSync(INVOICE, 'utf8'));
   assert.equal(inv.items.length, 30);
   assert.deepEqual(inv.checks, { lines: 30, line_numbers_1_to_n: true, taxable_total: 45974.9, invoice_taxable_total: 45974.9, hsn_summary_matches: true, each_line_taxable_eq_rate_x_qty_minus_discount: true });

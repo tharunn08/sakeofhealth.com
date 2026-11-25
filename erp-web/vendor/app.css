@@ -1,6 +1,7 @@
-:root{--bg:#F6F7F9;--panel:#fff;--line:#DDE1E6;--soft:#EEF0F3;--ink:#1B1F24;--muted:#57606A;--accent:#1F5FBF;--accent-ink:#16478F;--accent-bg:#E8F0FB;--warn-bg:#FFF4DB;--warn:#6B4500;--bad:#B42318;--good:#1E5631;--good-bg:#E6F4EA}
+/* One design system: the same colours as the admin panel (frontend/admin/admin.css) and the shop. */
+:root{--bg:#f6f7f4;--panel:#fff;--line:#e4e8e0;--soft:#eef1ea;--ink:#16261a;--muted:#5b6b5e;--accent:#2f5d1f;--accent-ink:#24481a;--accent-bg:#eef4e8;--warn-bg:#fef6e7;--warn:#8a4b06;--bad:#b91c1c;--good:#2f5d1f;--good-bg:#eef4e8}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 a{color:var(--accent)}a:hover{color:var(--accent-ink)}
 button,input,select,textarea{font:inherit}
 .shell{display:flex;flex-wrap:wrap;min-height:100vh}
