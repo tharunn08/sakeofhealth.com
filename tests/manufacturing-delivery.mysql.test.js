@@ -240,7 +240,7 @@ test('undeliverable: back to the warehouse returns the stock to available and re
   assert.equal(Number(end.qty_available) - Number(mid.qty_available), 5); assert.equal(Number(mid.qty_in_transit) - Number(end.qty_in_transit), 5);
   assert.equal((await s.post('/api/erp/deliveries/' + S.sh2 + '/return', { reason: 'Refused by the buyer', condition: 'good' }, S.wm.h)).data.unchanged, true, 'a repeat moves nothing');
   // a distributor has no access to a company order's shipment or challan
-  const d = Number((await c.db.query("INSERT INTO b2b_accounts (account_type, status, business_name, contact_person, mobile, address_line1, city, pincode, state_id, approved_at) VALUES ('distributor', 'approved', 'North Distributors', 'D', '9845022222', 'X', 'Bengaluru', '560002', ?, UTC_TIMESTAMP())", [S.ka])).insertId);
+  const d = Number((await c.db.query("INSERT INTO b2b_accounts (account_type, status, business_name, contact_person, mobile, address_line1, city, district_name, pincode, state_id, approved_at) VALUES ('distributor', 'approved', 'North Distributors', 'D', '9845022222', 'X', 'Bengaluru', 'Bengaluru Urban', '560002', ?, UTC_TIMESTAMP())", [S.ka])).insertId);
   await c.db.query("INSERT INTO b2b_users (account_id, name, mobile, password_hash, role, is_primary, status) VALUES (?, 'D', '9845022222', ?, 'distributor', 1, 'active')", [d, b2bSecurity.hashPassword('Distrib!2345')]);
   const dt = bearer((await s.post('/api/b2b/auth/login', { identifier: '9845022222', password: 'Distrib!2345', role: 'distributor' })).data.token);
   assert.equal((await s.get('/api/b2b/retailer-orders/' + S.o1 + '/challan', dt)).status, 404);

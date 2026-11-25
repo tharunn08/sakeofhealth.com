@@ -103,7 +103,7 @@ test('the admin record has everything; bank verification is maker-checker; edits
 });
 
 test('salesmen: list with numbers, detail, update with the cash-in-hand rule, and the salesman\'s own dashboard', async () => {
-  S.t1 = Number((await c.db.query("INSERT INTO b2b_territories (code, name, level, state_id) VALUES ('BLR-S', 'Bengaluru South', 'area', ?)", [S.ka])).insertId);
+  S.t1 = Number((await c.db.query("INSERT INTO b2b_territories (code, name, level, state_id, created_by) VALUES ('BLR-S', 'Bengaluru South', 'area', ?, ?)", [S.ka, c.maker.id])).insertId);
   S.sm = await c.person('salesguy', [{ code: 'salesman', scopeType: 'territory', scopeId: S.t1 }]);
   const lk = await s.get('/api/erp/sales/salesmen/lookups', c.maker.h);
   assert.equal(lk.status, 200); assert.ok(lk.data.staff.some(x => x.id === S.sm.id && x.hasSalesmanRole));

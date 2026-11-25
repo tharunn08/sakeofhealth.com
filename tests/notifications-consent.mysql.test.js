@@ -186,7 +186,7 @@ test('groups: a rule group is worked out at send time; audience rules apply to g
   const mine = list.data.items.find(x => x.id === g.data.id);
   assert.equal(mine.size, 2); assert.equal(mine.usable, true);
   assert.equal((await s.get('/api/erp/notifications/groups', S.proc.h)).data.items.find(x => x.id === g.data.id).usable, false);
-  await c.db.query("INSERT INTO b2b_accounts (account_type, status, business_name, contact_person, mobile, email, address_line1, city, pincode, state_id, approved_at) VALUES ('retailer', 'approved', 'New Shop', 'Owner', '9845044444', 'new@trial.local', 'x', 'Bengaluru', '560001', ?, UTC_TIMESTAMP())", [S.ka]);
+  await c.db.query("INSERT INTO b2b_accounts (account_type, status, business_name, contact_person, mobile, email, address_line1, city, district_name, pincode, state_id, approved_at) VALUES ('retailer', 'approved', 'New Shop', 'Owner', '9845044444', 'new@trial.local', 'x', 'Bengaluru', 'Bengaluru Urban', '560001', ?, UTC_TIMESTAMP())", [S.ka]);
   const r = await s.post('/api/erp/notifications/messages', { requestKey: key(), category: 'service', channels: ['email'], subject: 'Holiday hours', body: 'We are closed on Monday.', groups: [g.data.id] }, S.sales.h);
   assert.equal(r.status, 201); assert.equal(r.data.queued, 3, 'the new shop is included');
   const off = await s.put('/api/erp/notifications/groups/' + g.data.id, { active: false }, S.sales.h);
