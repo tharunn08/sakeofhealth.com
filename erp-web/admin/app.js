@@ -159,9 +159,9 @@
         confirmPassword: el('input', { type: 'password', autocomplete: 'new-password', minlength: '12' }), reason: el('input', { placeholder: 'Optional' }) };
       var out = el('div');
       second.appendChild(el('section', { class: 'panel' }, [el('h2', { text: 'Add the second Super Admin' }),
-        el('p', { class: 'note', text: 'You are the only Super Admin, and nobody can approve their own request. Add a second Super Admin here, a person you trust; ' +
-          'after that, people get roles the normal way (request, then approval). Their password must be at least 12 characters; they choose their own at first sign-in. ' +
-          'This is recorded in the audit log.' }),
+        el('p', { class: 'note', text: 'You are the only Super Admin, and nobody can approve their own request. Ordinary roles you can give yourself below; ' +
+          'giving the Super Admin role, and other admin-level changes, needs a second Super Admin. Add one here, a person you trust. ' +
+          'Their password must be at least 12 characters; they choose their own at first sign-in. This is recorded in the audit log.' }),
         el('div', { class: 'row' }, [el('label', {}, ['Name', f.name]), el('label', {}, ['E-mail', f.email])]),
         el('div', { class: 'row' }, [el('label', {}, ['Temporary password (12+ characters)', f.password]), el('label', {}, ['Repeat password', f.confirmPassword])]),
         el('div', { class: 'row' }, [el('label', {}, ['Reason', f.reason]), el('button', { class: 'btn primary', type: 'button', text: 'Add Super Admin', on: { click: function () {
@@ -192,8 +192,9 @@
       kind.addEventListener('change', function () { salesRow.hidden = kind.value !== 'salesman'; });
       salesRow.hidden = kind.value !== 'salesman';
       fs.appendChild(el('section', { class: 'panel' }, [el('h2', { text: 'Add a salesman, delivery person or event staff' }),
-        el('p', { class: 'note', text: 'Creates the account, asks for the role (another Super Admin approves it under Administration → Approvals) and, for a salesman, the salesman record. ' +
-          'Once approved they sign in at sakeofhealth.com/login and open the Field app on their phone. The temporary password must be 12+ characters; they choose their own at first sign-in.' }),
+        el('p', { class: 'note', text: 'Creates the account, gives the role and, for a salesman, the salesman record. The role is given at once when your own access covers it; ' +
+          'otherwise it waits under Administration → Approvals. They sign in at sakeofhealth.com/login and open the Field app on their phone. ' +
+          'The temporary password must be 12+ characters; they choose their own at first sign-in.' }),
         el('div', { class: 'row' }, [el('label', {}, ['Job', kind]), el('label', {}, ['Name', g.name]), el('label', {}, ['E-mail', g.email]), el('label', {}, ['Mobile', g.mobile])]),
         el('div', { class: 'row' }, [el('label', {}, ['Temporary password (12+ characters)', g.password]), el('label', {}, ['Repeat password', g.confirmPassword])]),
         salesRow,
@@ -204,28 +205,55 @@
           if (kind.value === 'salesman') Object.assign(body, { employeeCode: g.employeeCode.value, homeTerritoryId: Number(g.terr.value) || null, defaultWarehouseId: Number(g.wh.value) || null, cashLimit: g.cash.value });
           api('POST', '/field-staff', body).then(function (r) {
             g.password.value = ''; g.confirmPassword.value = '';
-            fout.replaceChildren(msg('ok', 'Added ' + body.email + '. The role is waiting for approval (request #' + r.approval.approvalId + '): another Super Admin approves it under Administration → Approvals.'));
+            fout.replaceChildren(msg('ok', r.approval && r.approval.status === 'granted'
+              ? 'Added ' + body.email + ' with the role. They can sign in now at sakeofhealth.com/login.'
+              : 'Added ' + body.email + '. The role is waiting for approval (request #' + r.approval.approvalId + ')' + (r.approval.why ? ': ' + r.approval.why : '.')));
             setTimeout(function () { show('staff'); }, 4000);
           }).catch(function (e) { fout.replaceChildren(msg('err', e.message)); });
         } } })]), fout]));
     }
+    if (has('core.roles.view')) { var pol = el('div'); main.insertBefore(pol, box); rolePolicyPanel(pol); }
+    var hist = el('div');
     Promise.all([api('GET', '/staff'), has('core.roles.view') ? api('GET', '/roles') : Promise.resolve({ items: [] })]).then(function (res) {
       var roles = res[1].items;
-      box.appendChild(el('section', { class: 'panel' }, [el('h2', { text: 'People' }), table(['Name', 'E-mail', 'Roles', 'Status', 'MFA', 'Last login', ''], res[0].items.map(function (s) {
-        var act = el('div', { class: 'row' });
+      box.appendChild(el('section', { class: 'panel' }, [el('h2', { text: 'People' }), hist, table(['Name', 'E-mail', 'Roles', 'Status', 'MFA', 'Last login', ''], res[0].items.map(function (s) {
+        var act = el('div', { class: 'row' }), note = el('div');
+        function done(text) { return function () { note.replaceChildren(msg('ok', text)); setTimeout(function () { show('staff'); }, 1500); }; }
+        function oops(e) { note.replaceChildren(msg('err', e.message)); }
         if (has('core.staff.edit') && s.status === 'active' && s.id !== state.me.id) act.appendChild(el('button', { class: 'btn danger', type: 'button', text: 'Disable', on: { click: function () {
-          api('PATCH', '/staff/' + s.id, { status: 'disabled', reason: 'Disabled from staff screen' }).then(function () { show('staff'); }).catch(function (e) { act.appendChild(msg('err', e.message)); });
+          api('PATCH', '/staff/' + s.id, { status: 'disabled', reason: 'Disabled from staff screen' }).then(function () { show('staff'); }).catch(oops);
         } } }));
-        if (has('core.roles.edit') && roles.length) {
-          var sel = el('select', { 'aria-label': 'Role to grant to ' + s.name }, roles.map(function (r) { return el('option', { value: String(r.id), text: r.name }); }));
-          var why = el('input', { 'aria-label': 'Reason', placeholder: 'Reason' });
+        if (has('core.staff.edit') && s.status === 'disabled') act.appendChild(el('button', { class: 'btn', type: 'button', text: 'Re-activate', on: { click: function () {
+          api('PATCH', '/staff/' + s.id, { status: 'active', reason: 'Re-activated from staff screen' }).then(function (r) {
+            if (r && r.status === 'active') done('Active again.')(); else note.replaceChildren(msg('ok', 'Sent for approval (request #' + r.approvalId + ').'));
+          }).catch(oops);
+        } } }));
+        if (has('core.roles.edit') && roles.length && s.status === 'active') {
+          var sel = el('select', { 'aria-label': 'Role to give ' + s.name }, roles.filter(function (r) { return r.is_active !== 0; }).map(function (r) { return el('option', { value: String(r.id), text: r.name }); }));
+          var why = el('input', { 'aria-label': 'Reason', placeholder: 'Reason (optional)' });
           act.appendChild(sel); act.appendChild(why);
-          act.appendChild(el('button', { class: 'btn', type: 'button', text: 'Request role', on: { click: function () {
-            api('POST', '/staff/' + s.id + '/roles', { roleId: Number(sel.value), scopeType: 'all', reason: why.value }).then(function () { act.appendChild(msg('ok', 'Sent for approval')); })
-              .catch(function (e) { act.appendChild(msg('err', e.message)); });
+          act.appendChild(el('button', { class: 'btn', type: 'button', text: 'Give role', on: { click: function () {
+            api('POST', '/staff/' + s.id + '/roles', { roleId: Number(sel.value), scopeType: 'all', reason: why.value }).then(function (r) {
+              if (r.status === 'granted') done(r.alreadyGranted ? 'They already have this role.' : 'Role given. Their open sessions were ended so it applies at once.')();
+              else note.replaceChildren(msg('ok', 'Sent for approval (request #' + r.approvalId + ')' + (r.why ? ': ' + r.why : '.')));
+            }).catch(oops);
           } } }));
         }
-        return [s.name, s.email, s.roles.join(', ') || '—', s.status, s.mfa_enabled ? 'on' : 'off', fmt(s.last_login_at), act];
+        if (has('core.staff.edit') && s.mfa_enabled && s.id !== state.me.id) act.appendChild(el('button', { class: 'btn', type: 'button', text: 'Clear 2FA', on: { click: function () {
+          var r2 = el('input', { 'aria-label': 'Reason for clearing two-step sign-in', placeholder: 'Why? e.g. lost phone' });
+          note.replaceChildren(el('div', { class: 'row' }, [r2, el('button', { class: 'btn danger', type: 'button', text: 'Clear their authenticator', on: { click: function () {
+            api('POST', '/staff/' + s.id + '/mfa/reset', { reason: r2.value }).then(done('Cleared. They sign in with their password and set up a new authenticator.')).catch(oops);
+          } } })]));
+        } } }));
+        if (has('core.staff.view')) act.appendChild(el('button', { class: 'btn', type: 'button', text: 'Role history', on: { click: function () {
+          api('GET', '/staff/' + s.id + '/roles/history').then(function (h) {
+            hist.replaceChildren(el('h3', { text: 'Role history: ' + s.name }), table(['Role', 'Scope', 'Given', 'By', 'Ended'], h.items.map(function (g) {
+              return [g.role_name, g.scope_type + (g.scope_id ? ' #' + g.scope_id : ''), fmt(g.granted_at), g.granted_by_name || '—', g.revoked_at ? fmt(g.revoked_at) : 'current'];
+            })));
+            hist.scrollIntoView({ block: 'nearest' });
+          }).catch(oops);
+        } } }));
+        return [s.name, s.email, s.roles.join(', ') || '—', s.status, s.mfa_enabled ? 'on' : 'off', fmt(s.last_login_at), el('div', {}, [act, note])];
       }))]));
       if (has('core.staff.create')) {
         var n = el('input', { 'aria-label': 'Name' }), e = el('input', { type: 'email', 'aria-label': 'E-mail' }), m = el('input', { inputmode: 'numeric', 'aria-label': 'Mobile' }),
@@ -234,12 +262,41 @@
           el('label', {}, ['Name', n]), el('label', {}, ['E-mail', e]), el('label', {}, ['Mobile (optional)', m]), el('label', {}, ['Initial password (12+ characters)', p]),
           el('button', { class: 'btn primary', type: 'button', text: 'Add', on: { click: function () {
             api('POST', '/staff', { name: n.value, email: e.value, mobile: m.value || null, password: p.value }).then(function () { show('staff'); }).catch(function (x) { out.replaceChildren(msg('err', x.message)); });
-          } } })]), out, el('p', { class: 'note', text: 'New people have no access until a role is granted and approved.' })]));
+          } } })]), out, el('p', { class: 'note', text: 'New people have no access until they are given a role.' })]));
       }
       if (roles.length) box.appendChild(el('section', { class: 'panel' }, [el('h2', { text: 'Roles' }), table(['Role', 'Type', 'Permissions'], roles.map(function (r) {
         return [r.name, r.is_system ? 'system' : 'custom', el('pre', { text: r.permissions.join('\n') || '—' })];
       }))]));
     }).catch(function (e) { box.appendChild(msg('err', e.message)); });
+  }
+
+  // Who may give roles without a second approver (role-policy.js on the server decides; this only shows it).
+  function rolePolicyPanel(box) {
+    api('GET', '/security/role-assignment').then(function (st) {
+      var sec = el('section', { class: 'panel' }, [el('h2', { text: 'Giving roles' })]);
+      box.replaceChildren(sec);
+      sec.appendChild(el('p', { text: st.mode === 'direct'
+        ? 'One admin gives ordinary roles at once. A second person approves: the Super Admin role, roles that can change roles or settings, roles listed below, roles you give yourself, and roles with more access than your own.'
+        : 'Every role waits for a second person to approve it.' }));
+      if (st.mode === 'direct' && st.approvalRoles.length) sec.appendChild(el('p', { class: 'note', text: 'Also need approval: ' + st.approvalRoles.join(', ') }));
+      if (st.source === 'fail-safe') sec.appendChild(el('p', { class: 'note', text: 'The setting could not be read, so every role needs approval for now.' }));
+      if (!st.canChange) return;
+      api('GET', '/roles').then(function (rr) {
+        var mode = el('select', { 'aria-label': 'How roles are given' }, [el('option', { value: 'direct', text: 'One admin gives ordinary roles' }), el('option', { value: 'approval', text: 'Every role needs approval' })]);
+        mode.value = st.mode;
+        var picks = rr.items.filter(function (r) { return r.code !== 'super_admin'; }).map(function (r) {
+          var c = el('input', { type: 'checkbox', value: r.code }); c.checked = st.approvalRoles.indexOf(r.code) !== -1;
+          return el('label', { class: 'row' }, [c, r.name]);
+        });
+        var why = el('input', { 'aria-label': 'Reason', placeholder: 'Reason (optional)' }), out = el('div');
+        sec.appendChild(el('div', { class: 'row' }, [el('label', {}, ['How roles are given', mode]), why, el('button', { class: 'btn primary', type: 'button', text: 'Save', on: { click: function () {
+          var list = picks.map(function (l) { return l.querySelector('input'); }).filter(function (c) { return c.checked; }).map(function (c) { return c.value; });
+          api('PUT', '/security/role-assignment', { mode: mode.value, approvalRoles: list, reason: why.value }).then(function () { rolePolicyPanel(box); }).catch(function (e) { out.replaceChildren(msg('err', e.message)); });
+        } } })]));
+        sec.appendChild(el('details', {}, [el('summary', { text: 'Roles that always need approval (in addition to admin-level roles)' })].concat(picks)));
+        sec.appendChild(out);
+      }).catch(function (e) { sec.appendChild(msg('err', e.message)); });
+    }).catch(function (e) { box.replaceChildren(msg('err', e.message)); });
   }
 
   function auditView(main) {
@@ -275,16 +332,16 @@
     api('GET', '/security/mfa').then(function (st) { drawOwn(st); drawSite(st); })
       .catch(function (e) { siteBox.appendChild(msg('err', e.message)); });
 
-    // Own authenticator: set up once; asked for at sign-in only while the site switch is on.
+    // Own authenticator: set up once; asked for at sign-in only where the policy applies to this person.
     function drawOwn(st) {
       if (state.me.mfa) { mfaBox.appendChild(msg('ok', 'On: you signed in with your 6-digit code.')); return; }
       if (st.ownAuthenticator) {
-        mfaBox.appendChild(el('p', { class: 'note', text: st.required
+        mfaBox.appendChild(el('p', { class: 'note', text: st.appliesToMe
           ? 'Your authenticator is set up. Sign out and sign in again with your 6-digit code to approve or change sensitive settings.'
-          : 'Your authenticator is set up. It is not asked for while two-step sign-in is switched off for everyone.' }));
+          : 'Your authenticator is set up. It is not asked for while two-step sign-in does not apply to your role.' }));
         return;
       }
-      mfaBox.appendChild(el('p', { class: 'note', text: 'Set up an authenticator app on your phone. It is needed before two-step sign-in can be switched on for everyone.' }));
+      mfaBox.appendChild(el('p', { class: 'note', text: 'Set up an authenticator app on your phone. It is needed before two-step sign-in can be switched on for a role you hold.' }));
       mfaBox.appendChild(el('button', { class: 'btn primary', type: 'button', text: 'Set up', on: { click: function () {
         api('POST', '/me/mfa/setup').then(function (r) {
           var code = el('input', { inputmode: 'numeric', maxlength: '6', 'aria-label': 'Code from the app' });
@@ -297,37 +354,45 @@
       } } }));
     }
 
-    // The site-wide switch (Super Admin). Every change is written to the audit log.
+    // The two-step sign-in policy (Super Admin): off, everyone, or chosen roles. Every change is in the audit log.
     function drawSite(st) {
       siteBox.replaceChildren(el('h2', { text: 'Two-step sign-in for everyone' }));
-      siteBox.appendChild(el('p', { text: st.required
-        ? 'ON — staff who set up an authenticator must enter the 6-digit code at sign-in, and approvals and sensitive actions need it.'
-        : 'OFF — nobody is asked for a code at sign-in, and no action needs one.' }));
+      siteBox.appendChild(el('p', { text: st.mode === 'all'
+        ? 'ON for everyone — staff who set up an authenticator enter the 6-digit code at sign-in, and approvals and sensitive actions need it.'
+        : st.mode === 'roles' ? 'ON for these roles only: ' + st.roles.join(', ') + '. Everyone else signs in with a password.'
+          : 'OFF — nobody is asked for a code at sign-in, and no action needs one.' }));
       var src = { server: 'Fixed by the server setting ERP_MFA_REQUIRED in Hostinger. Remove that setting there to use this switch.',
         'default': 'It has never been switched, so it is off.',
         'fail-safe': 'The settings could not be read, so it is on for safety.' }[st.source];
       if (st.source === 'switch') src = 'Last changed' + (st.changedBy ? ' by ' + st.changedBy : '') + (st.changedAt ? ' on ' + fmt(st.changedAt) : '') + '.';
       if (src) siteBox.appendChild(el('p', { class: 'note', text: src }));
       if (!st.canChange) return;
-      var turnOn = !st.required;
-      if (turnOn && !st.ownAuthenticator) {
-        siteBox.appendChild(el('p', { class: 'note', text: 'To switch it on, first set up your own authenticator above, so you can still sign in and switch it off later.' }));
+      if (st.appliesToMe && !st.sessionHasCode) {
+        siteBox.appendChild(el('p', { class: 'note', text: 'To change it, sign out and sign in again with your 6-digit code.' }));
         return;
       }
-      if (!turnOn && !st.sessionHasCode) {
-        siteBox.appendChild(el('p', { class: 'note', text: 'To switch it off, sign out and sign in again with your 6-digit code.' }));
-        return;
-      }
+      var mode = el('select', { 'aria-label': 'Who needs two-step sign-in' }, [el('option', { value: 'off', text: 'Nobody (off)' }),
+        el('option', { value: 'all', text: 'Everyone' }), el('option', { value: 'roles', text: 'Only the roles I choose' })]);
+      mode.value = st.mode;
+      var picks = (st.roleOptions || []).map(function (r) {
+        var c = el('input', { type: 'checkbox', value: r.code }); c.checked = st.roles.indexOf(r.code) !== -1;
+        return el('label', { class: 'row' }, [c, r.name]);
+      });
+      var list = el('div', {}, picks);
+      function sync() { list.hidden = mode.value !== 'roles'; }
+      mode.addEventListener('change', sync); sync();
       var why = el('input', { 'aria-label': 'Reason', placeholder: 'Reason (optional)' }), out = el('div');
-      siteBox.appendChild(el('div', { class: 'row' }, [why, el('button', { class: turnOn ? 'btn primary' : 'btn danger', type: 'button',
-        text: turnOn ? 'Switch on for everyone' : 'Switch off for everyone', on: { click: function () {
-          api('PUT', '/security/mfa', { required: turnOn, reason: why.value }).then(function () {
-            return api('GET', '/security/mfa').then(function (st2) {
-              drawSite(st2);
-              siteBox.appendChild(msg('ok', turnOn ? 'Switched on. Sign out and sign in again with your code before approving anything.' : 'Switched off. Nobody is asked for a code now.'));
-            });
-          }).catch(function (e) { out.replaceChildren(msg('err', e.message)); });
-        } } })]));
+      if (!st.ownAuthenticator) siteBox.appendChild(el('p', { class: 'note', text: 'If the setting you choose includes your own role, set up your own authenticator above first, so you can still sign in.' }));
+      siteBox.appendChild(el('div', { class: 'row' }, [el('label', {}, ['Who needs it', mode]), why, el('button', { class: 'btn primary', type: 'button', text: 'Save', on: { click: function () {
+        var roles = picks.map(function (l) { return l.querySelector('input'); }).filter(function (c) { return c.checked; }).map(function (c) { return c.value; });
+        api('PUT', '/security/mfa', { mode: mode.value, roles: roles, reason: why.value }).then(function () {
+          return api('GET', '/security/mfa').then(function (st2) {
+            drawSite(st2);
+            siteBox.appendChild(msg('ok', st2.appliesToMe ? 'Saved. Sign out and sign in again with your code before approving anything.' : 'Saved.'));
+          });
+        }).catch(function (e) { out.replaceChildren(msg('err', e.message)); });
+      } } })]));
+      siteBox.appendChild(list);
       siteBox.appendChild(out);
     }
   }

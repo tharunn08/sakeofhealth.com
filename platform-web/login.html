@@ -32,6 +32,20 @@
       <button class="btn btn-primary btn-block btn-lg mt-20" type="submit" id="submitBtn">Sign in</button>
       <button class="btn btn-ghost btn-block mt-20" type="button" id="skipCode" hidden>Continue without business modules</button>
       <p style="text-align:center;margin:14px 0 0;font-size:13px;"><a href="#" id="changeLink" style="color:var(--ink-3);">Team or business account: change my password</a></p>
+      <p style="text-align:center;margin:8px 0 0;font-size:13px;"><a href="#" id="forgotLink" style="color:var(--ink-3);">Forgot your password?</a></p>
+    </div>
+    <div id="forgotBox" hidden>
+      <p class="sub" style="margin-top:0">Business staff (admin, ERP, salesmen, delivery and event staff): enter your e-mail and we will send a link to choose a new password. The link works once, for 30 minutes.</p>
+      <div class="field"><label for="forgotEmail">Email address</label><input class="input" type="email" id="forgotEmail" autocomplete="username"/></div>
+      <button class="btn btn-primary btn-block btn-lg mt-20" type="button" id="forgotBtn">Send reset link</button>
+      <p class="sub" style="margin-top:14px;font-size:12px">Shop customers, retailers, distributors and suppliers: contact us to reset your password.</p>
+      <p style="text-align:center;margin:8px 0 0;font-size:13px;"><a href="/login" style="color:var(--ink-3);">Back to sign in</a></p>
+    </div>
+    <div id="resetBox" hidden>
+      <p class="sub" style="margin-top:0">Choose a new password: at least 12 characters, with letters and a number.</p>
+      <div class="field"><label for="resetPassword">New password</label><input class="input" type="password" id="resetPassword" autocomplete="new-password" minlength="12"/></div>
+      <div class="field"><label for="resetPassword2">Repeat new password</label><input class="input" type="password" id="resetPassword2" autocomplete="new-password" minlength="12"/></div>
+      <button class="btn btn-primary btn-block btn-lg mt-20" type="button" id="resetBtn">Save new password</button>
     </div>
     <div id="changeBox" hidden>
       <p class="sub" style="margin-top:0" id="changeWhy">Your account has a temporary password. Choose your own to continue (at least 12 characters, letters and a number).</p>

@@ -17,6 +17,7 @@ const settings = require('../core/settings.js');
 const monitor = require('../core/monitor.js');
 const jobs = require('../core/jobs.js');
 const mfaPolicy = require('../core/mfa-policy.js');
+const rolePolicy = require('../core/role-policy.js');
 
 const r = express.Router();
 const can = identity.can;
@@ -38,20 +39,31 @@ r.use(identity.requireStaff);
 r.get('/me', h(async function (req, res) {
   const p = req.erp;
   res.json({ id: p.id, name: p.name, email: p.email, roles: p.roles, permissions: Array.from(p.permissions).sort(), scopes: p.scopes, mfa: p.mfa,
-    mfaRequired: await mfaPolicy.required() });
+    mfaRequired: await mfaPolicy.required(p.roles) });
 }));
 r.post('/me/password', h(async function (req, res) {
   res.json(await tx(req, function (t, a) { return staff.changeOwnPassword(t, req.erp, a, req.body.currentPassword, req.body.newPassword); }));
 }));
-// ── two-step sign-in switch for the whole site (Super Admin) ──
+// ── two-step sign-in policy: off, everyone, or chosen roles (Super Admin) ──
 r.get('/security/mfa', h(async function (req, res) {
   const st = await mfaPolicy.status();
   const own = await db.queryOne('SELECT mfa_enabled FROM b2b_staff WHERE id = ?', [req.erp.id]);
-  res.json(Object.assign({}, st, { canChange: req.erp.permissions.has('core.settings.edit') && st.source !== 'server',
-    ownAuthenticator: !!(own && Number(own.mfa_enabled) === 1), sessionHasCode: !!req.erp.mfa }));
+  const canChange = req.erp.permissions.has('core.settings.edit') && st.source !== 'server';
+  res.json(Object.assign({}, st, { canChange: canChange, appliesToMe: mfaPolicy.appliesTo(st, req.erp.roles),
+    ownAuthenticator: !!(own && Number(own.mfa_enabled) === 1), sessionHasCode: !!req.erp.mfa,
+    roleOptions: canChange ? await db.query('SELECT code, name FROM b2b_roles WHERE is_active = 1 ORDER BY is_system DESC, name') : undefined }));
 }));
 r.put('/security/mfa', can('core.settings.edit'), h(async function (req, res) {
-  res.json(await tx(req, function (t, a) { return mfaPolicy.set(t, a, req.erp, req.body.required, req.body.reason); }));
+  const value = typeof req.body.required === 'boolean' ? req.body.required : { mode: req.body.mode, roles: req.body.roles };
+  res.json(await tx(req, function (t, a) { return mfaPolicy.set(t, a, req.erp, value, req.body.reason); }));
+}));
+// ── who may give roles without a second approver (Super Admin) ──
+r.get('/security/role-assignment', can('core.roles.view'), h(async function (req, res) {
+  const st = await rolePolicy.status();
+  res.json(Object.assign({}, st, { adminPermissions: rolePolicy.ADMIN_PERMISSIONS, canChange: req.erp.permissions.has('core.settings.edit') }));
+}));
+r.put('/security/role-assignment', can('core.settings.edit'), h(async function (req, res) {
+  res.json(await tx(req, function (t, a) { return rolePolicy.set(t, a, { mode: req.body.mode, approvalRoles: req.body.approvalRoles || [] }, req.body.reason); }));
 }));
 r.post('/me/mfa/setup', h(async function (req, res) { res.json(await staff.mfaSetup(req.erp)); }));
 r.post('/me/mfa/enable', h(async function (req, res) {
@@ -76,7 +88,14 @@ r.post('/staff', can('core.staff.create'), h(async function (req, res) {
   res.status(201).json(await tx(req, function (t, a) { return staff.create(t, a, req.body); }));
 }));
 r.patch('/staff/:id', can('core.staff.edit'), h(async function (req, res) {
-  res.json(await tx(req, function (t, a) { return staff.update(t, a, id(req.params.id), req.body); }));
+  res.json(await tx(req, function (t, a) { return staff.update(t, a, id(req.params.id), req.body, req.erp); }));
+}));
+// Lost phone: clear a person's authenticator (needs a code-checked session where two-step sign-in applies).
+r.post('/staff/:id/mfa/reset', can('core.staff.edit', { mfa: true }), h(async function (req, res) {
+  res.json(await tx(req, function (t, a) { return staff.resetMfa(t, a, req.erp, id(req.params.id), req.body.reason); }));
+}));
+r.get('/staff/:id/roles/history', can('core.staff.view'), h(async function (req, res) {
+  res.json({ items: await staff.roleHistory(id(req.params.id)) });
 }));
 r.get('/roles', can('core.roles.view'), h(async function (req, res) { res.json({ items: await staff.roles() }); }));
 r.post('/roles', can('core.roles.edit'), h(async function (req, res) {
@@ -86,7 +105,9 @@ r.put('/roles/:id/permissions', can('core.roles.edit'), h(async function (req, r
   res.status(202).json(await tx(req, function (t, a) { return staff.requestRolePermissions(t, a, id(req.params.id), req.body.permissions, req.body.reason); }));
 }));
 r.post('/staff/:id/roles', can('core.roles.edit'), h(async function (req, res) {
-  res.status(202).json(await tx(req, function (t, a) { return staff.requestGrant(t, a, id(req.params.id), req.body); }));
+  // Given at once (201) when role-policy.js allows it, otherwise sent for approval (202).
+  const out = await tx(req, function (t, a) { return staff.requestGrant(t, a, id(req.params.id), req.body, req.erp); });
+  res.status(out.status === 'granted' ? 201 : 202).json(out);
 }));
 r.post('/staff/:id/roles/:grantId/revoke', can('core.roles.edit'), h(async function (req, res) {
   res.json(await tx(req, function (t, a) { return staff.revokeGrant(t, a, id(req.params.id), id(req.params.grantId), req.body.reason); }));

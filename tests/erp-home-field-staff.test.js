@@ -87,53 +87,75 @@ test('sign-in: delivery and event staff get the field app too; a salesman keeps 
 });
 
 /* ── One-step field staff ── */
+const ROLE_PERMS = { 11: ['sales.orders.create', 'sales.visits.log'], 12: ['deliveries.view', 'deliveries.update'], 13: ['events.sell'] };
 function fakeTx(state) {
   return {
     async queryOne(sql, args) {
       if (/FROM b2b_roles WHERE code = \?/.test(sql)) return { id: { salesman: 11, delivery_staff: 12, event_staff: 13 }[args[0]], name: args[0] };
-      if (/FROM b2b_roles WHERE id = \?/.test(sql)) return { id: args[0], code: { 11: 'salesman', 12: 'delivery_staff', 13: 'event_staff' }[args[0]] };
+      if (/FROM b2b_roles WHERE id = \?/.test(sql)) return { id: args[0], code: { 11: 'salesman', 12: 'delivery_staff', 13: 'event_staff' }[args[0]], name: 'Role ' + args[0] };
       if (/FROM b2b_staff WHERE id = \? AND status = 'active'/.test(sql)) return { id: args[0] };
       return null;
     },
     async query(sql, args) {
       (state.sql = state.sql || []).push(sql);
+      if (/FROM b2b_role_permissions WHERE role_id = \?/.test(sql)) return (ROLE_PERMS[args[0]] || []).map((p) => ({ permission_code: p }));
       if (/INSERT INTO b2b_staff \(/.test(sql)) { if (state.dup) throw Object.assign(new Error('dup'), { code: 'ER_DUP_ENTRY' }); state.insert = args; return { insertId: 77 }; }
+      if (/INSERT INTO b2b_staff_roles/.test(sql)) { (state.grants = state.grants || []).push(args); return { insertId: 300 }; }
       if (/UPDATE b2b_staff SET must_change_password = 1/.test(sql)) { state.mustChange = args; return { affectedRows: 1 }; }
       return { affectedRows: 1 };
     },
   };
 }
 
-test('add a salesman, delivery person or event staff in one step: account, role request (approval kept), salesman record', async (t) => {
+test('add a salesman, delivery person or event staff in one step: account, role (direct or approval by policy), salesman record', async (t) => {
   const staff = require('../src/modules/erp/core/staff.js');
   const approvals = require('../src/modules/erp/core/approvals.js');
   const audit = require('../src/modules/erp/core/audit.js');
   const sales = require('../src/modules/erp/sales/service.js');
-  const saved = { request: approvals.request, write: audit.write, add: sales.addSalesman };
-  const asked = [], salesmen = [];
+  const rolePolicy = require('../src/modules/erp/core/role-policy.js');
+  const saved = { request: approvals.request, write: audit.write, add: sales.addSalesman, status: rolePolicy.status };
+  const asked = [], salesmen = [], audits = [];
+  let policy = { mode: 'direct', approvalRoles: [] };
   approvals.request = async (tx, actor, r) => { asked.push(r); return { approvalId: 501, status: 'pending' }; };
-  audit.write = async () => 'h';
+  audit.write = async (tx, actor, e) => { audits.push(e); return 'h'; };
   sales.addSalesman = async (tx, actor, b) => { salesmen.push(b); return { salesmanId: 9 }; };
-  t.after(() => { approvals.request = saved.request; audit.write = saved.write; sales.addSalesman = saved.add; });
-  const owner = { id: 1, roles: ['super_admin'], permissions: new Set(['core.staff.create', 'core.roles.edit', 'core.staff.edit']) };
+  rolePolicy.status = async () => policy;
+  t.after(() => { approvals.request = saved.request; audit.write = saved.write; sales.addSalesman = saved.add; rolePolicy.status = saved.status; });
+  const ALL = { territory: 'all', warehouse: 'all', state: 'all' };
+  const owner = { id: 1, roles: ['super_admin'], scopes: ALL, permissions: new Set(['core.staff.create', 'core.roles.edit', 'core.staff.edit',
+    'deliveries.view', 'deliveries.update', 'sales.orders.create', 'sales.visits.log', 'events.sell']) };
   const actor = { type: 'staff', id: 1, label: 'owner@x.y' };
   const base = { name: 'Ravi', email: 'ravi@example.com', mobile: '9876543210', password: 'Delivery-2026!', confirmPassword: 'Delivery-2026!' };
 
+  // One admin, direct mode (the default): the role is given at once, no second person.
   let st = {};
   let r = await staff.addFieldStaff(fakeTx(st), actor, owner, Object.assign({ kind: 'delivery' }, base));
-  assert.deepEqual([r.id, r.role, r.approval.approvalId, r.salesman, r.mustChangePassword], [77, 'delivery_staff', 501, null, true]);
+  assert.deepEqual([r.id, r.role, r.approval.status, r.approval.grantId, r.salesman, r.mustChangePassword], [77, 'delivery_staff', 'granted', 300, null, true]);
+  assert.deepEqual(st.grants[0], [77, 12, 'all', null, 1], 'grant row: staff 77, role 12, scope all, given by 1');
+  assert.equal(asked.length, 0, 'no approval request');
   assert.deepEqual(st.mustChange, [77], 'temporary password: changed at first sign-in');
-  assert.equal(asked[0].type, 'core.role_grant'); assert.equal(asked[0].payload.roleId, 12); assert.equal(asked[0].entityId, 77);
+  const g = audits.find((e) => e.action === 'role.granted');
+  assert.equal(g.new.direct, true); assert.equal(g.approvalId, undefined);
   assert.equal(salesmen.length, 0, 'no salesman record for delivery staff');
 
   st = {};
   r = await staff.addFieldStaff(fakeTx(st), actor, owner, Object.assign({ kind: 'salesman', employeeCode: 'S-01', homeTerritoryId: 4, defaultWarehouseId: 2, cashLimit: '' }, base));
-  assert.equal(asked[1].payload.roleId, 11);
+  assert.equal(st.grants[0][1], 11);
   assert.deepEqual(salesmen[0], { staffId: 77, employeeCode: 'S-01', homeTerritoryId: 4, defaultWarehouseId: 2, cashLimit: 20000 });
   assert.deepEqual(r.salesman, { salesmanId: 9 });
 
+  // Approval mode: the same request waits for a second person.
+  policy = { mode: 'approval', approvalRoles: [] };
   r = await staff.addFieldStaff(fakeTx({}), actor, owner, Object.assign({ kind: 'event' }, base));
-  assert.equal(r.role, 'event_staff');
+  assert.equal(r.role, 'event_staff'); assert.equal(r.approval.approvalId, 501);
+  assert.equal(asked[0].type, 'core.role_grant'); assert.equal(asked[0].payload.roleId, 13); assert.equal(asked[0].entityId, 77);
+  assert.ok(asked[0].reason.length >= 5);
+
+  // Direct mode, but the giver lacks a permission the role carries: approval.
+  policy = { mode: 'direct', approvalRoles: [] };
+  const narrow = Object.assign({}, owner, { permissions: new Set(['core.staff.create', 'core.roles.edit', 'deliveries.view']) });
+  r = await staff.addFieldStaff(fakeTx({}), actor, narrow, Object.assign({ kind: 'delivery' }, base));
+  assert.equal(r.approval.approvalId, 501); assert.match(r.approval.why, /cannot/);
 
   const noRoles = { id: 1, roles: [], permissions: new Set(['core.staff.create']) };
   await assert.rejects(staff.addFieldStaff(fakeTx({}), actor, noRoles, Object.assign({ kind: 'delivery' }, base)), /core\.roles\.edit/);

@@ -4,6 +4,7 @@
  *   GET  /login                    one sign-in page for staff and shop customers
  *   POST /api/platform/auth/login  checks every account type the person may have
  *                                  and returns the workspaces they can open
+ *   POST /api/platform/auth/forgot-password, /reset-password   e-mailed reset link (business staff)
  *   GET  /api/platform/nav         the signed-in staff member's sidebar (server-filtered)
  *   GET  /admin                    opens the user's home page in the panel
  *   GET  /admin/<group>/<page>     every admin page, built by the one shell from the registry
@@ -149,6 +150,33 @@ function mount(app, opts) {
         res.status(s.status).json(Object.assign({ changed: r.changed }, s.body));
       });
     }).catch(next);
+  });
+
+  /**
+   * Forgot password (business staff accounts). The answer is the same whether or not the account
+   * exists, and is sent before the e-mail goes out, so neither the text nor the timing tells.
+   */
+  const { rateLimit } = require('express-rate-limit');
+  const resetLimit = rateLimit({ windowMs: 15 * 60000, max: process.env.NODE_ENV === 'test' ? 1000 : 5, standardHeaders: true, legacyHeaders: false,
+    message: { error: 'Too many attempts. Please wait 15 minutes and try again.' } });
+  const RESET_SENT = 'If a business staff account uses this e-mail, a link to choose a new password is on its way. It works once, for 30 minutes. Check spam if it does not arrive.';
+  app.post('/api/platform/auth/forgot-password', resetLimit, function (req, res) {
+    const email = String((req.body || {}).email || '').trim();
+    res.json({ ok: true, message: RESET_SENT });
+    if (!email || !erpConfig.enabled() || !require('../db/connection.js').isConfigured()) return;
+    require('./password-reset.js').request(email, { ip: req.ip }).catch(function (e) { console.error('[password-reset] request failed:', e.message); });
+  });
+  app.post('/api/platform/auth/reset-password', resetLimit, function (req, res, next) {
+    const b = req.body || {};
+    const problem = newPasswordProblem('', b.newPassword);
+    if (problem) return res.status(400).json({ error: problem });
+    if (!erpConfig.enabled() || !require('../db/connection.js').isConfigured()) return res.status(400).json({ error: 'This reset link has expired or was already used. Ask for a new one.', code: 'bad_link' });
+    require('./password-reset.js').complete(b.token, b.newPassword, { ip: req.ip }).then(function (r) {
+      res.json({ ok: true, email: r.email });
+    }).catch(function (e) {
+      if (e.expose) return res.status(e.status || 400).json({ error: e.message, code: e.code });
+      next(e);
+    });
   });
 
   /* ── The one sidebar ── */

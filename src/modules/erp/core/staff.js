@@ -1,7 +1,9 @@
 /**
  * Staff, roles and grants. Reducing access (disable, revoke) is immediate and
- * ends sessions. Increasing access (granting a role, changing a role's
- * permissions) goes through an approval by someone else.
+ * ends sessions. Changing a role's permissions goes through an approval by someone
+ * else. Giving a role follows role-policy.js: one authorized admin gives an ordinary
+ * role at once; Super Admin, admin-level roles and anything beyond the giver's own
+ * access still need a second person.
  */
 'use strict';
 const { posId } = require('../lib/http.js');
@@ -10,6 +12,7 @@ const security = require('./security.js');
 const audit = require('./audit.js');
 const approvals = require('./approvals.js');
 const identity = require('./identity.js');
+const rolePolicy = require('./role-policy.js');
 
 function fail(status, msg) { return Object.assign(new Error(msg), { status: status, expose: true }); }
 const EMAIL = /^[^@\s]{1,64}@[^@\s]{1,180}\.[^@\s]{2,}$/;
@@ -43,7 +46,7 @@ async function create(tx, actor, b) {
   return { id: r.insertId };
 }
 
-async function update(tx, actor, id, b) {
+async function update(tx, actor, id, b, principal) {
   const s = await tx.queryOne('SELECT id, name, mobile, status FROM b2b_staff WHERE id = ? FOR UPDATE', [id]);
   if (!s) throw fail(404, 'Not found');
   const next = { name: b.name != null ? String(b.name).trim().slice(0, 120) : s.name, mobile: b.mobile !== undefined ? (b.mobile ? String(b.mobile).replace(/\D/g, '') : null) : s.mobile,
@@ -52,8 +55,14 @@ async function update(tx, actor, id, b) {
   if (next.mobile && !/^[6-9]\d{9}$/.test(next.mobile)) throw fail(400, 'Mobile must be a 10-digit Indian number');
   if (Number(id) === Number(actor.id) && next.status === 'disabled') throw fail(400, 'You cannot disable yourself');
   if (next.status === 'active' && s.status === 'disabled') {
-    // Re-activation restores access: it needs approval like any grant.
-    return approvals.request(tx, actor, { type: 'core.staff_reactivate', entity: 'staff', entityId: id, reason: b.reason || '', payload: { name: next.name, mobile: next.mobile } });
+    // Re-activation restores the person's roles: done at once when the giver could give each of
+    // those roles directly (role-policy.js), otherwise approved by a second person.
+    if (principal && await canRestoreDirectly(tx, principal, id)) {
+      await reactivate(tx, actor, id, next, null, b.reason);
+      return { id: Number(id), status: 'active' };
+    }
+    const why = b.reason && String(b.reason).trim().length >= 5 ? b.reason : 'Re-activate ' + next.name + (b.reason ? ': ' + String(b.reason).trim() : '');
+    return approvals.request(tx, actor, { type: 'core.staff_reactivate', entity: 'staff', entityId: id, reason: why, payload: { name: next.name, mobile: next.mobile } });
   }
   await tx.query('UPDATE b2b_staff SET name = ?, mobile = ?, status = ? WHERE id = ?', [next.name, next.mobile, next.status, id]);
   if (next.status === 'disabled' && s.status !== 'disabled') await identity.revokeSessions(tx, id);
@@ -61,9 +70,26 @@ async function update(tx, actor, id, b) {
     old: { name: s.name, mobile: s.mobile, status: s.status }, new: next, reason: b.reason });
   return { id: Number(id), status: next.status };
 }
+async function reactivate(tx, actor, id, d, approvalId, reason) {
+  await tx.query("UPDATE b2b_staff SET status = 'active', name = ?, mobile = ?, failed_logins = 0, locked_until = NULL WHERE id = ?", [d.name, d.mobile, id]);
+  await audit.write(tx, actor, { module: 'core', action: 'staff.reactivated', entity: 'staff', entityId: id,
+    new: { direct: !approvalId }, reason: reason ? String(reason).slice(0, 500) : null, approvalId: approvalId || undefined });
+}
+/** Could the giver give every role this person still holds, directly? */
+async function canRestoreDirectly(tx, principal, staffId) {
+  if (!principal.permissions || !principal.permissions.has('core.roles.edit')) return false;   // only someone who may give roles
+  const policy = await rolePolicy.status();
+  if (policy.mode !== 'direct' || Number(staffId) === Number(principal.id)) return false;
+  const grants = await tx.query('SELECT sr.role_id, sr.scope_type, sr.scope_id, r.code FROM b2b_staff_roles sr JOIN b2b_roles r ON r.id = sr.role_id ' +
+    'WHERE sr.staff_id = ? AND sr.revoked_at IS NULL', [staffId]);
+  for (const g of grants) {
+    const perms = (await tx.query('SELECT permission_code FROM b2b_role_permissions WHERE role_id = ?', [g.role_id])).map(function (r) { return r.permission_code; });
+    if (!rolePolicy.decide(policy, principal, { code: g.code, permissions: perms }, { staffId: staffId, scopeType: g.scope_type, scopeId: g.scope_id }).direct) return false;
+  }
+  return true;
+}
 approvals.register('core.staff_reactivate', async function (tx, req, actor) {
-  await tx.query("UPDATE b2b_staff SET status = 'active', name = ?, mobile = ?, failed_logins = 0, locked_until = NULL WHERE id = ?", [req.data.name, req.data.mobile, req.entityId]);
-  await audit.write(tx, actor, { module: 'core', action: 'staff.reactivated', entity: 'staff', entityId: req.entityId, approvalId: req.id });
+  await reactivate(tx, actor, req.entityId, req.data, req.id);
   return { id: req.entityId, status: 'active' };
 });
 
@@ -92,6 +118,24 @@ async function mfaEnable(tx, principal, actor, code) {
   await tx.query('UPDATE b2b_staff SET mfa_enabled = 1, token_version = token_version + 1 WHERE id = ?', [principal.id]);
   await audit.write(tx, actor, { module: 'core', action: 'staff.mfa_enabled', entity: 'staff', entityId: principal.id });
   return { ok: true, reLogin: true };
+}
+
+/**
+ * Clears another person's authenticator (lost or replaced phone). They sign in with their password and
+ * set up a new authenticator; their open sessions end. Not for your own account (set up again on My
+ * account), and only a Super Admin may clear a Super Admin's. Audited with the reason.
+ */
+async function resetMfa(tx, actor, principal, staffId, reason) {
+  if (Number(staffId) === Number(principal.id)) throw fail(400, 'Use My account to change your own two-step sign-in');
+  if (!reason || String(reason).trim().length < 5) throw fail(400, 'Say why (at least 5 characters), for the audit log');
+  const s = await tx.queryOne('SELECT id, name, mfa_enabled FROM b2b_staff WHERE id = ? FOR UPDATE', [staffId]);
+  if (!s) throw fail(404, 'Not found');
+  const held = await require('./mfa-policy.js').rolesOf(tx, staffId);
+  if (held.indexOf('super_admin') !== -1 && principal.roles.indexOf('super_admin') === -1) throw fail(403, 'Only a Super Admin can clear a Super Admin\'s two-step sign-in');
+  if (Number(s.mfa_enabled) !== 1) throw fail(409, 'This person has no authenticator set up');
+  await tx.query('UPDATE b2b_staff SET mfa_enabled = 0, mfa_secret_enc = NULL, token_version = token_version + 1 WHERE id = ?', [staffId]);
+  await audit.write(tx, actor, { module: 'core', action: 'security.mfa_reset', entity: 'staff', entityId: staffId, old: { mfa: true }, new: { mfa: false }, reason: String(reason).slice(0, 500) });
+  return { ok: true, name: s.name };
 }
 
 // ── Roles ──
@@ -143,8 +187,13 @@ approvals.register('core.role_permissions', async function (tx, req, actor) {
 });
 
 const SCOPES = ['all', 'territory', 'warehouse', 'state'];
-async function requestGrant(tx, actor, staffId, b) {
-  const role = await tx.queryOne('SELECT id, code FROM b2b_roles WHERE id = ? AND is_active = 1', [b.roleId]);
+/**
+ * Gives a role. principal (req.erp) is the giver; without it the request goes to approval.
+ * → { status: 'granted', grantId } when given at once, or the approval request
+ *   { approvalId, status: 'pending', …, why } when a second person must approve.
+ */
+async function requestGrant(tx, actor, staffId, b, principal) {
+  const role = await tx.queryOne('SELECT id, code, name FROM b2b_roles WHERE id = ? AND is_active = 1', [b.roleId]);
   if (!role) throw fail(404, 'Role not found');
   const s = await tx.queryOne("SELECT id FROM b2b_staff WHERE id = ? AND status = 'active'", [staffId]);
   if (!s) throw fail(404, 'Staff member not found or disabled');
@@ -152,20 +201,44 @@ async function requestGrant(tx, actor, staffId, b) {
   if (SCOPES.indexOf(scopeType) === -1) throw fail(400, 'Scope must be one of ' + SCOPES.join(', '));
   const scopeId = scopeType === 'all' ? null : posId(b.scopeId);
   if (scopeType !== 'all' && !scopeId) throw fail(400, 'scopeId is required for a ' + scopeType + ' scope');
-  return approvals.request(tx, actor, { type: 'core.role_grant', entity: 'staff', entityId: staffId, reason: b.reason,
-    payload: { roleId: Number(role.id), role: role.code, scopeType: scopeType, scopeId: scopeId } });
+  const d = { roleId: Number(role.id), role: role.code, scopeType: scopeType, scopeId: scopeId };
+  let verdict = { direct: false, reason: 'Every role is set to need approval.' };
+  if (principal && principal.permissions) {
+    const perms = (await tx.query('SELECT permission_code FROM b2b_role_permissions WHERE role_id = ?', [role.id])).map(function (r) { return r.permission_code; });
+    verdict = rolePolicy.decide(await rolePolicy.status(), principal, { code: role.code, permissions: perms }, { staffId: staffId, scopeType: scopeType, scopeId: scopeId });
+  }
+  if (verdict.direct) {
+    const done = await applyGrant(tx, actor, Number(staffId), d, Number(principal.id), null, b.reason);
+    return Object.assign({ status: 'granted', role: role.code, roleName: role.name }, done);
+  }
+  const reason = b.reason && String(b.reason).trim().length >= 5 ? b.reason : ('Role ' + role.name + (b.reason ? ': ' + String(b.reason).trim() : ''));
+  const req = await approvals.request(tx, actor, { type: 'core.role_grant', entity: 'staff', entityId: staffId, reason: reason, payload: d });
+  return Object.assign(req, { role: role.code, roleName: role.name, why: verdict.reason });
+}
+
+/** Writes the grant (same for a direct grant and an approved request). */
+async function applyGrant(tx, actor, staffId, d, grantedBy, approvalId, reason) {
+  const dup = await tx.queryOne('SELECT id FROM b2b_staff_roles WHERE staff_id = ? AND role_id = ? AND scope_type = ? AND (scope_id <=> ?) AND revoked_at IS NULL',
+    [staffId, d.roleId, d.scopeType, d.scopeId]);
+  if (dup) return { alreadyGranted: true, grantId: Number(dup.id) };
+  const r = await tx.query('INSERT INTO b2b_staff_roles (staff_id, role_id, scope_type, scope_id, granted_by) VALUES (?, ?, ?, ?, ?)',
+    [staffId, d.roleId, d.scopeType, d.scopeId, grantedBy]);
+  await identity.revokeSessions(tx, staffId);
+  await audit.write(tx, actor, { module: 'core', action: 'role.granted', entity: 'staff', entityId: staffId,
+    new: Object.assign({}, d, { direct: !approvalId }), reason: reason ? String(reason).slice(0, 500) : null, approvalId: approvalId || undefined });
+  return { grantId: Number(r.insertId) };
 }
 approvals.register('core.role_grant', async function (tx, req, actor) {
-  const d = req.data;
-  const dup = await tx.queryOne('SELECT id FROM b2b_staff_roles WHERE staff_id = ? AND role_id = ? AND scope_type = ? AND (scope_id <=> ?) AND revoked_at IS NULL',
-    [req.entityId, d.roleId, d.scopeType, d.scopeId]);
-  if (dup) return { alreadyGranted: true };
-  const r = await tx.query('INSERT INTO b2b_staff_roles (staff_id, role_id, scope_type, scope_id, granted_by) VALUES (?, ?, ?, ?, ?)',
-    [req.entityId, d.roleId, d.scopeType, d.scopeId, req.requestedBy]);
-  await identity.revokeSessions(tx, req.entityId);
-  await audit.write(tx, actor, { module: 'core', action: 'role.granted', entity: 'staff', entityId: req.entityId, new: d, approvalId: req.id });
-  return { grantId: r.insertId };
+  return applyGrant(tx, actor, Number(req.entityId), req.data, Number(req.requestedBy), req.id);
 });
+
+/** Role history for one person: every grant, with who gave it and when it ended. */
+async function roleHistory(staffId) {
+  return db.query(
+    'SELECT sr.id, r.code AS role, r.name AS role_name, sr.scope_type, sr.scope_id, sr.granted_at, sr.revoked_at, ' +
+    'g.name AS granted_by_name FROM b2b_staff_roles sr JOIN b2b_roles r ON r.id = sr.role_id LEFT JOIN b2b_staff g ON g.id = sr.granted_by ' +
+    'WHERE sr.staff_id = ? ORDER BY sr.id DESC LIMIT 100', [staffId]);
+}
 
 /** Revoking is immediate (less access is always safe) and ends the person's sessions. */
 async function revokeGrant(tx, actor, staffId, grantId, reason) {
@@ -195,7 +268,7 @@ async function addSecondSuperAdmin(tx, actor, principal, b) {
   if (!principal || principal.roles.indexOf('super_admin') === -1) throw fail(403, 'Only a Super Admin can add the second Super Admin');
   const role = await tx.queryOne("SELECT id FROM b2b_roles WHERE code = 'super_admin' AND is_active = 1 FOR UPDATE");
   if (!role) throw fail(409, 'The Super Admin role is missing');
-  if (await superAdminCount(tx) >= 2) throw fail(409, 'Two Super Admins already exist. Give roles from Business Staff & Roles instead (request and approval).', 'two_exist');
+  if (await superAdminCount(tx) >= 2) throw fail(409, 'Two Super Admins already exist. Give roles from Staff & roles instead; the Super Admin role is approved by the other Super Admin.', 'two_exist');
   const name = String(b.name || '').trim().slice(0, 120), email = String(b.email || '').trim().toLowerCase();
   if (!name) throw fail(400, 'Name is required');
   if (!EMAIL.test(email)) throw fail(400, 'A valid e-mail is required');
@@ -213,9 +286,9 @@ async function addSecondSuperAdmin(tx, actor, principal, b) {
 
 /**
  * A salesman, delivery person or event staff member in one step: the account (temporary password,
- * changed at first sign-in), the role request (approved by a second person, as every role is) and,
- * for a salesman, the salesman record the field app needs. Nothing about the approval rule changes:
- * until the role is approved the person can sign in but sees nothing.
+ * changed at first sign-in), the role (given at once when role-policy.js allows it, otherwise sent for
+ * approval) and, for a salesman, the salesman record the field app needs. While a role waits for
+ * approval the person can sign in but sees nothing.
  */
 const FIELD_ROLES = { salesman: 'salesman', delivery: 'delivery_staff', event: 'event_staff' };
 async function addFieldStaff(tx, actor, principal, b) {
@@ -230,7 +303,7 @@ async function addFieldStaff(tx, actor, principal, b) {
   if (!role) throw fail(409, 'The ' + code + ' role is missing');
   const made = await create(tx, actor, { name: b.name, email: b.email, mobile: b.mobile, password: b.password });
   await tx.query('UPDATE b2b_staff SET must_change_password = 1 WHERE id = ?', [made.id]);
-  const approval = await requestGrant(tx, actor, made.id, { roleId: role.id, reason: b.reason || ('New ' + role.name) });
+  const approval = await requestGrant(tx, actor, made.id, { roleId: role.id, reason: b.reason || ('New ' + role.name) }, principal);
   let salesman = null;
   if (kind === 'salesman') {
     salesman = await require('../sales/service.js').addSalesman(tx, actor, { staffId: made.id, employeeCode: b.employeeCode,
@@ -239,5 +312,5 @@ async function addFieldStaff(tx, actor, principal, b) {
   return { id: made.id, role: code, approval: approval, salesman: salesman, mustChangePassword: true };
 }
 
-module.exports = { list, create, update, changeOwnPassword, mfaSetup, mfaEnable, roles, createRole, requestRolePermissions, requestGrant, revokeGrant,
+module.exports = { list, create, update, changeOwnPassword, mfaSetup, mfaEnable, roles, createRole, requestRolePermissions, requestGrant, revokeGrant, roleHistory, resetMfa,
   superAdminCount, addSecondSuperAdmin, addFieldStaff, FIELD_ROLES };

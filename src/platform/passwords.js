@@ -33,7 +33,8 @@ async function changeEverywhere(input, opts) {
       const sec = require('../modules/erp/core/security.js');
       const s = await sql.queryOne('SELECT id, password_hash, status, mfa_enabled, mfa_secret_enc FROM b2b_staff WHERE email = ?', [email]);
       if (!s || s.status !== 'active' || !sec.verifyPassword(current, s.password_hash)) return;
-      if (Number(s.mfa_enabled) === 1 && await require('../modules/erp/core/mfa-policy.js').required()) {
+      const mfaPolicy = require('../modules/erp/core/mfa-policy.js');
+      if (Number(s.mfa_enabled) === 1 && await mfaPolicy.requiredForStaff(sql, s.id)) {
         const secret = sec.decrypt(s.mfa_secret_enc);
         if (!input.totp || !secret || !sec.verifyTotp(secret, input.totp)) { needCode = true; return; }
       }
