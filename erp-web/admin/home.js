@@ -45,6 +45,7 @@
     ]],
     ['Insights', [
       ['insights', 'Smart Insights', 'reports.export', 'Overview', 'Sales forecast, stock-out and reorder advice, customer risk, alerts and suggestions.'],
+      ['assistant', 'AI Assistant', 'reports.export', 'Overview', 'Ask questions about sales, stock and customers in plain words (off until a provider key is added).'],
       ['overview', 'System Health', 'core.monitoring.view', 'Overview', 'Background jobs, monitoring events and the database.'],
     ]],
     ['Team & control', [
@@ -54,6 +55,7 @@
       ['notifications', 'Notifications', 'notifications.view', 'Administration', 'Messages to customers, retailers and staff, with consent.'],
       ['offline', 'Offline Sync', 'offline.view', 'Administration', 'Work saved by the field app without signal, and how it was settled.'],
       ['audit', 'Audit Log', 'core.audit.view', 'Administration', 'Who did what and when; tamper-checked.'],
+      ['branding', 'Logos & Bills', 'core.settings.view', 'Administration', 'Your logo library, and which logo prints on bills.'],
       ['account', 'My Password & 2FA', 'core.self.view', 'Administration', 'Your password and two-step sign-in.'],
     ]],
   ];

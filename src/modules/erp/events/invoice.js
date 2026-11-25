@@ -9,7 +9,8 @@ const m = function (n) { return Number(n || 0).toFixed(2); };
 const day = function (v) { try { return new Date(v).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata' }); } catch (e) { return String(v || ''); } };
 
 /** sale = events.saleView(...), seller = invoices.sellerCard('company'). */
-function render(sale, seller) {
+/** logo: { url, label } from src/platform/branding.js (the logo chosen for bills); optional. */
+function render(sale, seller, logo) {
   const t = sale.totals, s = seller || {};
   const taxCols = sale.interstate ? '<th>IGST</th>' : '<th>CGST</th><th>SGST</th>';
   const rows = sale.items.map(function (i, n) {
@@ -32,10 +33,11 @@ function render(sale, seller) {
     '.muted,.sub{color:#5b6b5e;font-size:12px}table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}th,td{border:1px solid #d9dfd4;padding:5px 6px;text-align:left;vertical-align:top}' +
     'th{background:#f3f6f0}.n{text-align:right;white-space:nowrap}.totals{width:auto;margin-left:auto}.totals th{text-align:left}.totals td{text-align:right;min-width:110px}' +
     '.void{background:#fbebeb;color:#8a1c1c;border:1px solid #e3a3a3;padding:8px 10px;font-weight:bold;margin:10px 0}.bar{margin:12px 0}' +
-    '@media print{.bar{display:none}body{padding:0}}</style></head><body><main>' +
+    '.logo{display:block;max-height:60px;max-width:200px;object-fit:contain;margin:0 0 8px}@media print{.bar{display:none}body{padding:0}}</style></head><body><main>' +
     '<div class="bar"><button onclick="window.print()">Print / Save as PDF</button></div>' +
     (sale.voided ? '<div class="void">VOID — cancelled on ' + esc(day(sale.voided.at)) + ': ' + esc(sale.voided.reason) + '</div>' : '') +
-    '<div class="top"><div><h1>' + esc(s.brand || s.name || 'Sake of Health') + '</h1><div class="muted">' + esc(s.name || '') + '<br>' + esc(s.address || '') +
+    '<div class="top"><div>' + (logo && logo.url ? '<img class="logo" src="' + esc(logo.url) + '" alt="' + esc(logo.label || 'Logo') + '">' : '') +
+    '<h1>' + esc(s.brand || s.name || 'Sake of Health') + '</h1><div class="muted">' + esc(s.name || '') + '<br>' + esc(s.address || '') +
     (s.gstin ? '<br>GSTIN ' + esc(s.gstin) : '') + (s.phone ? '<br>' + esc(s.phone) : '') + '</div></div>' +
     '<div><strong>Tax invoice</strong><br>No. ' + esc(sale.invoiceNo) + '<br>Date ' + esc(day(sale.soldAt)) + '<br><span class="muted">' + esc(sale.event.name) + ' (' + esc(sale.event.code) + ')</span></div></div>' +
     '<h3>Bill to</h3><div class="muted">' + esc(sale.customer.name || 'Walk-in customer') + (sale.customer.mobile ? ' · ' + esc(sale.customer.mobile) : '') +

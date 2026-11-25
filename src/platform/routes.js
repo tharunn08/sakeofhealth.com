@@ -63,12 +63,15 @@ function mount(app, opts) {
   /* ── Background run for an outside cron service (404 unless CRON_SECRET is set) ── */
   require('./cron-route.js').mount(app);
 
+  /* ── Logos: the one chosen for bills, and the pictures (public: they print on customers' bills) ── */
+  require('./branding.js').mount(app);
+
   /* ── Single sign-in ── */
   app.get('/login', function (req, res) {
     noStore(res);
     res.sendFile(path.join(WEB, 'login.html'));
   });
-  ['login.js', 'erp-host.js', 'erp-embed.css', 'shell.css', 'session-check.js'].forEach(function (f) {
+  ['login.js', 'erp-host.js', 'erp-embed.css', 'bill-logo.js', 'shell.css', 'session-check.js'].forEach(function (f) {
     app.get('/platform/' + f, function (req, res) {
       res.setHeader('Cache-Control', 'no-cache');
       res.setHeader('X-Content-Type-Options', 'nosniff');

@@ -113,6 +113,28 @@ r.post('/staff/:id/roles/:grantId/revoke', can('core.roles.edit'), h(async funct
   res.json(await tx(req, function (t, a) { return staff.revokeGrant(t, a, id(req.params.id), id(req.params.grantId), req.body.reason); }));
 }));
 
+// ── logo library: several logos, one chosen for bills (src/platform/branding.js) ──
+const branding = require('../../../platform/branding.js');
+const logoUpload = require('multer')({ storage: require('multer').memoryStorage(), limits: { fileSize: branding.MAX_BYTES, files: 1, fields: 4 } }).single('file');
+function receiveLogo(req, res, next) {
+  logoUpload(req, res, function (e) {
+    if (!e) return next();
+    res.status(400).json({ error: e.code === 'LIMIT_FILE_SIZE' ? 'The logo must be 1 MB or smaller' : 'Upload one picture file', code: 'bad_upload' });
+  });
+}
+r.get('/branding', can('core.settings.view'), h(async function (req, res) {
+  res.json(Object.assign(await branding.state(), { canChange: req.erp.permissions.has('core.settings.edit'), maxBytes: branding.MAX_BYTES, maxLogos: branding.MAX_LOGOS }));
+}));
+r.post('/branding/logos', can('core.settings.edit'), receiveLogo, h(async function (req, res) {
+  res.status(201).json(await tx(req, function (t, a) { return branding.upload(t, a, req.file, req.body && req.body.label); }));
+}));
+r.put('/branding/bill-logo', can('core.settings.edit'), h(async function (req, res) {
+  res.json(await tx(req, function (t, a) { return branding.chooseBillLogo(t, a, String(req.body.id || ''), req.body.reason); }));
+}));
+r.post('/branding/logos/:name/remove', can('core.settings.edit'), h(async function (req, res) {
+  res.json(await tx(req, function (t, a) { return branding.remove(t, a, String(req.params.name)); }));
+}));
+
 // ── approvals ──
 r.get('/approvals', can('core.approvals.view'), h(async function (req, res) { res.json({ items: await approvals.queue(req.erp, req.query) }); }));
 r.post('/approvals/:id/decide', can('core.approvals.view'), h(async function (req, res) {
