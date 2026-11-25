@@ -54,6 +54,17 @@ jobs:
       - name: Dependency audit (production dependencies, high and critical)
         if: always()
         run: npm audit --omit=dev --audit-level=high
+      - name: Show failing tests in the log
+        if: failure()
+        run: |
+          for f in test-results/*/mysql/*.tap.txt; do
+            if grep -q '^not ok' "$f" || ! grep -q '^# pass' "$f"; then
+              echo "::group::$(basename "$f")"
+              grep -n -A30 '^not ok' "$f" | head -400 || true
+              grep -q '^# pass' "$f" || tail -60 "$f"
+              echo "::endgroup::"
+            fi
+          done
       - name: Keep the evidence
         if: always()
         uses: actions/upload-artifact@v4
