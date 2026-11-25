@@ -128,3 +128,9 @@ test('Smart Insights: products open a detail panel with their own figures', () =
   const svc = read('src/modules/erp/insights/service.js');
   for (const field of ['reorderPoint:', 'safetyStock:', 'inTransit:', 'onOrder:', 'sold26Weeks:']) assert.ok(svc.includes(field), 'the server sends ' + field);
 });
+
+test('trade settings page does not list the back office security, logo or assistant settings', () => {
+  const src = read('src/modules/b2b/routes/admin.js');
+  assert.match(src, /const NOT_TRADE = \/\^\(security\|branding\|ai\)\\\.\//);
+  assert.match(src, /if \(NOT_TRADE\.test\(k\)\) delete all\[k\]/);
+});
