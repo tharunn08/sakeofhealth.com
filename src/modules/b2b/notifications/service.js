@@ -26,8 +26,11 @@ function esc(s) {
 
 function emailHtml(title, lines, link) {
   const brand = process.env.BRAND_NAME || 'Sake of Health';
+  // The shop logo, from the public site (e-mail programs need a full address). Left out when no site address is set.
+  const site = (process.env.PUBLIC_SITE_URL || process.env.SITE_URL || '').replace(/\/$/, '');
+  const logo = /^https:\/\//.test(site) ? '<img src="' + esc(site + '/assets/images/logo-mark.png') + '" alt="" width="30" height="35" style="vertical-align:middle;margin-right:10px;background:#fff;border-radius:6px;padding:3px">' : '';
   return '<div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;color:#16261a">' +
-    '<div style="background:#2f5d1f;color:#fff;padding:18px 22px;border-radius:10px 10px 0 0;font-size:17px;font-weight:700">' + esc(brand) + ' — Business</div>' +
+    '<div style="background:#2f5d1f;color:#fff;padding:18px 22px;border-radius:10px 10px 0 0;font-size:17px;font-weight:700">' + logo + esc(brand) + ' — Business</div>' +
     '<div style="border:1px solid #e4e8e0;border-top:0;padding:22px;border-radius:0 0 10px 10px">' +
     '<h2 style="margin:0 0 12px;font-size:18px">' + esc(title) + '</h2>' +
     lines.map(function (l) { return '<p style="margin:0 0 10px;line-height:1.55;font-size:14px">' + esc(l) + '</p>'; }).join('') +

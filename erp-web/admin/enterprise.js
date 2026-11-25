@@ -1,4 +1,5 @@
-/* Business platform admin — Logos & Bills, and the AI Assistant.
+/* Business platform admin — My Work, Logos & Bills, and the AI Assistant.
+   My Work: each person's day from live data (approvals, money, cash, deliveries, manufacturing, stock).
    Logos & Bills: upload several logos and choose which one prints on bills (src/platform/branding.js).
    AI Assistant: answers questions from the business's own reports; switched off until a provider key
    is set in Hostinger and a Super Admin switches it on (src/modules/erp/assistant/service.js).
@@ -92,6 +93,80 @@
     }).catch(function (e) { box.appendChild(msg('err', e.message)); });
   }
 
+  // ── My Work: one page per person, from live data, showing only what their role covers ──
+  function money(n) { return '₹' + Number(n || 0).toLocaleString('en-IN', { maximumFractionDigits: 0 }); }
+  function count(n) { return String(n == null ? '—' : n); }
+  function mywork(main) {
+    var me = E.state.me || { roles: [] };
+    main.appendChild(el('h1', { text: 'My Work' }));
+    main.appendChild(el('p', { class: 'note', text: 'Today for ' + (me.name || 'you') + (me.roles && me.roles.length ? ' (' + me.roles.join(', ').replace(/_/g, ' ') + ')' : '') +
+      '. Figures are live; each card shows only what your role can open.' }));
+    var grid = el('div', { class: 'grid' }); main.appendChild(grid);
+    var details = el('div'); main.appendChild(details);
+    var shown = 0;
+    function card(title, perm, load) {
+      if (perm && !perm.some(E.has)) return;
+      shown++;
+      var body = el('div', {}, [el('p', { class: 'note', text: 'Loading…' })]);
+      grid.appendChild(el('section', { class: 'panel' }, [el('h2', { text: title }), body]));
+      load().then(function (kids) { body.replaceChildren.apply(body, kids); })
+        .catch(function (e) { body.replaceChildren(el('p', { class: 'note', text: e.status === 403 ? 'Not available for your role.' : 'Could not load: ' + e.message })); });
+    }
+    function line(label, value, go) {
+      return el('div', { class: 'row', style: 'justify-content:space-between;align-items:center' }, [el('span', { text: label }),
+        go ? el('button', { class: 'linkish', type: 'button', text: value, 'aria-label': label + ': ' + value + ', open', on: { click: function () { E.show(go); } } }) : el('strong', { text: value })]);
+    }
+    card('Waiting for your approval', ['core.approvals.view'], function () {
+      return E.api('GET', '/api/erp/core/approvals').then(function (r) {
+        var items = r.items || [];
+        if (items.length) details.appendChild(el('section', { class: 'panel' }, [el('h2', { text: 'Approvals waiting for you' }),
+          E.table(['Request', 'Reason', 'Asked by', 'When'], items.slice(0, 20).map(function (a) { return [a.type.replace(/^core\./, '').replace(/_/g, ' '), a.reason || '', a.requestedBy || '', fmt(a.requestedAt)]; }))]));
+        return [line('Requests', count(items.length), 'approvals')];
+      });
+    });
+    card('Money owed to you', ['finance.reports.view'], function () {
+      return E.api('GET', '/api/erp/finance/ageing').then(function (r) {
+        var t = r.totals || {};
+        var overdue = (t['1_30'] || 0) + (t['31_60'] || 0) + (t['61_90'] || 0) + (t['90_plus'] || 0);
+        var late = (r.parties || []).filter(function (p) { return (p.total || 0) - (p.current || 0) > 0; }).slice(0, 10);
+        if (late.length) details.appendChild(el('section', { class: 'panel' }, [el('h2', { text: 'Customers with overdue invoices' }),
+          E.table(['Customer', 'Overdue (₹)', '90+ days (₹)', 'Total open (₹)'], late.map(function (p) { return [p.party, money((p.total || 0) - (p.current || 0)), money(p['90_plus']), money(p.total)]; }))]));
+        return [line('Open', money(t.total), 'finance'), line('Overdue', money(overdue)), line('Over 90 days', money(t['90_plus']))];
+      });
+    });
+    card('Bills you owe suppliers', ['finance.reports.view'], function () {
+      return E.api('GET', '/api/erp/finance/ageing?side=payables').then(function (r) {
+        var t = r.totals || {};
+        return [line('Open', money(t.total), E.has('finance.payables.view') ? 'bills' : null), line('Past due', money((t['1_30'] || 0) + (t['31_60'] || 0) + (t['61_90'] || 0) + (t['90_plus'] || 0)))];
+      });
+    });
+    card('Field cash to confirm', ['sales.collections.confirm'], function () {
+      return E.api('GET', '/api/erp/sales/collections/pending').then(function (r) {
+        var items = r.items || [], sum = items.reduce(function (a, p) { return a + Number(p.amount || 0); }, 0);
+        return [line('Collections', count(items.length), 'collections'), line('Amount', money(sum))];
+      });
+    });
+    card('Deliveries today', ['deliveries.view', 'deliveries.manage'], function () {
+      return E.api('GET', '/api/erp/deliveries/summary').then(function (r) {
+        return [line('Open shipments', count(r.open), 'deliveryhub'), line('Late', count(r.late)), line('Delivered today', count(r.deliveredToday)), line('Packed, no shipment yet', count(r.waitingForShipment))];
+      });
+    });
+    card('Manufacturing', ['manufacturing.view'], function () {
+      return Promise.all([E.api('GET', '/api/erp/manufacturing/orders?status=open'), E.api('GET', '/api/erp/manufacturing/batches?status=submitted')]).then(function (x) {
+        return [line('Open production orders', count((x[0].items || []).length), 'manufacturing'), line('Batches waiting for quality release', count((x[1].items || []).length), 'quality')];
+      });
+    });
+    if (E.has('reports.export') && E.has('inventory.view')) card('Stock', null, function () {
+      return E.api('GET', '/api/erp/insights/stock').then(function (r) {
+        var c = r.counts || {};
+        return [line('Out of stock', count(c.outOfStock), 'insights'), line('Order now', count(c.orderNow)), line('Order soon', count(c.orderSoon))];
+      });
+    });
+    if (!shown) main.appendChild(el('p', { text: 'Your role has no business figures to show yet. ERP Home lists the pages you can open.' }));
+    main.appendChild(el('p', { class: 'note', text: 'Manufacturers and suppliers outside the company have their own dashboard in the supplier portal (sakeofhealth.com/vendor-portal/). Salesmen, delivery and event staff use the Field app.' }));
+  }
+
+  window.ERP_VIEWS.push({ id: 'mywork', label: 'My Work', perm: 'core.self.view', render: mywork });
   window.ERP_VIEWS.push({ id: 'branding', label: 'Logos & Bills', perm: 'core.settings.view', render: branding });
   window.ERP_VIEWS.push({ id: 'assistant', label: 'AI Assistant', perm: 'reports.export', render: assistant });
 })();

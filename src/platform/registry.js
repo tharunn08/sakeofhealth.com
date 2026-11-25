@@ -87,6 +87,7 @@ const PAGES = [
   ERP('insights', 'overview', 'insights', 'Smart Insights', 'analytics', 'reports.export'),
   ERP('assistant', 'overview', 'assistant', 'AI Assistant', 'analytics', 'reports.export'),
   ERP('erphome', 'business', 'erp', 'ERP Home', 'dashboard', 'core.self.view'),
+  ERP('mywork', 'business', 'my-work', 'My Work', 'dashboard', 'core.self.view'),
   ERP('salesdesk', 'sales', 'desk', 'Sales Desk', 'orders', 'sales.reports.view'),
   ERP('salesmen', 'sales', 'salesmen', 'Salesmen', 'staff', 'sales.reports.view'),
   // Delivery: dashboard, shop deliveries, trade deliveries, staff. The two delivery lists keep their

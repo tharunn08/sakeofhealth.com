@@ -30,6 +30,18 @@
     return svg;
   }
 
+  /** Drill-down: one product's figures, shown above its table. */
+  function detailPanel(holder, title, pairs, weeks) {
+    var big = weeks && weeks.length ? spark(weeks) : null;
+    if (big) { big.setAttribute('width', '320'); big.setAttribute('height', '80'); }
+    holder.replaceChildren(el('section', { class: 'panel', 'aria-live': 'polite' }, [
+      el('div', { class: 'row', style: 'justify-content:space-between' }, [el('h3', { text: title }), el('button', { class: 'linkish', type: 'button', text: 'Close', on: { click: function () { holder.replaceChildren(); } } })]),
+      big ? el('div', {}, [big, note('Units sold per week, oldest first; the last bar is this week.')]) : '',
+      el('dl', { class: 'kv' }, [].concat.apply([], pairs.filter(function (p) { return p[1] != null && p[1] !== ''; }).map(function (p) { return [el('dt', { text: p[0] }), el('dd', { text: String(p[1]) })]; })))]));
+    holder.scrollIntoView({ block: 'nearest' });
+  }
+  function opener(label, fn) { return el('button', { class: 'linkish', type: 'button', text: label, 'aria-label': 'Show details for ' + label, on: { click: fn } }); }
+
   function sources(list) {
     if (!list || !list.length) return null;
     return note('Data used: ' + list.map(function (s) { return s.name + (s.included ? '' : ' (not available)'); }).join(' · ') +
@@ -66,13 +78,18 @@
     if (!has('sales.reports.view')) { body.appendChild(note('Your role cannot see sales figures.')); return; }
     var box = el('div'); body.appendChild(box); loading(box);
     api('GET', I + '/forecast').then(function (f) {
+      var drill = el('div');
       var rows = f.items.map(function (p) {
         var t = TREND[p.trend] || [p.trend, ''];
-        return [p.name + ' (' + p.sku + ')', spark(p.lastWeeks), num(p.perWeek), String(p.forecast30), p.forecastLow + '–' + p.forecastHigh,
+        var open = function () { detailPanel(drill, p.name + ' (' + p.sku + ')', [['Sold per week now', num(p.perWeek)], ['Sold in the last 26 weeks', p.sold26Weeks],
+          ['Next 30 days', p.forecast30], ['Likely range', p.forecastLow + '–' + p.forecastHigh], ['Trend', t[0] + (p.changePct == null ? '' : ' (' + (p.changePct > 0 ? '+' : '') + p.changePct + '%)')],
+          ['Confidence', CONF[p.confidence] || p.confidence]], p.lastWeeks); };
+        return [opener(p.name + ' (' + p.sku + ')', open), spark(p.lastWeeks), num(p.perWeek), String(p.forecast30), p.forecastLow + '–' + p.forecastHigh,
           el('span', {}, [tag(t[0], t[1]), p.changePct == null ? '' : ' ' + (p.changePct > 0 ? '+' : '') + p.changePct + '%']), CONF[p.confidence] || p.confidence];
       });
       box.replaceChildren(section('Sales forecast — next 30 days', [
         note('Expected units per product, from the last ' + f.defaults.weeksOfHistory + ' weeks of sales (trend-adjusted). The range covers about 8 in 10 outcomes. Confidence is low when there are few weeks of sales or sales jump around.'),
+        note('Click a product for its details. Search or click a heading to sort.'), drill,
         table(['Product', 'Last 8 weeks', 'Per week now', 'Next 30 days', 'Likely range', 'Trend', 'Confidence'], rows),
         f.notSelling ? note(f.notSelling + ' active product' + (f.notSelling === 1 ? ' has' : 's have') + ' no sales in the last ' + f.defaults.weeksOfHistory + ' weeks and ' + (f.notSelling === 1 ? 'is' : 'are') + ' not listed.') : '',
         sources(f.sources) || '']));
@@ -84,10 +101,13 @@
     if (!has('inventory.view')) { body.appendChild(note('Your role cannot see stock.')); return; }
     var box = el('div'); body.appendChild(box); loading(box);
     api('GET', I + '/stock').then(function (s) {
-      var c = s.counts;
+      var c = s.counts, drill = el('div');
       var rows = s.items.map(function (p) {
         var st = STATUS[p.status] || [p.status, ''];
-        return [p.name + ' (' + p.sku + ')', tag(st[0], st[1]), String(p.available), p.daysOfCover == null ? '—' : num(p.daysOfCover) + ' days',
+        var open = function () { detailPanel(drill, p.name + ' (' + p.sku + ')', [['Status', st[0]], ['Available now', p.available], ['In transit', p.inTransit], ['On order', p.onOrder],
+          ['Lasts', p.daysOfCover == null ? null : num(p.daysOfCover) + ' days'], ['Runs out on', p.stockOutDate], ['Sold per week now', p.perWeek == null ? null : num(p.perWeek)],
+          ['Lead time', p.leadDays + ' days' + (p.leadDaysAssumed ? ' (assumed)' : '')], ['Reorder point', p.reorderPoint], ['Safety stock', p.safetyStock], ['Suggested order', p.orderQty || null]], p.lastWeeks); };
+        return [opener(p.name + ' (' + p.sku + ')', open), tag(st[0], st[1]), String(p.available), p.daysOfCover == null ? '—' : num(p.daysOfCover) + ' days',
           p.stockOutDate || '—', String(p.inTransit + p.onOrder), p.leadDays + ' days' + (p.leadDaysAssumed ? ' (assumed)' : ''), p.orderQty ? String(p.orderQty) : '—'];
       });
       box.replaceChildren(
@@ -96,6 +116,7 @@
           note('Stock in company warehouses (available minus reserved) against the forecast. "Order now" means the stock runs out before a new delivery could arrive. ' +
             'Suggested quantity = demand over the lead time + ' + s.defaults.coverDays + ' days, plus safety stock, minus what is in stock, in transit or already on order; rounded up to whole cases. ' +
             'Lead time comes from approved supplier products, otherwise ' + s.defaults.leadDays + ' days is assumed.'),
+          note('Click a product for its details; type "Order now" in the search box to see only those.'), drill,
           table(['Product', 'Status', 'Available', 'Lasts', 'Runs out on', 'Coming in', 'Lead time', 'Suggested order'], rows),
           note('To act on a suggestion, raise a purchase requisition under Procurement & Suppliers → Purchasing.')]));
     }).catch(err(box));

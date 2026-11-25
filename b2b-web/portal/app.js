@@ -111,11 +111,11 @@
 
   function renderShell(active, title) {
     var a = S.me.account, items = nav();
-    $('#side').innerHTML = '<div class="side-brand"><b>Sake of Health</b><span>Business portal</span></div><nav class="side-nav">' + items.map(function (i) {
+    $('#side').innerHTML = '<div class="side-brand"><img class="brand-logo" src="/assets/images/logo-mark.svg" alt=""><b>Sake of Health</b><span>Business portal</span></div><nav class="side-nav">' + items.map(function (i) {
       if (i.sep) return '<div class="sep">' + esc(i.sep) + '</div>';
       return '<a href="/b2b/' + i.path + '" data-link class="' + (i.path === active ? 'on' : '') + '">' + icon(i.icon) + '<span>' + esc(i.label) + '</span>' + (i.count === 'cart' && S.cartCount ? '<span class="count">' + S.cartCount + '</span>' : '') + '</a>'; }).join('') +
       '</nav><div class="side-foot"><b>' + esc(a.shop_name || a.business_name) + '</b><span>' + esc(a.account_type) + ' · ' + esc(a.city) + '</span></div>';
-    $('#top').innerHTML = '<a class="top-brand" href="/b2b/dashboard" data-link>Sake of Health<small>' + esc(a.account_type) + ' portal</small></a><div class="top-title">' + esc(title) + '</div>' +
+    $('#top').innerHTML = '<a class="top-brand" href="/b2b/dashboard" data-link><img class="brand-logo sm" src="/assets/images/logo-mark.svg" alt="">Sake of Health<small>' + esc(a.account_type) + ' portal</small></a><div class="top-title">' + esc(title) + '</div>' +
       (approved() ? '<a class="icon-btn" href="/b2b/notifications" data-link aria-label="Notifications">' + icon('bell') + (S.me.unreadNotifications ? '<span class="dot">' + Math.min(99, S.me.unreadNotifications) + '</span>' : '') + '</a>' +
         '<a class="icon-btn" href="/b2b/cart" data-link aria-label="Cart">' + icon('cart') + (S.cartCount ? '<span class="dot">' + S.cartCount + '</span>' : '') + '</a>' : '');
     var bots = items.filter(function (i) { return i.bot; }).slice(0, 5);

@@ -59,7 +59,9 @@ function siteUrl() { return (process.env.PUBLIC_SITE_URL || process.env.SITE_URL
 const escHtml = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
 
 function mail(name, link) {
-  const html = '<p>Hello ' + escHtml(name || '') + ',</p>' +
+  const site = siteUrl();
+  const html = (/^https:\/\//.test(site) ? '<p><img src="' + escHtml(site + '/assets/images/logo-mark.png') + '" alt="Sake of Health" width="40" height="46"></p>' : '') +
+    '<p>Hello ' + escHtml(name || '') + ',</p>' +
     '<p>Someone asked to reset the password for your Sake of Health business account. If it was you, open this link within 30 minutes:</p>' +
     '<p><a href="' + escHtml(link) + '">Choose a new password</a></p>' +
     '<p>The link works once. If you did not ask for this, ignore this e-mail: your password stays the same.</p>' +
