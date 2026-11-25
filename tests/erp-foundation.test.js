@@ -195,11 +195,21 @@ test('jobs: retries with back-off, then fails and raises a monitoring event; ded
   const j = await jobs.enqueue(null, 'test.flaky', {}, { maxAttempts: 2, dedupeKey: 'flaky-1' });
   assert.ok(j.jobId);
   assert.equal((await jobs.enqueue(null, 'test.flaky', {}, { dedupeKey: 'flaky-1' })).duplicate, true);
-  // runDue skips while another run in this process is still going (a timer may have started one): retry until it runs.
-  const runNow = async function () { for (let i = 0; i < 100; i++) { const r = await jobs.runDue(10); if (!r.skipped) return r; await new Promise((ok) => setTimeout(ok, 50)); } throw new Error('runDue never ran'); };
-  const r1 = await runNow();
+  // runDue takes at most a batch of due jobs, oldest first, and skips while another run in this process is going;
+  // jobs left by earlier tests can fill a batch. Run until this job has had the expected number of attempts.
+  const runUntil = async function (attempts) {
+    let last = null;
+    for (let i = 0; i < 40; i++) {
+      const r = await jobs.runDue(50);
+      if (!r.skipped) last = r;
+      if (Number((await db.queryOne('SELECT attempts FROM b2b_jobs WHERE id = ?', [j.jobId])).attempts) >= attempts) return last;
+      await new Promise((ok) => setTimeout(ok, 50));
+    }
+    throw new Error('the job never reached attempt ' + attempts);
+  };
+  const r1 = await runUntil(1);
   await db.query('UPDATE b2b_jobs SET run_after = UTC_TIMESTAMP() - INTERVAL 1 SECOND WHERE id = ?', [j.jobId]);   // skip the back-off wait
-  const r2 = await runNow();
+  const r2 = await runUntil(2);
   const row = await db.queryOne('SELECT status, attempts, max_attempts, last_error, run_after, UTC_TIMESTAMP() AS now FROM b2b_jobs WHERE id = ?', [j.jobId]);
   assert.equal(row.status, 'failed', JSON.stringify({ row: row, r1: r1, r2: r2, calls: calls })); assert.equal(Number(row.attempts), 2); assert.equal(calls, 2);
   assert.ok(await db.queryOne("SELECT id FROM b2b_monitor_events WHERE code = 'job_failed' AND ref_id = ?", [String(j.jobId)]));
