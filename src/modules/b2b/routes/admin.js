@@ -373,7 +373,13 @@ router.get('/export/:name', h(async function (req, res) {
 
 /* ═════════════ Settings, audit, notifications ═════════════ */
 
-router.get('/settings', can('b2b.settings.view', 'b2b.pricing.view'), h(async function (req, res) { res.json({ settings: await settings.all() }); }));
+// Trade settings only: the back office's own security, logo and assistant settings are not shown here.
+const NOT_TRADE = /^(security|branding|ai)\./;
+router.get('/settings', can('b2b.settings.view', 'b2b.pricing.view'), h(async function (req, res) {
+  const all = await settings.all();
+  Object.keys(all).forEach(function (k) { if (NOT_TRADE.test(k)) delete all[k]; });
+  res.json({ settings: all });
+}));
 router.put('/settings', h(async function (req, res) {
   const body = req.body || {}, role = req.admin.role;
   const keys = Object.keys(body);

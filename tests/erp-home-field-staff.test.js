@@ -60,13 +60,13 @@ test('ERP Home: explains ERP; a Super Admin sees every module, delivery staff on
   const all = renderHome(new Set(ref.roles.find((r) => r.code === 'super_admin').permissions));
   assert.deepEqual([all.view.id, all.view.perm], ['erphome', 'core.self.view']);
   assert.match(all.text, /What is ERP\? ERP \(Enterprise Resource Planning\) is the business side of Sake of Health/);
-  assert.match(all.text, /Your role can open 35 of the 35 ERP modules/);
-  assert.equal(all.buttons.length, 35);
+  assert.match(all.text, /Your role can open 36 of the 36 ERP modules/);
+  assert.equal(all.buttons.length, 36);
   all.buttons.find((b) => b.attrs['aria-label'] === 'Open Stock & Batches').onclick();
   assert.deepEqual(all.shown, ['stock']);
   const del = renderHome(new Set(ref.roles.find((r) => r.code === 'delivery_staff').permissions));
-  assert.match(del.text, /Your role can open 1 of the 35 ERP modules/);
-  assert.deepEqual(del.buttons.map((b) => b.attrs['aria-label']), ['Open My Password & 2FA']);
+  assert.match(del.text, /Your role can open 2 of the 36 ERP modules/);
+  assert.deepEqual(del.buttons.map((b) => b.attrs['aria-label']), ['Open My Work', 'Open My Password & 2FA']);
   assert.match(del.text, /Field app on their phone: sakeofhealth\.com\/sales-app\//);
 });
 

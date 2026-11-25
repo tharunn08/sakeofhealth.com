@@ -48,3 +48,8 @@ input[type=checkbox]{width:20px;height:20px;padding:0}
 .dash .stops{padding-left:20px;margin:6px 0}
 .dash .stops li{padding:3px 0}
 .dash .stops li.done{color:#15803d}
+.brandbar{display:flex;align-items:center;gap:10px;padding:10px 20px;background:#fff;border-bottom:1px solid #e3e7ea}
+.brandbar img{width:28px;height:32px;object-fit:contain}
+.brandbar b{font-size:15px}
+.brandbar span{color:#5b6b5e;font-size:13px}
+.brandbar ~ #app .login{margin-top:8vh}
