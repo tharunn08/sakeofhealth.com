@@ -74,14 +74,32 @@ async function me(principal, sm) {
   };
 }
 
+/** An order the buyer still owes money on (same rule as the B2B outstanding report, without orders that never went ahead). */
+const OWED_SQL = "status NOT IN ('cancelled','rejected','refunded','draft','pending_otp','otp_expired') AND payment_status IN ('pending','partial')";
+
 async function retailers(principal, sm, q) {
   const where = ["a.account_type = 'retailer'"], params = [];
   const t = territories(principal, sm);
   if (t) { if (!t.length) where.push('1=0'); else { where.push('a.territory_id IN (' + db.placeholders(t) + ')'); params.push.apply(params, t); } }
   if (q.q) { const s = '%' + String(q.q).replace(/[\\%_]/g, '\\$&').slice(0, 60) + '%'; where.push('(a.business_name LIKE ? OR a.shop_name LIKE ? OR a.mobile LIKE ? OR a.pincode LIKE ?)'); params.push(s, s, s, s); }
   if (q.beatId) { where.push('a.id IN (SELECT account_id FROM b2b_beat_stops WHERE beat_id = ?)'); params.push(posId(q.beatId)); }
-  return { items: await db.query('SELECT a.id, a.business_name, a.shop_name, a.contact_person, a.mobile, a.city, a.pincode, a.status, a.latitude, a.longitude, a.territory_id FROM b2b_accounts a WHERE ' +
-    where.join(' AND ') + ' ORDER BY a.business_name LIMIT ' + db.int(q.limit, 100, 1, 500), params) };
+  const items = await db.query('SELECT a.id, a.business_name, a.shop_name, a.contact_person, a.mobile, a.city, a.pincode, a.status, a.latitude, a.longitude, a.territory_id FROM b2b_accounts a WHERE ' +
+    where.join(' AND ') + ' ORDER BY a.business_name LIMIT ' + db.int(q.limit, 100, 1, 500), params);
+  if (items.length) {
+    // for the shop list in the field app: when it last ordered, when it was last visited, what it still owes
+    const ids = items.map(function (a) { return a.id; });
+    const ord = await db.query('SELECT buyer_account_id AS id, MAX(created_at) AS last_order_at, COALESCE(SUM(CASE WHEN ' + OWED_SQL + ' THEN grand_total - amount_paid ELSE 0 END), 0) AS due ' +
+      'FROM b2b_orders WHERE buyer_account_id IN (' + db.placeholders(ids) + ") AND status NOT IN ('pending_otp','otp_expired','cancelled','rejected','draft') GROUP BY buyer_account_id", ids);
+    const vis = await db.query('SELECT account_id AS id, MAX(checked_in_at) AS last_visit_at FROM b2b_visits WHERE account_id IN (' + db.placeholders(ids) + ') GROUP BY account_id', ids);
+    const o = {}, w = {};
+    ord.forEach(function (r) { o[r.id] = r; }); vis.forEach(function (r) { w[r.id] = r; });
+    items.forEach(function (a) {
+      a.last_order_at = o[a.id] ? o[a.id].last_order_at : null;
+      a.due = o[a.id] ? Number(Number(o[a.id].due).toFixed(2)) : 0;
+      a.last_visit_at = w[a.id] ? w[a.id].last_visit_at : null;
+    });
+  }
+  return { items: items };
 }
 
 /** A retailer registered by a salesman: pending, reviewed by the same B2B admin approval as self-registration. */
@@ -124,7 +142,10 @@ async function catalogue(principal, sm, q) {
   const avail = seller.type === 'company' ? await inventory.availability(products.map(function (p) { return Number(p.id); }), (await inventory.companyWarehouses()).map(function (w) { return Number(w.id); })) : null;
   return { seller: seller.type, items: qd.lines.map(function (l) {
     return { productId: Number(l.product.id), sku: l.product.sku, name: l.product.name, mrp: l.product.mrp, moq: l.product.moq, caseQty: l.product.case_qty,
-      unitPriceExGst: b2bMoney.fromPaise(l.price.unitPrice), gstRate: l.product.gst_rate, available: avail ? (avail[l.product.id] || 0) : null, problem: l.problem };
+      unitPriceExGst: b2bMoney.fromPaise(l.price.unitPrice), gstRate: l.product.gst_rate, available: avail ? (avail[l.product.id] || 0) : null, problem: l.problem,
+      brand: l.product.brand || null, packSize: l.product.pack_size || null, categoryId: l.product.category_id == null ? null : Number(l.product.category_id),
+      // only pictures served by this site (the app's content policy blocks other hosts anyway)
+      image: /^\/[^/]/.test(String(l.product.image_url || '')) ? l.product.image_url : null };
   }) };
 }
 
@@ -366,7 +387,7 @@ async function checkIn(tx, actor, principal, sm, b) {
   if (lat && lng && a.latitude != null) dist = Math.round(require('../../b2b/mappings/service.js').haversineKm(Number(lat), Number(lng), Number(a.latitude), Number(a.longitude)) * 1000);
   const outcome = b.outcome && ['order', 'no_order', 'shop_closed', 'collection_only', 'new_registration'].indexOf(b.outcome) !== -1 ? b.outcome : null;
   const r = await tx.query('INSERT INTO b2b_visits (salesman_id, account_id, beat_id, checked_in_at, lat, lng, distance_m, outcome, note, client_uuid) VALUES (?, ?, ?, UTC_TIMESTAMP(), ?, ?, ?, ?, ?, ?)',
-    [sm.id, a.id, posId(b.beatId) || null, lat, lng, dist, outcome, v.text(b.note, 255) || null, uuid]);
+    [sm.id, a.id, posId(b.beatId) || null, lat, lng, dist, outcome, v.text(b.note, 500) || null, uuid]);
   return { visitId: Number(r.insertId), distanceFromShopM: dist, flagged: dist != null && dist > 300 ? 'more than 300 m from the saved shop location' : null };
 }
 
@@ -422,4 +443,4 @@ async function addSalesman(tx, actor, b) {
   } catch (e) { if (e.code === 'ER_DUP_ENTRY') throw fail(409, 'Already a salesman or employee code in use'); throw e; }
 }
 
-module.exports = { buildOrder, continueOrder, requireSalesman, me, retailers, registerRetailer, catalogue, createOrder, resend, verify, requestOverride, expireHolds, checkIn, collect, confirmHandover, addSalesman, otpHash };
+module.exports = { OWED_SQL, buildOrder, continueOrder, requireSalesman, retailerInScope, territories, me, retailers, registerRetailer, catalogue, createOrder, resend, verify, requestOverride, expireHolds, checkIn, collect, confirmHandover, addSalesman, otpHash };
