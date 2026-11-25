@@ -61,8 +61,14 @@ test('migration 004: tables, added columns, idempotent re-run', async () => {
   assert.match(e.t, /'pending','sending','sent','failed','skipped_no_provider'/);
   assert.equal((await migrate.up()).applied.length, 0, 'second run applies nothing');
   const m4 = require('../src/db/migrations/004_core_governance.js');
-  const again = await db.withConnection(function (conn) { return m4.up(conn); });
-  assert.equal(again.applied, 0, 'guarded changes are all skipped on a re-run');
+  // Run on its own again, 004 either skips every change or — because migration 016 since added values to an
+  // enum it created — refuses to shrink that enum. Either way nothing is changed.
+  const before = (await db.queryOne("SELECT COLUMN_TYPE AS t FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'b2b_notification_queue' AND COLUMN_NAME = 'status'")).t;
+  let again = null, refused = null;
+  try { again = await db.withConnection(function (conn) { return m4.up(conn); }); } catch (e) { refused = e; }
+  if (refused) assert.match(refused.message, /^Refused: extendEnum b2b_notification_queue\.status/, 'only the enum guard may refuse');
+  else assert.equal(again.applied, 0, 'guarded changes are all skipped on a re-run');
+  assert.equal((await db.queryOne("SELECT COLUMN_TYPE AS t FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'b2b_notification_queue' AND COLUMN_NAME = 'status'")).t, before, 'enum unchanged');
   assert.equal((await migrate.verify()).ok, true);
 });
 
@@ -189,9 +195,11 @@ test('jobs: retries with back-off, then fails and raises a monitoring event; ded
   const j = await jobs.enqueue(null, 'test.flaky', {}, { maxAttempts: 2, dedupeKey: 'flaky-1' });
   assert.ok(j.jobId);
   assert.equal((await jobs.enqueue(null, 'test.flaky', {}, { dedupeKey: 'flaky-1' })).duplicate, true);
-  await jobs.runDue(10);
-  await db.query('UPDATE b2b_jobs SET run_after = UTC_TIMESTAMP() WHERE id = ?', [j.jobId]);   // skip the back-off wait
-  await jobs.runDue(10);
+  // runDue skips while another run in this process is still going (a timer may have started one): retry until it runs.
+  const runNow = async function () { for (let i = 0; i < 100; i++) { const r = await jobs.runDue(10); if (!r.skipped) return r; await new Promise((ok) => setTimeout(ok, 50)); } throw new Error('runDue never ran'); };
+  await runNow();
+  await db.query('UPDATE b2b_jobs SET run_after = UTC_TIMESTAMP() - INTERVAL 1 SECOND WHERE id = ?', [j.jobId]);   // skip the back-off wait
+  await runNow();
   const row = await db.queryOne('SELECT status, attempts, last_error FROM b2b_jobs WHERE id = ?', [j.jobId]);
   assert.equal(row.status, 'failed'); assert.equal(Number(row.attempts), 2); assert.equal(calls, 2);
   assert.ok(await db.queryOne("SELECT id FROM b2b_monitor_events WHERE code = 'job_failed' AND ref_id = ?", [String(j.jobId)]));

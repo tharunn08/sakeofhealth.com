@@ -173,7 +173,7 @@ async function sell(tx, actor, principal, b) {
     want[pid].qty += qty; want[pid].discount = r2(want[pid].discount + d);
   });
   const ids = Object.keys(want).map(Number).sort(function (a, z) { return a - z; });
-  const prods = await tx.query("SELECT id, sku, name, hsn_code, gst_rate, mrp, status FROM b2b_products WHERE id IN (" + db.placeholders(ids) + ')', ids);
+  const prods = await tx.query("SELECT id, sku, name, hsn_code, gst_rate, mrp, is_active FROM b2b_products WHERE id IN (" + db.placeholders(ids) + ')', ids);
   const byId = {}; prods.forEach(function (p) { byId[Number(p.id)] = p; });
   ids.forEach(function (pid) { need(byId[pid], 'Unknown product ' + pid, 'unknown_product'); need(Number(byId[pid].mrp) > 0, byId[pid].name + ' has no price (MRP)', 'no_price'); });
   // stock under lock, all lines first (nothing is half-sold)
