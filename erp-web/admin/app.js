@@ -433,12 +433,31 @@
       .catch(function (e) { siteBox.appendChild(msg('err', e.message)); });
 
     // Own authenticator: set up once; asked for at sign-in only where the policy applies to this person.
+    // Backup codes: 10 one-time codes for a lost phone, shown once when made.
+    function drawBackup() {
+      var box = el('div', { class: 'panel' }, [el('h3', { text: 'Backup codes' })]);
+      mfaBox.appendChild(box);
+      api('GET', '/me/recovery-codes').then(function (rc) {
+        box.appendChild(el('p', { class: 'note', text: rc.left
+          ? rc.left + ' unused backup codes (made ' + fmt(rc.createdAt) + '). Each works once, instead of the 6-digit code, if your phone is lost.'
+          : 'No backup codes yet. Make a set and keep it on paper, away from your phone.' }));
+        var out = el('div');
+        box.appendChild(el('button', { class: 'btn', type: 'button', text: rc.left ? 'Make a new set (the old codes stop working)' : 'Make backup codes', on: { click: function () {
+          api('POST', '/me/recovery-codes').then(function (r) {
+            out.replaceChildren(el('p', { text: 'Write these down or print this page now. They are shown only once.' }),
+              el('pre', { text: r.codes.join('\n'), style: 'font-size:16px;letter-spacing:1px' }));
+          }).catch(function (e) { out.replaceChildren(msg('err', e.status === 403 ? 'Sign out and sign in again with your 6-digit code first.' : e.message)); });
+        } } }));
+        box.appendChild(out);
+      }).catch(function (e) { box.appendChild(msg('err', e.message)); });
+    }
     function drawOwn(st) {
-      if (state.me.mfa) { mfaBox.appendChild(msg('ok', 'On: you signed in with your 6-digit code.')); return; }
+      if (state.me.mfa) { mfaBox.appendChild(msg('ok', 'On: you signed in with your 6-digit code.')); drawBackup(); return; }
       if (st.ownAuthenticator) {
         mfaBox.appendChild(el('p', { class: 'note', text: st.appliesToMe
           ? 'Your authenticator is set up. Sign out and sign in again with your 6-digit code to approve or change sensitive settings.'
           : 'Your authenticator is set up. It is not asked for while two-step sign-in does not apply to your role.' }));
+        drawBackup();
         return;
       }
       mfaBox.appendChild(el('p', { class: 'note', text: 'Set up an authenticator app on your phone. It is needed before two-step sign-in can be switched on for a role you hold.' }));

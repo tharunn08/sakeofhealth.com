@@ -66,6 +66,13 @@ r.put('/security/role-assignment', can('core.settings.edit'), h(async function (
   res.json(await tx(req, function (t, a) { return rolePolicy.set(t, a, { mode: req.body.mode, approvalRoles: req.body.approvalRoles || [] }, req.body.reason); }));
 }));
 r.post('/me/mfa/setup', h(async function (req, res) { res.json(await staff.mfaSetup(req.erp)); }));
+// Backup codes: how many are left, and a new set (shown once; needs a code-checked session where 2FA applies).
+const recoveryCodes = require('../core/recovery-codes.js');
+r.get('/me/recovery-codes', h(async function (req, res) { res.json(await recoveryCodes.status(req.erp.id)); }));
+r.post('/me/recovery-codes', can('core.self.view', { mfa: true }), h(async function (req, res) {
+  res.setHeader('Cache-Control', 'no-store');
+  res.json(await tx(req, function (t, a) { return recoveryCodes.generate(t, a, req.erp.id); }));
+}));
 r.post('/me/mfa/enable', h(async function (req, res) {
   res.json(await tx(req, function (t, a) { return staff.mfaEnable(t, req.erp, a, req.body.code); }));
 }));

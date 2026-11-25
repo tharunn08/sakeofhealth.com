@@ -35,8 +35,10 @@ async function changeEverywhere(input, opts) {
       if (!s || s.status !== 'active' || !sec.verifyPassword(current, s.password_hash)) return;
       const mfaPolicy = require('../modules/erp/core/mfa-policy.js');
       if (Number(s.mfa_enabled) === 1 && await mfaPolicy.requiredForStaff(sql, s.id)) {
+        const recovery = require('../modules/erp/core/recovery-codes.js');
         const secret = sec.decrypt(s.mfa_secret_enc);
-        if (!input.totp || !secret || !sec.verifyTotp(secret, input.totp)) { needCode = true; return; }
+        const ok = input.totp && (recovery.looksLikeCode(input.totp) ? await recovery.consume(s.id, input.totp) : (!!secret && sec.verifyTotp(secret, input.totp)));
+        if (!ok) { needCode = true; return; }
       }
       await sql.query('UPDATE b2b_staff SET password_hash = ?, token_version = token_version + 1 WHERE id = ?', [sec.hashPassword(next), s.id]);
       await mustChange.clear('staff', s.id);

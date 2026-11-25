@@ -134,6 +134,7 @@ async function resetMfa(tx, actor, principal, staffId, reason) {
   if (held.indexOf('super_admin') !== -1 && principal.roles.indexOf('super_admin') === -1) throw fail(403, 'Only a Super Admin can clear a Super Admin\'s two-step sign-in');
   if (Number(s.mfa_enabled) !== 1) throw fail(409, 'This person has no authenticator set up');
   await tx.query('UPDATE b2b_staff SET mfa_enabled = 0, mfa_secret_enc = NULL, token_version = token_version + 1 WHERE id = ?', [staffId]);
+  await require('./recovery-codes.js').clear(tx, staffId);   // the old backup codes go with the old authenticator
   await audit.write(tx, actor, { module: 'core', action: 'security.mfa_reset', entity: 'staff', entityId: staffId, old: { mfa: true }, new: { mfa: false }, reason: String(reason).slice(0, 500) });
   return { ok: true, name: s.name };
 }

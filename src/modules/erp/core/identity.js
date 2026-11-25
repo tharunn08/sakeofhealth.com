@@ -44,8 +44,9 @@ async function login(email, password, totp, ctx, opts) {
   // The code is checked only where two-step sign-in applies to this person (mfa-policy.js).
   const codeChecked = okPassword && Number(s.mfa_enabled) === 1 && await mfaPolicy.requiredForStaff(db, s.id);
   if (codeChecked) {
-    const secret = security.decrypt(s.mfa_secret_enc);
-    okTotp = !!secret && security.verifyTotp(secret, totp);
+    const recovery = require('./recovery-codes.js');
+    if (recovery.looksLikeCode(totp)) okTotp = await recovery.consume(s.id, totp);   // a one-time backup code (lost phone)
+    else { const secret = security.decrypt(s.mfa_secret_enc); okTotp = !!secret && security.verifyTotp(secret, totp); }
     if (!totp) throw fail(401, 'Enter the 6-digit code from your authenticator app', 'mfa_required');
   }
   if (!okPassword || !okTotp) {
