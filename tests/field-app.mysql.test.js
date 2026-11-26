@@ -152,7 +152,7 @@ test('deliveries: open ones carry what the buyer still owes; "done" lists the dr
 });
 
 test('first sign-in with a temporary password: blocked until the person chooses their own, then the salesman screens open', async () => {
-  const p = await c.person('newsales', [{ code: 'salesman', scopeType: 'territory', scopeId: S.t1 }]);
+  const p = await c.person('newsales', [{ code: 'salesman', scopeType: 'territory', scopeId: S.t1 }], { mfa: false });   // a new person has no authenticator yet
   await c.db.query('INSERT INTO b2b_salesmen (staff_id, employee_code, home_territory_id, cash_limit, is_active) VALUES (?, ?, ?, 5000, 1)', [p.id, 'SM-09', S.t1]);
   await c.db.query('UPDATE b2b_staff SET must_change_password = 1 WHERE id = ?', [p.id]);   // as the office's "add staff" leaves it
   const first = await s.post('/api/erp/core/login', { email: p.email, password: p.pw });
