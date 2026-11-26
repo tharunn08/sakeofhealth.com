@@ -150,3 +150,22 @@ test('deliveries: open ones carry what the buyer still owes; "done" lists the dr
   const other = await c.person('driver2', ['delivery_staff']);
   assert.equal((await s.get('/api/erp/deliveries?status=done&days=60', other.h)).data.items.length, 0, 'only their own');
 });
+
+test('first sign-in with a temporary password: blocked until the person chooses their own, then the salesman screens open', async () => {
+  const p = await c.person('newsales', [{ code: 'salesman', scopeType: 'territory', scopeId: S.t1 }]);
+  await c.db.query('INSERT INTO b2b_salesmen (staff_id, employee_code, home_territory_id, cash_limit, is_active) VALUES (?, ?, ?, 5000, 1)', [p.id, 'SM-09', S.t1]);
+  await c.db.query('UPDATE b2b_staff SET must_change_password = 1 WHERE id = ?', [p.id]);   // as the office's "add staff" leaves it
+  const first = await s.post('/api/erp/core/login', { email: p.email, password: p.pw });
+  assert.equal(first.status, 200); assert.equal(first.data.mustChangePassword, true);
+  const h = { Authorization: 'Bearer ' + first.data.token };
+  const blocked = await s.get('/api/sales/me', h);
+  assert.equal(blocked.status, 403); assert.equal(blocked.data.code, 'password_change_required', 'the app shows the choose-a-password step, not "not a salesman"');
+  assert.equal((await s.get('/api/erp/core/me', h)).status, 200, 'who am I still works');
+  const ch = await s.post('/api/erp/core/me/password', { currentPassword: p.pw, newPassword: 'Chosen-by-me-2026' }, h);
+  assert.equal(ch.status, 200, JSON.stringify(ch.data)); assert.equal(ch.data.reLogin, true);
+  assert.equal((await s.get('/api/sales/me', h)).status, 401, 'the temporary session ended');
+  const again = await s.post('/api/erp/core/login', { email: p.email, password: 'Chosen-by-me-2026' });
+  assert.equal(again.status, 200); assert.equal(again.data.mustChangePassword, false);
+  const me = await s.get('/api/sales/me', { Authorization: 'Bearer ' + again.data.token });
+  assert.equal(me.status, 200, JSON.stringify(me.data)); assert.equal(me.data.salesman.employeeCode, 'SM-09');
+});
