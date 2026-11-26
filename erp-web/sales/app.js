@@ -72,6 +72,11 @@
     return fetch(url, { method: method, headers: h, body: body ? JSON.stringify(body) : undefined }).then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (j) {
         if (r.status === 401 && !/login$/.test(url)) logout();
+        if (j.code === 'password_change_required' && !/\/me\/password$/.test(url)) {   // a temporary password not yet replaced: back to sign-in, which asks for a new one
+          token = null; try { sessionStorage.removeItem('sales.token'); } catch (x) { /* */ }
+          if (location.hash) history.replaceState(null, '', location.pathname);
+          who.ready = false; root.replaceChildren(login('Sign in again with your temporary password to choose your own.'));
+        }
         if (!r.ok) { var e = new Error(j.error || 'Request failed'); e.code = j.code; e.data = j; e.status = r.status; throw e; }
         return j;
       });
@@ -297,16 +302,40 @@
   ['online', 'offline'].forEach(function (ev) { window.addEventListener(ev, function () { queueViews.forEach(function (f) { f(); }); }); });
 
   // ───────────────────────── sign-in, queue, location ─────────────────────────
-  function login(error) {
-    var e = el('input', { type: 'email', autocomplete: 'username', inputmode: 'email' }), p = el('input', { type: 'password', autocomplete: 'current-password' }), c = el('input', { inputmode: 'numeric', autocomplete: 'one-time-code', placeholder: 'only if asked', maxlength: '9' });
+  function keep(t) { token = t; try { sessionStorage.setItem('sales.token', t); } catch (x) { /* */ } }
+  function login(error, email) {
+    var e = el('input', { type: 'email', autocomplete: 'username', inputmode: 'email', value: email || '' }), p = el('input', { type: 'password', autocomplete: 'current-password' }), c = el('input', { inputmode: 'numeric', autocomplete: 'one-time-code', placeholder: 'only if asked', maxlength: '9' });
     var go1 = function () {
-      api('POST', '/api/erp/core/login', { email: e.value, password: p.value, totp: c.value || undefined }).then(function (r) { token = r.token; try { sessionStorage.setItem('sales.token', r.token); } catch (x) { /* */ } start(); })
-        .catch(function (x) { root.replaceChildren(login(x.message)); });
+      var mail = e.value.trim();
+      api('POST', '/api/erp/core/login', { email: mail, password: p.value, totp: c.value || undefined }).then(function (r) {
+        keep(r.token);
+        // a new account (or a password reset by the office) starts with a temporary password: choose your own first
+        if (r.mustChangePassword) { root.replaceChildren(newPassword(mail, p.value)); return; }
+        start();
+      }).catch(function (x) { root.replaceChildren(login(x.message, mail)); });
     };
     p.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') go1(); });
-    return el('div', { class: 'card login' }, [el('h1', { text: 'Field app' }), el('p', { class: 'muted', text: 'For salesmen, delivery staff and event counters. Sign in with your staff account.' }),
+    return el('div', { class: 'card login' }, [el('h1', { text: 'Field app' }), el('p', { class: 'muted', text: 'For salesmen, delivery staff and event counters. Sign in with your staff account (the one the office made for you), not a shop customer account.' }),
       error ? msg('err', error) : null, field('E-mail', e), field('Password', p), field('Authenticator or backup code', c),
       big(null, 'Sign in', go1, 'primary'), el('a', { href: '/login', class: 'small', text: 'Forgot your password? Use the main sign-in page' })]);
+  }
+  /** First sign-in with a temporary password: choose your own (12+ characters, letters and a number), then carry on. */
+  function newPassword(email, temp, error) {
+    var a = el('input', { type: 'password', autocomplete: 'new-password', 'aria-label': 'New password' }), b = el('input', { type: 'password', autocomplete: 'new-password', 'aria-label': 'New password again' });
+    var save = function () {
+      var n = a.value;
+      var problem = n.length < 12 ? 'Choose a password of at least 12 characters.' : !/[A-Za-z]/.test(n) || !/[0-9]/.test(n) ? 'Use letters and at least one number.'
+        : n === temp ? 'Choose a new password, different from the temporary one.' : n !== b.value ? 'The two passwords are not the same.' : null;
+      if (problem) { root.replaceChildren(newPassword(email, temp, problem)); return; }
+      api('POST', '/api/erp/core/me/password', { currentPassword: temp, newPassword: n })
+        .then(function () { return api('POST', '/api/erp/core/login', { email: email, password: n }); })   // the old session ends with the change
+        .then(function (r) { keep(r.token); start(); })
+        .catch(function (x) { if (x.code === 'mfa_required') { token = null; root.replaceChildren(login('Password changed. Sign in with it and your authenticator code.', email)); return; } root.replaceChildren(newPassword(email, temp, x.message)); });
+    };
+    b.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') save(); });
+    return el('div', { class: 'card login' }, [el('h1', { text: 'Choose your password' }),
+      el('p', { class: 'muted', text: 'You signed in with a temporary password. Choose your own to continue: at least 12 characters, with letters and a number.' }),
+      error ? msg('err', error) : null, field('New password', a), field('New password again', b), big(null, 'Save and continue', save, 'primary')]);
   }
 
   function queuePanel() {
@@ -1250,12 +1279,13 @@
     root.replaceChildren(el('div', { class: 'boot' }, [skeleton(3)]));
     who = { ready: false, salesman: null, events: [], deliveries: null, name: '', perms: {} };
     Promise.all([
-      api('GET', '/api/sales/me').catch(function (x) { if (x.code === 'not_salesman' || x.status === 403) return null; throw x; }),
+      api('GET', '/api/sales/me').catch(function (x) { if (x.code === 'password_change_required') throw x; if (x.code === 'not_salesman' || x.status === 403) return null; throw x; }),
       api('GET', '/api/erp/events').then(function (r) { return r.items.filter(function (e) { return e.status !== 'closed'; }); }).catch(function (x) { if (x.status === 403) return []; throw x; }),
       // deliveries are optional here: any failure (no right, older server) leaves the rest of the app working
       api('GET', '/api/erp/deliveries?status=open').then(function (r) { if (Array.isArray(r && r.items)) store('soh.deliv', r); return Array.isArray(r && r.items) ? r.items : null; }).catch(function () { return null; }),
       api('GET', '/api/erp/core/me').catch(function () { return null; }),
     ]).then(function (x) {
+      if (!token) return;   // sent back to sign-in on the way (a temporary password to replace)
       who.salesman = x[0]; who.events = x[1]; who.deliveries = x[2];
       var me = x[3];
       who.name = (me && me.name) || (x[0] && x[0].salesman.name) || '';
@@ -1267,6 +1297,11 @@
       mode = modes().indexOf(saved) !== -1 ? saved : modes()[0];
       if (!path()) location.replace('#/' + HOME[mode]); else render();
     }).catch(function (x) {
+      if (x.code === 'password_change_required') {   // a saved session from before the password must be changed
+        token = null; try { sessionStorage.removeItem('sales.token'); } catch (e) { /* */ }
+        root.replaceChildren(login('Sign in again with your temporary password to choose your own.'));
+        return;
+      }
       if (offline(x)) {
         root.replaceChildren(el('div', { class: 'boot' }, [msg('warn', 'Offline. Saved work is kept on this phone and sent when the connection returns.'), card([queuePanel()]), big('refresh', 'Try again', start, 'primary')]));
         return;
