@@ -265,6 +265,18 @@ trade portal.
 * Every write is audited in the hash-chained audit log; invoices and ledger rows are insert-only.
 * Secrets only from environment variables (`.env.example` lists names, never values).
 
+## 9a. One sign-in page (2026-11-26)
+
+Everyone signs in at `/login`: shop customers, retailers and distributors (e-mail or mobile number), manufacturers
+and suppliers, the office team, salesmen, delivery and event staff. `POST /api/platform/auth/login` checks every
+account store and returns the workspaces the person may open; the page stores each session where its app expects it.
+The other apps have no sign-in form of their own and send people to `/login?to=<customer|business|supplier|sales|admin>`
+(`/b2b/login` redirects; the field app, the supplier portal and the shop's My Account redirect when signed out;
+`?back=/path` returns a customer to the shop page, same site only). Staff whose only roles are salesman, delivery
+staff or event staff go straight to the field app. Below the form: Create a shop account (`/account.html#signup`) and
+Business register (retailer, distributor, manufacturer/supplier). Temporary passwords are changed on `/login` first.
+The shop's `account.html` was re-pinned for this on the owner's request (b2c-manifest `repins`).
+
 ## 10. Migrations
 
 `020_manufacturing_delivery`: eleven new tables (facilities, BOMs and lines, manufacturing orders,

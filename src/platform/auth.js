@@ -39,7 +39,7 @@ function outcome(e) {
  * @param {{email:string, password:string, totp?:string}} input
  * @param {{staff:Function, customer:Function, erp?:Function, business?:Function, supplier?:Function}} sources
  *   staff/customer(email, password) → {ok, token, user, mustChangePassword?} | {ok:false, unavailable?}
- *   erp(email, password, totp, {countFailure}) → Promise<{token, staff, mustChangePassword, isSalesman}>
+ *   erp(email, password, totp, {countFailure}) → Promise<{token, staff, mustChangePassword, isSalesman, isFieldStaff, fieldOnly}>
  *   business(email, password, {countFailure}) → Promise<{token, user, accountStatus, mustChangePassword}>
  *   supplier(email, password, {countFailure}) → Promise<{token, user, vendorStatus, mustChangePassword}>
  *   (MySQL sources throw {status, code, expose} on failure)
@@ -89,7 +89,9 @@ async function signIn(input, sources) {
 
   const erp = res.erp && res.erp.ok ? res.erp.value : null;
   const workspaces = [];
-  if (staff.ok || erp) {
+  // Salesmen, delivery and event staff with nothing else: straight to the field app, no admin panel to choose
+  const fieldOnly = !!(erp && erp.fieldOnly && (erp.isSalesman || erp.isFieldStaff) && !staff.ok);
+  if (staff.ok || (erp && !fieldOnly)) {
     workspaces.push({
       type: 'admin', label: 'Admin panel', home: '/admin',
       token: staff.ok ? staff.token : null, erpToken: erp ? erp.token : null,

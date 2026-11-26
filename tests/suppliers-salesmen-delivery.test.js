@@ -227,7 +227,7 @@ test('the screens: suppliers in full, salesmen, delivery; the supplier portal re
   for (const k of ["'/states'", "'/addresses'", "'/bank-accounts'", "'/users'", "'/capabilities'", 'Register as a manufacturer or supplier', "type: 'checkbox'"]) assert.ok(portal.includes(k), k);
   assert.ok(read('erp-web/sales/app.js').includes("'/api/sales/dashboard'"));
   const login = read('platform-web/login.html');
-  assert.ok(login.includes('href="/vendor-portal/?register"') && login.includes('href="/b2b/"'));
+  assert.ok(login.includes('href="/vendor-portal/?register"') && login.includes('href="/b2b/register?type=retailer"') && login.includes('href="/b2b/register?type=distributor"'));
   assert.ok(!/textContent\s*=\s*[^;]*innerHTML|\.innerHTML\s*=/.test(people), 'text only, no HTML injection');
 });
 

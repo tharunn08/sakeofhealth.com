@@ -48,7 +48,7 @@
 
   /* ─────────── session + API ─────────── */
   function session() { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; } }
-  function logout(expired) { localStorage.removeItem(KEY); location.replace('/b2b/login' + (expired ? '?expired=1' : '')); }
+  function logout(expired) { localStorage.removeItem(KEY); location.replace('/login?to=business' + (expired ? '&expired=1' : '')); }
 
   async function api(path, opts) {
     opts = opts || {};

@@ -21,7 +21,7 @@
     if (token) h.Authorization = 'Bearer ' + token;
     return fetch(API + path, { method: method, headers: h, body: body ? (form ? body : JSON.stringify(body)) : undefined }).then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (j) {
-        if (r.status === 401 && path !== '/auth/login') logout();
+        if (r.status === 401 && path !== '/auth/login') logout(true);
         if (!r.ok) { var e = new Error(j.error || 'Request failed'); e.code = j.code; throw e; }
         return j;
       });
@@ -34,7 +34,9 @@
     return el('div', { class: 'table-wrap' }, [el('table', {}, [el('thead', {}, [el('tr', {}, head.map(function (x) { return el('th', { text: x }); }))]),
       el('tbody', {}, rows.length ? rows.map(function (r) { return el('tr', {}, r.map(function (c) { return el('td', {}, [c]); })); }) : [el('tr', {}, [el('td', { colspan: String(head.length), class: 'note', text: 'Nothing here.' })])])])]);
   }
-  function logout() { token = null; try { sessionStorage.removeItem('vendor.token'); } catch (e) { /* */ } start(); }
+  function logout(expired) { token = null; try { sessionStorage.removeItem('vendor.token'); } catch (e) { /* */ } toSignIn(expired); }
+  /** Everyone signs in on the one page; it brings manufacturers and suppliers back here. */
+  function toSignIn(expired) { location.replace('/login?to=supplier' + (expired ? '&expired=1' : '')); }
 
   function login(error) {
     var e = field('E-mail', { type: 'email', autocomplete: 'username' }), p = field('Password', { type: 'password', autocomplete: 'current-password' });
@@ -44,18 +46,12 @@
       var np = field('New password (12+ characters)', { type: 'password', autocomplete: 'new-password' });
       box.appendChild(np.node);
       box.appendChild(btn('Activate account', function () {
-        api('POST', '/invite/accept', { token: invite, password: np.input.value }).then(function () { history.replaceState(null, '', location.pathname); root.replaceChildren(login()); root.prepend(msg('ok', 'Done — sign in now.')); })
+        api('POST', '/invite/accept', { token: invite, password: np.input.value }).then(function () { history.replaceState(null, '', location.pathname); root.replaceChildren(msg('ok', 'Done — your account is ready. Taking you to the sign-in page…')); setTimeout(function () { toSignIn(); }, 1500); })
           .catch(function (x) { root.replaceChildren(login(x.message)); });
       }, 'primary'));
       return box;
     }
-    box.appendChild(e.node); box.appendChild(p.node);
-    box.appendChild(btn('Sign in', function () {
-      api('POST', '/auth/login', { email: e.input.value, password: p.input.value }).then(function (r) { token = r.token; try { sessionStorage.setItem('vendor.token', r.token); } catch (x) { /* */ } start(); })
-        .catch(function (x) { root.replaceChildren(login(x.message)); });
-    }, 'primary'));
-    box.appendChild(el('p', { class: 'note' }, ['New manufacturer or supplier? ', el('a', { href: '#', text: 'Register your business', on: { click: function (ev) { ev.preventDefault(); root.replaceChildren(register()); } } })]));
-    box.appendChild(el('p', { class: 'note' }, ['You can also sign in at ', el('a', { href: '/login', text: 'the main sign-in page' }), '. Forgot your password? Ask our purchase team for a new temporary password.']));
+    toSignIn();
     return box;
   }
 
@@ -164,7 +160,7 @@
 
   function home(me) {
     var main = el('main', { id: 'main' });
-    main.appendChild(el('div', { class: 'row' }, [el('h1', { text: me.vendor.legal_name }), el('span', { class: 'tag', text: me.vendor.status.replace(/_/g, ' ') }), btn('Sign out', logout)]));
+    main.appendChild(el('div', { class: 'row' }, [el('h1', { text: me.vendor.legal_name }), el('span', { class: 'tag', text: me.vendor.status.replace(/_/g, ' ') }), btn('Sign out', function () { logout(false); })]));
     if (me.vendor.status !== 'approved') main.appendChild(msg('warn', 'Your business is being verified. Upload the documents below; you can quote once approved.'));
     var out = el('div'); main.appendChild(out);
     // documents
@@ -376,7 +372,7 @@
 
   function start() {
     if (!token) { root.replaceChildren(/[?&]register\b/.test(location.search) ? register() : login()); return; }
-    api('GET', '/me').then(home).catch(function () { logout(); });
+    api('GET', '/me').then(home).catch(function () { logout(true); });
   }
   start();
 })();

@@ -61,9 +61,11 @@ test('all 15 sign in at the one /login with their temporary password and are tol
     assert.equal(r.status, 200, p.role + ': ' + JSON.stringify(r.data));
     assert.equal(r.data.mustChangePassword, true, p.role);
     const types = r.data.workspaces.map(w => w.type);
-    if (p.shop || p.erp) assert.ok(types.includes('admin'), p.role + ' opens the admin panel');
+    if (p.shop || (p.erp && !p.salesman)) assert.ok(types.includes('admin'), p.role + ' opens the admin panel');
+    if (p.salesman && !p.shop) assert.deepEqual(types, ['sales'], 'a salesman with only that role goes straight to the field app');
     if (p.shop) assert.ok(ws(r, 'admin').token, p.role + ' has the shop/trade session');
-    if (p.erp) assert.ok(ws(r, 'admin').erpToken, p.role + ' has the ERP session');
+    if (p.erp && !p.salesman) assert.ok(ws(r, 'admin').erpToken, p.role + ' has the ERP session');
+    if (p.salesman) assert.ok(ws(r, 'sales').token, 'the salesman has the field-app session');
     if (p.salesman) assert.ok(types.includes('sales'), 'salesman opens the field app');
     if (p.vendor) assert.deepEqual(types, ['supplier'], p.role);
     if (p.business) assert.deepEqual(types, ['business'], p.role);

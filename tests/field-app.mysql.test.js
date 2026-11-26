@@ -170,3 +170,18 @@ test('first sign-in with a temporary password: blocked until the person chooses 
   assert.equal(me.status, 200, JSON.stringify(me.data)); assert.equal(me.data.salesman.employeeCode, 'SM-09');
   assert.equal((await s.get('/api/sales/dashboard', { Authorization: 'Bearer ' + again.data.token })).status, 200);
 });
+
+test('the one sign-in page: a salesman with only the salesman role goes straight to the field app; the old business login sends people there', async () => {
+  const { code } = require('./helpers/erp.js');
+  const r = await s.post('/api/platform/auth/login', { email: S.sm.email, password: S.sm.pw, totp: S.sm.secret ? code(S.sm.secret) : undefined });
+  assert.equal(r.status, 200, JSON.stringify(r.data));
+  assert.deepEqual(r.data.workspaces.map((w) => [w.type, w.home]), [['sales', '/sales-app/']], 'no admin panel to choose');
+  assert.equal((await s.get('/api/sales/me', { Authorization: 'Bearer ' + r.data.workspaces[0].token })).status, 200, 'the session opens the field app');
+  const acc = await c.db.queryOne("SELECT id FROM b2b_roles WHERE code = 'accountant'");
+  await c.db.query("INSERT INTO b2b_staff_roles (staff_id, role_id, scope_type) VALUES (?, ?, 'all')", [S.sm2.id, acc.id]);
+  const both = await s.post('/api/platform/auth/login', { email: S.sm2.email, password: S.sm2.pw, totp: S.sm2.secret ? code(S.sm2.secret) : undefined });
+  assert.equal(both.status, 200, JSON.stringify(both.data));
+  assert.deepEqual(both.data.workspaces.map((w) => w.type), ['admin', 'sales'], 'an office role too: both, to choose');
+  const old = await s.get('/b2b/login');
+  assert.equal(old.status, 200); assert.match(String(old.data), /One sign-in for everyone/);
+});

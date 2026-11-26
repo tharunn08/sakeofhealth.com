@@ -1,7 +1,9 @@
-/* One sign-in (/login) for staff (shop/trade and ERP accounts) and shop customers.
-   The server decides which workspaces an e-mail/password (and, for ERP accounts with
-   two-factor on, a 6-digit code) opens; this page only stores the chosen session the
-   way that workspace expects it. */
+/* The one sign-in page (/login) for everyone: shop customers, retailers and distributors, manufacturers
+   and suppliers, the office team, salesmen, delivery and event staff. The server decides which workspaces
+   an e-mail (or a business mobile number) and password (and, for ERP accounts with two-factor on, a
+   6-digit code) open; this page only stores the chosen session the way that workspace expects it.
+   The other apps send people here: ?to=<customer|business|supplier|sales|admin> opens that workspace
+   directly when the person has it; ?back=/path returns a shop customer to the shop page they came from. */
 (function () {
   'use strict';
   var A = window.Admin;
@@ -18,10 +20,13 @@
   function resetButton() { btn.disabled = false; btn.textContent = 'Sign in'; }
 
   var q = new URLSearchParams(location.search);
+  var wanted = /^(customer|business|supplier|sales|admin)$/.test(q.get('to') || '') ? q.get('to') : null;
+  // a shop page to return a customer to: same site only (a path, never another address)
+  var back = /^\/(?![\/\\])[A-Za-z0-9_\-./?=&#%]*$/.test(q.get('back') || '') ? q.get('back') : null;
   if (q.get('expired')) show('Your session expired. Please sign in again.', 'warn');
 
-  // Already signed in to the admin panel? Go straight through.
-  if ((A.Auth.token() || A.Auth.erpToken()) && !q.get('expired')) {
+  // Already signed in to the admin panel? Go straight through (not when another app sent the person here).
+  if ((A.Auth.token() || A.Auth.erpToken()) && !q.get('expired') && (!wanted || wanted === 'admin')) {
     A.fetchNav().then(function () { location.replace('/admin'); }).catch(function () { A.Auth.clear(); });
   }
 
@@ -32,7 +37,7 @@
     else if (w.type === 'business') localStorage.setItem('soh_b2b', JSON.stringify({ token: w.token, user: w.user }));
     else if (w.type === 'supplier') sessionStorage.setItem('vendor.token', w.token);
     else if (w.type === 'sales') sessionStorage.setItem('sales.token', w.token);
-    location.href = w.home;
+    location.href = w.type === 'customer' && back ? back : w.home;
   }
 
   // ── Forgot password: e-mailed link for business staff; the token arrives after "#", never in a URL the server sees ──
@@ -117,6 +122,9 @@
   });
 
   function proceed(ws) {
+    // the app that sent the person here, when they have it; otherwise their only workspace, or a choice
+    var hit = wanted ? ws.filter(function (w) { return w.type === wanted; })[0] : null;
+    if (hit) { btn.innerHTML = A.icon('check') + ' Welcome back'; open(hit); return; }
     if (ws.length === 1) { btn.innerHTML = A.icon('check') + ' Welcome back'; open(ws[0]); return; }
     // More than one: let the person choose (nothing is stored until they do).
     document.getElementById('credentials').hidden = true;
