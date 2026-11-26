@@ -24,6 +24,8 @@ const { login: customerLogin } = require('../middleware/customerAuth.js');
 const erpConfig = require('../modules/erp/config.js');
 
 const WEB = path.join(__dirname, '..', '..', 'platform-web');
+/** Roles whose whole job is in the field app (a person with only these never needs the admin panel). */
+const FIELD_ROLES = ['salesman', 'delivery_staff', 'event_staff'];
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
 function noStore(res) {
@@ -108,6 +110,11 @@ function mount(app, opts) {
             'JOIN b2b_role_permissions rp ON rp.role_id = ro.id WHERE sr.staff_id = ? AND sr.revoked_at IS NULL ' +
             "AND rp.permission_code IN ('deliveries.update', 'events.sell') LIMIT 1", [r.staff.id]));
         } catch (e) { r.isFieldStaff = false; }
+        try {   // only field roles (salesman, delivery, event staff): the field app alone, no admin panel to choose
+          const roles = await require('../db/connection.js').query(
+            'SELECT ro.code FROM b2b_staff_roles sr JOIN b2b_roles ro ON ro.id = sr.role_id AND ro.is_active = 1 WHERE sr.staff_id = ? AND sr.revoked_at IS NULL', [r.staff.id]);
+          r.fieldOnly = roles.length > 0 && roles.every(function (x) { return FIELD_ROLES.indexOf(x.code) !== -1; });
+        } catch (e) { r.fieldOnly = false; }
         return r;
       };
       src.supplier = function (email, password, opts) { return require('../modules/erp/vendors/service.js').login(email, password, ip, opts); };

@@ -108,7 +108,10 @@ function mount(app) {
     };
   };
   app.use('/admin/b2b', express.static(path.join(WEB, 'admin'), staticOpts));
-  app.get(['/b2b', '/b2b/', '/b2b/login'], page('portal/login.html'));
+  // Everyone signs in on the one page (/login); it opens the business portal for retailers and distributors.
+  app.get(['/b2b', '/b2b/', '/b2b/login', '/b2b/login.html'], function (req, res) {
+    res.redirect(302, '/login?to=business' + (req.query && req.query.expired ? '&expired=1' : ''));
+  });
   app.get('/b2b/register', page('portal/register.html'));
   app.get(PORTAL_PAGES.map(function (p) { return '/b2b/' + p; }).concat(PORTAL_PAGES.map(function (p) { return '/b2b/' + p + '/:id'; })), page('portal/app.html'));
   app.use('/b2b', express.static(path.join(WEB, 'portal'), staticOpts));

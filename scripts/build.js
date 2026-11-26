@@ -64,7 +64,7 @@ for (const m of migs) {
 
 // 5. Pages the server serves must exist
 for (const f of ['frontend/index.html', 'frontend/admin/index.html', 'frontend/admin/print.html',
-  'b2b-web/portal/login.html', 'b2b-web/portal/register.html', 'b2b-web/portal/app.html', 'b2b-web/admin/dashboard.html']) {
+  'platform-web/login.html', 'b2b-web/portal/register.html', 'b2b-web/portal/app.html', 'b2b-web/admin/dashboard.html']) {
   if (!fs.existsSync(path.join(ROOT, f))) problems.push('Missing page: ' + f);
 }
 

@@ -224,15 +224,18 @@ test('the phone app: every screen, real endpoints, text only, no prices from the
   assert.match(app, /var body = \{ retailerId: id, paymentMethod: pay, clientUuid: key, items: items, notes: [^}]*\};/, 'the order sends products and quantities; the server prices it');
   assert.match(app, /fd\.append\('file', f\.blob, f\.name\)/, 'the photo goes with the delivery');
   assert.match(app, /function forgetAll\(\)[^\n]*\/\^soh\\\.\/[^\n]*k !== 'soh\.device'/, 'signing out removes the shop and order copies kept on the phone');
-  assert.match(app, /function logout\(\) \{\n\s+token = null; forgetAll\(\);/);
+  assert.match(app, /function logout\(expired\) \{\n\s+token = null; forgetAll\(\);/);
   assert.match(app, /function pub\(url\) \{ return fetch\(url\)/, 'the staff token is not sent to the public reference lists');
   assert.match(app, /outcome: 'no_order', note: text/, 'when ordering is off, the list is saved as what the shop needs');
   // the app still works when the order-code rules are not approved yet: it says so instead of failing
   assert.match(app, /Taking orders in the app is switched off until the owner approves the order-code rules/);
-  // first sign-in with a temporary password: choose your own in the app, then carry on (not "this account is not set up")
-  assert.match(app, /if \(r\.mustChangePassword\) \{ root\.replaceChildren\(newPassword\(mail, p\.value\)\); return; \}/);
-  assert.ok(app.includes("api('POST', '/api/erp/core/me/password', { currentPassword: temp, newPassword: n })"));
-  assert.match(app, /j\.code === 'password_change_required'/, 'any screen: a temporary password sends the person back to choose their own');
+  // one sign-in page for everyone: the app has no sign-in form of its own; /login (which asks for a new password when the
+  // one given is temporary) brings the person back with the field-app session
+  assert.match(app, /location\.replace\('\/login\?to=sales' \+ \(expired \? '&expired=1' : ''\)\)/);
+  assert.doesNotMatch(app, /'\/api\/erp\/core\/login'|type: 'password'/, 'no password is typed into the field app');
+  assert.match(app, /if \(!token\) \{ toSignIn\(\); return; \}/);
+  assert.match(app, /if \(j\.code === 'password_change_required'\) \{ token = null;.*toSignIn\(\); \}/, 'any screen: a temporary password goes back to the sign-in page');
+  assert.match(app, /if \(r\.status === 401\) logout\(true\);/);
   const css = read('erp-web/sales/app.css');
   assert.match(css, /\.tabs\{position:fixed;/); assert.match(css, /env\(safe-area-inset-bottom\)/);
 });

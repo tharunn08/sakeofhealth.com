@@ -81,7 +81,7 @@ test('every ERP table gets Download CSV / Excel, a search box when long, and sor
 test('logo in the trade portal, supplier portal, field app and business e-mails', () => {
   assert.match(read('b2b-web/portal/app.js'), /<div class="side-brand"><img class="brand-logo" src="\/assets\/images\/logo-mark\.png"/);
   assert.match(read('b2b-web/portal/app.js'), /<a class="top-brand"[^']*><img class="brand-logo sm"/);
-  for (const f of ['b2b-web/portal/login.html', 'b2b-web/portal/register.html']) assert.match(read(f), /class="wm"><img src="\/assets\/images\/logo-mark\.png"/, f);
+  assert.match(read('b2b-web/portal/register.html'), /class="wm"><img src="\/assets\/images\/logo-mark\.png"/);
   for (const f of ['erp-web/vendor/index.html', 'erp-web/sales/index.html']) assert.match(read(f), /<header class="brandbar"><img src="\/assets\/images\/logo-mark\.png"/, f);
   const saved = { p: process.env.PUBLIC_SITE_URL, s: process.env.SITE_URL };
   try {

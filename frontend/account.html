@@ -48,7 +48,7 @@ body{background:#f8f4ee;font-family:var(--ff-body);color:var(--text);min-height:
 
     <div id="acc-logged-out">
       <div class="acc-tabs">
-        <button class="acc-tab active" id="tab-login" onclick="showTab('login')">Log In</button>
+        <button class="acc-tab active" id="tab-login" onclick="location.href='/login?to=customer&amp;back=/account.html'">Log In</button>
         <button class="acc-tab" id="tab-signup" onclick="showTab('signup')">Sign Up</button>
       </div>
 
@@ -76,7 +76,7 @@ body{background:#f8f4ee;font-family:var(--ff-body);color:var(--text);min-height:
       </div>
 
       <div class="acc-guest">Just here to order? <a href="index.html#products">Continue as guest →</a></div>
-      <div class="acc-guest" id="acc-b2b-link" style="display:none;margin-top:.5rem;">Retailer or distributor? <a href="/b2b/login">Business login →</a></div>
+      <div class="acc-guest" id="acc-b2b-link" style="display:none;margin-top:.5rem;">Retailer or distributor? <a href="/login?to=business">Business login →</a></div>
     </div>
 
     <div id="acc-logged-in" style="display:none;">
@@ -169,8 +169,7 @@ async function doSignup(e) {
 
 function doLogout() {
   SohAuth.logout();
-  document.getElementById('acc-logged-in').style.display = 'none';
-  document.getElementById('acc-logged-out').style.display = 'block';
+  location.href = '/';
 }
 
 function renderLoggedIn(user) {
@@ -190,7 +189,11 @@ function renderLoggedIn(user) {
 
 (function init() {
   const user = SohAuth.currentUser();
-  if (user) renderLoggedIn(user);
+  if (user) { renderLoggedIn(user); return; }
+  // Everyone logs in on the one sign-in page (/login), which brings customers back here.
+  // Sign Up stays on this page: /account.html#signup
+  if (location.hash === '#signup') { showTab('signup'); return; }
+  location.replace('/login?to=customer&back=/account.html');
 })();
 </script>
 </body>

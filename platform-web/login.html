@@ -8,18 +8,25 @@
 <link rel="icon" type="image/png" href="/assets/images/carousel/favicon.png"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="/admin/admin.css"/>
+<style>
+  [hidden]{display:none!important}  /* .btn sets display, which hid nothing */
+  .join-btn{display:flex;flex-direction:column;align-items:flex-start;gap:1px;width:100%;padding:10px 14px;border:1px solid var(--line,#e4e8e0);border-radius:10px;background:#fff;color:var(--ink,#16261a);text-decoration:none;text-align:left}
+  .join-btn:hover{border-color:#2f5d1f;background:#f6f9f3}
+  .join-btn b{font-size:14px}.join-btn span{font-size:12px;color:var(--ink-4,#5b6b5e)}
+</style>
 </head>
 <body>
 <div class="login-wrap">
   <form class="login-card" id="loginForm" autocomplete="on" data-endpoint="/api/platform/auth/login">
     <div class="login-logo" style="background:#fff;box-shadow:0 6px 20px rgba(47,93,31,.18)"><img src="/assets/images/logo-mark.png" alt="Sake of Health" style="width:38px;height:38px;object-fit:contain"/></div>
     <h1>Sign In</h1>
-    <p class="sub">One sign-in for the Sake of Health team, business staff and shop customers</p>
+    <p class="sub">One sign-in for everyone: shop customers, retailers, distributors, manufacturers and suppliers, our team, salesmen and delivery staff.</p>
     <div id="alertBox" role="alert"></div>
     <div id="credentials">
       <div class="field">
         <label for="email">Email address</label>
-        <input class="input" type="email" id="email" name="email" required autocomplete="username" autofocus/>
+        <input class="input" type="text" inputmode="email" id="email" name="email" required autocomplete="username" autocapitalize="none" spellcheck="false" autofocus/>
+        <div style="font-size:12px;color:var(--ink-4);margin-top:5px">Retailers and distributors can also use their mobile number.</div>
       </div>
       <div class="field">
         <label for="password">Password</label>
@@ -57,14 +64,17 @@
       <p class="sub" style="margin-top:0">Where would you like to go?</p>
       <div id="chooserList" class="flex" style="flex-direction:column;gap:10px"></div>
     </div>
-    <p style="text-align:center;margin-top:22px;font-size:12px;color:var(--ink-4);">
-      New to the shop? <a href="/account.html" style="color:var(--ink-3);">Create an account</a> · <a href="/" style="color:var(--ink-3);">Back to store</a>
-    </p>
-    <p id="partnerLinks" style="text-align:center;margin-top:8px;font-size:12px;color:var(--ink-4);line-height:1.7;">
-      Everyone signs in here — shop staff, retailers, distributors, manufacturers, suppliers, salesmen and delivery staff.<br/>
-      New business partner? <a href="/b2b/" style="color:var(--ink-3);">Retailer or distributor</a> ·
-      <a href="/vendor-portal/?register" style="color:var(--ink-3);">Manufacturer or supplier</a>
-    </p>
+    <div id="joinBox" style="margin-top:26px;padding-top:18px;border-top:1px solid var(--line,#e4e8e0);text-align:center">
+      <p style="margin:0 0 4px;font-size:14px;font-weight:600;color:var(--ink-2,#16261a)">New here?</p>
+      <p style="margin:0 0 12px;font-size:13px;color:var(--ink-3)">Shopping for yourself? <a href="/account.html#signup" style="color:var(--accent,#2f5d1f);font-weight:600">Create a shop account</a></p>
+      <p style="margin:0 0 8px;font-size:13px;font-weight:600;color:var(--ink-2,#16261a)">Business register</p>
+      <div id="partnerLinks" style="display:flex;flex-direction:column;gap:8px">
+        <a class="join-btn" href="/b2b/register?type=retailer"><b>Retailer</b><span>Shops, pharmacies and stores buying at trade prices</span></a>
+        <a class="join-btn" href="/b2b/register?type=distributor"><b>Distributor</b><span>Area distribution partners</span></a>
+        <a class="join-btn" href="/vendor-portal/?register"><b>Manufacturer / supplier</b><span>Make or supply products for us</span></a>
+      </div>
+      <p style="margin:14px 0 0;font-size:12px;color:var(--ink-4)">Our team, salesmen and delivery staff use the account the office made for them. · <a href="/" style="color:var(--ink-3);">Back to store</a></p>
+    </div>
   </form>
 </div>
 <script src="/config.js"></script>

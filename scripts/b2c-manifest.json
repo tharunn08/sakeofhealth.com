@@ -1,7 +1,7 @@
 {
   "createdFrom": "sakeofhealth-main",
   "files": {
-    "frontend/account.html": "c6e622ed02b59a0722504a8afe4d1cb2f34e6692eb863296685fe2e3bb7a0104",
+    "frontend/account.html": "c08695ed23fcdb5937bdbbe162ac2ffa4ae124725dd2bef4231b0d25b4b16827",
     "frontend/admin/admin.css": "f472ad0f4aa0adb134e285c48e0a5555e07e8b0aa4e1628315b19d9328a40b3e",
     "frontend/admin/admin.js": "d75864dfacf8267487097c08117fe519a4b6b4cd764af103bc1279381c5493b2",
     "frontend/admin/analytics.html": "2153d2cc9a079e5a6202afce3fc58a3df9f169771ba5c745d92abf002ae71a19",
@@ -390,6 +390,18 @@
           "from": "d60a257cca0f903e4d08c68c4019f774ca6f7fbd5b67ee7cb1cb4b93f315b246",
           "to": "95e46d68482555f7d92dbd3e7a20b8abefcbc71af2d0109bacb92ae43bff9305",
           "reason": "Security updates (25 Nov 2026, owner's go-ahead): nodemailer 6.10.1 → 10.6.1, multer 2.5.0, axios 1.21.1, follow-redirects 1.16.3, body-parser 1.20.9, qs 6.16.2, uuid 11.1.1 (override for exceljs). npm audit: 0 vulnerabilities. The shop's own code is unchanged; it uses nodemailer's SMTP createTransport/sendMail only, which these versions keep."
+        }
+      ]
+    },
+    {
+      "date": "2026-11-26",
+      "by": "Owner's request 26 Nov 2026: one sign-in page for every login, including customers",
+      "changes": [
+        {
+          "file": "frontend/account.html",
+          "from": "c6e622ed02b59a0722504a8afe4d1cb2f34e6692eb863296685fe2e3bb7a0104",
+          "to": "c08695ed23fcdb5937bdbbe162ac2ffa4ae124725dd2bef4231b0d25b4b16827",
+          "reason": "My Account: a signed-out customer is sent to the one sign-in page (/login?to=customer&back=/account.html), which brings them back here signed in (the same soh_customer session the shop uses). Sign Up stays on this page (/account.html#signup). Log Out goes to the shop's home page. The business login link points at the one sign-in page. Checkout, cart, products and every other shop page are unchanged; guest checkout is unchanged."
         }
       ]
     }
