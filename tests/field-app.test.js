@@ -232,7 +232,7 @@ test('the phone app: every screen, real endpoints, text only, no prices from the
   // first sign-in with a temporary password: choose your own in the app, then carry on (not "this account is not set up")
   assert.match(app, /if \(r\.mustChangePassword\) \{ root\.replaceChildren\(newPassword\(mail, p\.value\)\); return; \}/);
   assert.ok(app.includes("api('POST', '/api/erp/core/me/password', { currentPassword: temp, newPassword: n })"));
-  assert.match(app, /x\.code === 'password_change_required'/);
+  assert.match(app, /j\.code === 'password_change_required'/, 'any screen: a temporary password sends the person back to choose their own');
   const css = read('erp-web/sales/app.css');
   assert.match(css, /\.tabs\{position:fixed;/); assert.match(css, /env\(safe-area-inset-bottom\)/);
 });

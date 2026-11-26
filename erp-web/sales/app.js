@@ -72,6 +72,11 @@
     return fetch(url, { method: method, headers: h, body: body ? JSON.stringify(body) : undefined }).then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (j) {
         if (r.status === 401 && !/login$/.test(url)) logout();
+        if (j.code === 'password_change_required' && !/\/me\/password$/.test(url)) {   // a temporary password not yet replaced: back to sign-in, which asks for a new one
+          token = null; try { sessionStorage.removeItem('sales.token'); } catch (x) { /* */ }
+          if (location.hash) history.replaceState(null, '', location.pathname);
+          who.ready = false; root.replaceChildren(login('Sign in again with your temporary password to choose your own.'));
+        }
         if (!r.ok) { var e = new Error(j.error || 'Request failed'); e.code = j.code; e.data = j; e.status = r.status; throw e; }
         return j;
       });
@@ -1280,6 +1285,7 @@
       api('GET', '/api/erp/deliveries?status=open').then(function (r) { if (Array.isArray(r && r.items)) store('soh.deliv', r); return Array.isArray(r && r.items) ? r.items : null; }).catch(function () { return null; }),
       api('GET', '/api/erp/core/me').catch(function () { return null; }),
     ]).then(function (x) {
+      if (!token) return;   // sent back to sign-in on the way (a temporary password to replace)
       who.salesman = x[0]; who.events = x[1]; who.deliveries = x[2];
       var me = x[3];
       who.name = (me && me.name) || (x[0] && x[0].salesman.name) || '';
